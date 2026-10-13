@@ -1,0 +1,3 @@
+# Vom Engine-Lader bei jedem Laden erzeugt (Typdateien, tsconfig), nicht versionieren
+.claude-plugin/types/
+tsconfig.json

@@ -1,0 +1,23 @@
+# Project State
+
+**Projekt:** {{PROJEKTNAME}}
+**Beschreibung:** {{KURZBESCHREIBUNG}}
+**Typ:** {{TYP}}
+
+> Kurzer Status-Snapshot, kein Logbuch. Budget: höchstens 60 Zeilen und 5 KB. Offene Aufgaben stehen ausschließlich in TODO.md daneben, hier keine `- [ ]`-Zeilen.
+
+## Current Position
+
+<!-- Wo steht das Projekt? Zustand je Strang mit Fakten, Zahlen, Terminen. Gilt unabhängig von der letzten Session. -->
+Status: Frisch aufgesetzt, noch kein Kickoff
+Last activity: {{HEUTE}}, Initial-Setup via /new-project
+
+## Session Continuity
+
+<!-- Wo mache ich weiter? Letzte Session in zwei bis drei Sätzen, nächster Schritt je Strang. Wird bei jedem wrap-up ersetzt. -->
+Letzte Session ({{HEUTE}}): Projekt aufgesetzt (CLAUDE.md, STATE.md, TODO.md, Vault-Notiz).
+
+Nächster Schritt je Strang:
+- Allgemein: Kickoff
+
+Offene Aufgaben: siehe TODO.md

@@ -1,0 +1,7 @@
+# TODO: {{PROJEKTNAME}}
+
+> Format: Themen-Cluster als `## <Strang>`, darunter je Todo eine Zeile `- [ ] Text` (reiner Text, keine Markdown-Auszeichnung). Cluster nach Strängen, nie nach Herkunft (Meeting, Call); Herkunft gehört ans Item. Vor jedem neuen Eintrag Dedup gegen bestehende Todos: ergänzen oder ersetzen statt doppeln. Erledigtes wird entfernt, nicht abgehakt stehen gelassen. Regeln für jedes To-do: eine Zeile, höchstens 140 Zeichen, Frist als `(bis TT.MM.)` am Zeilenende.
+
+## Allgemein
+
+- [ ] Kickoff planen

@@ -1,0 +1,22 @@
+# CLAUDE.md, {{PROJEKTNAME}}
+
+## Session-Start
+
+- `.planning/STATE.md` lesen (kurzer Projektstatus), `.planning/TODO.md` nur bei Bedarf.
+- Wissen aus dem Second Brain gezielt nachschlagen mit `~/.claude/bin/vault-find.sh <stichworte>`, die Projekt-Notiz nie komplett lesen.
+
+## Projekt-Kontext
+
+{{KURZBESCHREIBUNG}}
+
+{{TYP_DETAIL_LINE}}
+
+## Vault-Integration
+
+- Projekt-Tag: project/{{SLUG}}
+- Vault-Notiz: `~/Documents/Second-Brain/{{VAULT_FOLDER}}/{{SLUG}}/{{SLUG}}.md`
+
+## Regeln
+
+- Sprache: {{SPRACHE}}
+- Session-Ende: `/wrap-up` (aktualisiert Projektstatus und To-do-Liste, legt Wissen im Second Brain ab)

@@ -1,0 +1,48 @@
+---
+title: "Themenliste des Second Brain"
+created_date: YYYY-MM-DD
+type: meta
+status: active
+tags:
+  - type/meta
+aliases:
+  - Themenliste
+---
+
+# Themenliste
+
+Feste Liste der Themen. Startliste zum Anpassen, der Nutzer ergänzt und streicht nach Bedarf.
+
+## Regeln
+
+- Jede Decision und jedes Learning trägt ein bis zwei Themen als Tag `cluster/<slug>`. Die Index-Spalte topics wird daraus abgelesen, ein freies Feld `topics` gibt es nicht.
+- Gesetzt werden nur Slugs aus dieser Liste. `/brain:sort-inbox` prüft das per `grep` gegen die Tabelle.
+- Themen sind projektübergreifend. Projektnamen sind kein Thema, dafür gibt es `project/<slug>`.
+- Beim Anlegen einer Notiz ist das Thema freiwillig (nur setzen, wenn eindeutig und in der Liste). Beim Einsortieren durch `/brain:sort-inbox` ist es Pflicht.
+- Passt kein Thema, bleibt die Notiz im Eingang `01_Inbox/` mit `parked: "<Grund>"` und `topic_proposal: <slug>`. Ein neues Thema kommt nur nach Bestätigung des Nutzers in diese Liste, mit einer Zeile Beschreibung.
+- Zusammenlegen oder Streichen nur als Vorschlag über `/brain:health-check` (Themen mit weniger als fünf Einträgen sind Kandidaten).
+
+## Liste
+
+| Slug | Was hineingehört |
+|---|---|
+| **KI-Setup und Werkzeuge** | |
+| `skill-tooling` | Skills, Commands, Hooks und Agenten in Claude Code |
+| `vault-tooling` | Second Brain, Index, Einsortieren, Projektstatus und To-dos |
+| `mcp-connectoren` | Connectoren und Schnittstellen zu Google, Microsoft und anderen Diensten |
+| `shell-cli` | Terminal, Git, Kodierung und Zwischenablage |
+| **Entwicklung** | |
+| `api-integration` | Webhooks und externe APIs |
+| `frontend` | Web-Oberflächen, Layout, Gestaltungssystem |
+| **Dokumente** | |
+| `html-pdf` | Druckfähige Dokumente und Folien aus HTML |
+| `excel-tooling` | Excel-Dateien erzeugen und auswerten |
+| **Geschäft** | |
+| `go-to-market` | Vertrieb, Akquise, Nachfassen, Positionierung |
+| `content-strategie` | Inhalte, Social Media, persönlicher Auftritt |
+| `pricing` | Preise, Angebote, Pakete |
+| `prozess-organisation` | Zusammenarbeit, Planung, Aufgabensteuerung |
+| **Recht und Finanzen** | |
+| `vertragsrecht` | Verträge, AGB, Verhandlungen |
+| `datenschutz-compliance` | DSGVO, Auftragsverarbeitung, Regulierung |
+| `steuern-buchhaltung` | Steuern, Belege, Rechnungen |
