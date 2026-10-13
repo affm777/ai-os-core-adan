@@ -1,6 +1,6 @@
 // Mod „Session-Assistent": nimmt Nicht-Technikern das Merken von Befehlen ab.
 // Kontext-Batterie mit Cache-Restzeit, To-do-Bilanz nach dem Wrap-up,
-// offene To-dos im Band, Knöpfe „Wrap-up" und „Dashboard".
+// offene To-dos im Band, Knöpfe für Wrap-up, Dashboard, Meetings holen und Eingang sortieren.
 // Kein Netzwerk, keine Connectoren, kein Vault-Zugriff.
 
 import { atom, read, update } from 'claude-code'
@@ -305,6 +305,22 @@ export const register: Register = (on, options) => {
               label="Dashboard"
               dimColor
               onPress={() => void $.command.run({ command: 'aios-dashboard' })}
+            />
+          </Box>
+          <Box flexShrink={0}>
+            <Button
+              key="btn-meetings"
+              label="Meetings holen"
+              dimColor
+              onPress={() => void $.command.run({ command: 'brain:sync-meetings' })}
+            />
+          </Box>
+          <Box flexShrink={0}>
+            <Button
+              key="btn-inbox"
+              label="Eingang sortieren"
+              dimColor
+              onPress={() => void $.command.run({ command: 'brain:sort-inbox' })}
             />
           </Box>
           {todos >= 0 && (

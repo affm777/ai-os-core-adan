@@ -155,7 +155,7 @@ test('Ohne Option showCache steht kein Cache im Band (Standard für Teilnehmer)'
   }
 })
 
-test('Knöpfe starten die Befehle wrap-up und aios-dashboard', async ($, on) => {
+test('Knöpfe starten wrap-up, aios-dashboard, sync-meetings und sort-inbox', async ($, on) => {
   mock.clock(on)
   const seen: string[] = []
   on('command.run', (_$, e) => {
@@ -167,6 +167,9 @@ test('Knöpfe starten die Befehle wrap-up und aios-dashboard', async ($, on) => 
   expect(seen).toEqual(['wrap-up'])
   await ui.press({ key: 'btn-dashboard' })
   expect(seen).toEqual(['wrap-up', 'aios-dashboard'])
+  await ui.press({ key: 'btn-meetings' })
+  await ui.press({ key: 'btn-inbox' })
+  expect(seen).toEqual(['wrap-up', 'aios-dashboard', 'brain:sync-meetings', 'brain:sort-inbox'])
   await ui.unmount()
 })
 

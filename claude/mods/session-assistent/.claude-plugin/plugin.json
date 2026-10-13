@@ -1,7 +1,7 @@
 {
   "name": "session-assistent",
-  "version": "0.3.1",
-  "description": "Kontext-Batterie, To-do-Bilanz nach dem Wrap-up, offene To-dos im Band und Knöpfe für Wrap-up und Dashboard. Optional ein Cache-Countdown.",
+  "version": "0.4.0",
+  "description": "Kontext-Batterie, To-do-Bilanz nach dem Wrap-up, offene To-dos im Band und Knöpfe für Wrap-up, Dashboard, Meetings holen und Eingang sortieren. Optional ein Cache-Countdown.",
   "types": "./types/index.d.ts",
   "author": {
     "name": "Affom Birhane"
