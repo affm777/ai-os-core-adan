@@ -18,40 +18,43 @@ function measure(percent: number) {
   return { context: { window: 200000, tokens: Math.round(200000 * percent / 100), percent }, rateLimits: [], changed: ['context' as const] }
 }
 
-test('Knöpfe Wrap-up und Dashboard stehen im Band, Batterie bei 0 Prozent grün', async ($, on) => {
+test('Knöpfe stehen im Band, ohne Prozentzahl und ohne Kontext-Hinweis', async ($, on) => {
   mock.clock(on)
   for (const surface of ['terminal', 'desktop'] as const) {
     const ui = await $.ui.mount({ ...BAND, surface })
     expect(await ui.find({ key: 'btn-wrapup' })).toBeDefined()
     expect(await ui.find({ key: 'btn-dashboard' })).toBeDefined()
-    const bat = await ui.find({ type: 'Text', text: /▱▱▱▱▱▱▱▱ 0 %/ })
-    expect(bat).toBeDefined()
-    expect(bat?.props.color).toBe('success')
+    expect(await ui.find({ type: 'Text', text: / %/ })).toBeUndefined()
+    expect(await ui.find({ type: 'Text', text: /Wrap-up und eine neue Session/ })).toBeUndefined()
     expect(await ui.find({ type: 'Text', text: /Cache/ })).toBeUndefined()
     await ui.unmount()
   }
 })
 
-test('Batterie zeigt Füllstand und Farbe bei 30, 55 und 75 Prozent', async ($, on) => {
+test('Kontext-Hinweis ab 60 Prozent ersetzt die Knopfzeile, „Später" blendet ihn bis 75 Prozent aus', async ($, on) => {
   mock.clock(on)
   on('session.measure', (_$, e) => ({ changed: e.changed }))
-  const cases = [
-    { pct: 30, text: /▰▰▱▱▱▱▱▱ 30 %/, color: 'success', hot: false },
-    { pct: 55, text: /▰▰▰▰▱▱▱▱ 55 %/, color: 'warning', hot: false },
-    { pct: 75, text: /▰▰▰▰▰▰▱▱ 75 %/, color: 'error', hot: true },
-  ] as const
-  for (const c of cases) {
-    await $.session.measure(measure(c.pct))
-    for (const surface of ['terminal', 'desktop'] as const) {
-      const ui = await $.ui.mount({ ...BAND, surface })
-      const bat = await ui.find({ type: 'Text', text: c.text })
-      expect(bat).toBeDefined()
-      expect(bat?.props.color).toBe(c.color)
-      const wrap = await ui.find({ key: 'btn-wrapup' })
-      expect(wrap?.props.variant === 'primary').toBe(c.hot)
-      await ui.unmount()
-    }
-  }
+
+  await $.session.measure(measure(55))
+  let ui = await $.ui.mount({ ...BAND, surface: 'terminal' })
+  expect(await ui.find({ type: 'Text', text: /Guter Zeitpunkt/ })).toBeUndefined()
+  expect(await ui.find({ key: 'btn-wrapup' })).toBeDefined()
+  await ui.unmount()
+
+  await $.session.measure(measure(62))
+  ui = await $.ui.mount({ ...BAND, surface: 'terminal' })
+  expect(await ui.find({ type: 'Text', text: /Guter Zeitpunkt für Wrap-up/ })).toBeDefined()
+  expect(await ui.find({ key: 'hint-wrapup' })).toBeDefined()
+  expect(await ui.find({ key: 'btn-dashboard' })).toBeUndefined()
+  await ui.press({ key: 'hint-later' })
+  expect(await ui.find({ type: 'Text', text: /Guter Zeitpunkt/ })).toBeUndefined()
+  expect(await ui.find({ key: 'btn-dashboard' })).toBeDefined()
+  await ui.unmount()
+
+  await $.session.measure(measure(80))
+  const ui2 = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect(await ui2.find({ type: 'Text', text: /Jetzt Wrap-up machen/ })).toBeDefined()
+  await ui2.unmount()
 })
 
 test('Cache-Restzeit läuft ab dem letzten Turn herunter und meldet kalt', { options: { showCache: true } }, async ($, on) => {
@@ -150,7 +153,7 @@ test('Ohne Option showCache steht kein Cache im Band (Standard für Teilnehmer)'
   for (const surface of ['terminal', 'desktop'] as const) {
     const ui = await $.ui.mount({ ...BAND, surface })
     expect(await ui.find({ type: 'Text', text: /Cache/ })).toBeUndefined()
-    expect(await ui.find({ type: 'Text', text: /0 %/ })).toBeDefined()
+    expect(await ui.find({ key: 'btn-inbox' })).toBeDefined()
     await ui.unmount()
   }
 })

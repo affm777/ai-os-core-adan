@@ -1,5 +1,5 @@
 // Mod „Session-Assistent": nimmt Nicht-Technikern das Merken von Befehlen ab.
-// Kontext-Batterie mit Cache-Restzeit, To-do-Bilanz nach dem Wrap-up,
+// Kontext-Hinweis ab 60 und 75 Prozent, To-do-Bilanz nach dem Wrap-up,
 // offene To-dos im Band, Knöpfe für Wrap-up, Dashboard, Meetings holen und Eingang sortieren.
 // Kein Netzwerk, keine Connectoren, kein Vault-Zugriff.
 
@@ -10,6 +10,7 @@ import type { Bilanz } from '../types'
 
 
 const contextPercent = atom({ plugin: 'session-assistent', key: 'contextPercent' } as const, 0)
+const snoozedBelow = atom({ plugin: 'session-assistent', key: 'snoozedBelow' } as const, 0)
 const lastTurnAt = atom({ plugin: 'session-assistent', key: 'lastTurnAt' } as const, 0)
 const cacheTtlMs = atom({ plugin: 'session-assistent', key: 'cacheTtlMs' } as const, 0)
 const cacheFile = atom({ plugin: 'session-assistent', key: 'cacheFile' } as const, '')
@@ -19,10 +20,10 @@ const openTodos = atom({ plugin: 'session-assistent', key: 'openTodos' } as cons
 const wrapup = atom({ plugin: 'session-assistent', key: 'wrapup' } as const, { isRunning: false, hasWritten: false })
 const bilanz = atom({ plugin: 'session-assistent', key: 'bilanz' } as const, null as Bilanz | null)
 
-// Schwellen der Kontext-Anzeige: grün darunter, orange ab WARN, rot ab HOT.
-const CONTEXT_WARN = 50
-const CONTEXT_HOT = 70
-const BATTERY_CELLS = 8
+// Schwellen des Kontext-Hinweises (Entscheidung 13.10.: keine Prozentzahl im
+// Band, die zeigt die App schon; ab HINT_SOFT dezent, ab HINT_HARD deutlich).
+const HINT_SOFT = 60
+const HINT_HARD = 75
 // Lebensdauer des Prompt-Caches (Option cacheTtl im Manifest).
 const TTL_MS: Record<string, number> = { '5m': 5 * 60_000, '1h': 60 * 60_000 }
 const TTL_DEFAULT = '1h'
@@ -32,15 +33,8 @@ const TODO_RE = /^- \[ \] /
 
 // ---------- Kontext-Anzeige ----------
 
-export function battery(pct: number): string {
-  const filled = Math.round((Math.min(100, Math.max(0, pct)) / 100) * BATTERY_CELLS)
-  return '▰'.repeat(filled) + '▱'.repeat(BATTERY_CELLS - filled)
-}
-
-export function contextColor(pct: number): 'success' | 'warning' | 'error' {
-  if (pct >= CONTEXT_HOT) return 'error'
-  if (pct >= CONTEXT_WARN) return 'warning'
-  return 'success'
+export function hintTier(pct: number): number {
+  return pct >= HINT_HARD ? HINT_HARD : pct >= HINT_SOFT ? HINT_SOFT : 0
 }
 
 export function cacheText(now: number, last: number, ttl: number): string | null {
@@ -257,8 +251,9 @@ export const register: Register = (on, options) => {
     const todos = await read($, openTodos)
     const now = await $.clock.now()
 
-    const color = contextColor(pct)
-    const isHot = color === 'error'
+    const snooze = await read($, snoozedBelow)
+    const tier = hintTier(pct)
+    const showHint = tier > 0 && tier > snooze
     // Reihenfolge: Brücken-Datei (Messung), sonst eigener Zähler (Schätzung).
     let cache: string | null
     if (bridge !== null && bridge.expires_at !== null) {
@@ -286,16 +281,41 @@ export const register: Register = (on, options) => {
           </Box>
         )}
 
+        {/* Kontext-Hinweis ersetzt die Knopfzeile, bis Wrap-up oder Später
+            gedrückt wird. Später blendet bis zur nächsten Schwelle aus. */}
+        {showHint && (
+          <Box flexDirection="row" flexWrap="wrap" columnGap={1}>
+            <Box flexShrink={0}>
+              <Text color={tier === HINT_HARD ? 'warning' : undefined} dimColor={tier === HINT_SOFT} bold={tier === HINT_HARD}>
+                {tier === HINT_HARD
+                  ? 'Jetzt Wrap-up machen und eine neue Session beginnen.'
+                  : 'Guter Zeitpunkt für Wrap-up und eine neue Session.'}
+              </Text>
+            </Box>
+            <Box flexShrink={0}>
+              <Button
+                key="hint-wrapup"
+                label="Wrap-up"
+                variant="primary"
+                onPress={() => void $.command.run({ command: 'wrap-up' })}
+              />
+            </Box>
+            <Box flexShrink={0}>
+              <Button key="hint-later" label="Später" dimColor onPress={() => update($, snoozedBelow, () => tier)} />
+            </Box>
+          </Box>
+        )}
+
         {/* Schmale Bänder (Terminal-Tab mit 40 Spalten): Elemente umbrechen als
             Ganzes, nie zeichenweise, deshalb flexWrap am Band und flexShrink 0
             je Element. */}
+        {!showHint && (
         <Box flexDirection="row" flexWrap="wrap" columnGap={1}>
           <Box flexShrink={0}>
             <Button
               key="btn-wrapup"
               label="Wrap-up"
-              variant={isHot ? 'primary' : undefined}
-              dimColor={!isHot}
+              dimColor
               onPress={() => void $.command.run({ command: 'wrap-up' })}
             />
           </Box>
@@ -333,12 +353,8 @@ export const register: Register = (on, options) => {
               <Text dimColor>{cache}</Text>
             </Box>
           )}
-          <Box flexShrink={0}>
-            <Text color={color} bold={isHot}>
-              {battery(pct)} {pct} %
-            </Text>
-          </Box>
         </Box>
+        )}
       </Box>
     )
   })

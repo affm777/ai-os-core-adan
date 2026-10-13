@@ -13,6 +13,8 @@ declare module 'claude-code' {
     'session-assistent': {
       /** Kontextfüllstand in Prozent, 0 bis 100. */
       contextPercent: number
+      /** Schwelle, bis zu der der Kontext-Hinweis per „Später" ausgeblendet ist. */
+      snoozedBelow: number
       /** Zeitpunkt (ms seit Epoche) der letzten Modell-Anfrage der Hauptschleife, 0 vor der ersten. */
       lastTurnAt: number
       /** Lebensdauer des Prompt-Caches in Millisekunden (Rückfall ohne Brücken-Datei). */

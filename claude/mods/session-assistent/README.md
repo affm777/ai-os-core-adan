@@ -4,7 +4,7 @@ Claude-Code-Mod (Plugin mit Funktions-Hooks), gebaut gegen Claude Code 2.1.295. 
 
 ## Was er zeigt
 
-- Kontext-Batterie im Band, etwa „▰▰▰▰▱▱▱▱ 48 %", grün bis 49 Prozent, orange ab 50, rot ab 70. Ab rot ist der Knopf „Wrap-up" hervorgehoben, ein eigener Hinweistext entfällt.
+- Kontext-Hinweis über dem Prompt ab 60 Prozent Füllstand (dezent) und ab 75 Prozent (hervorgehoben), mit Knöpfen „Wrap-up" und „Später". Der Hinweis ersetzt die Knopfzeile, „Später" blendet ihn bis zur nächsten Schwelle aus. Keine Prozentzahl im Band, die zeigt die App selbst.
 - Optional (Option `showCache`, Standard aus) eine Cache-Restzeit, etwa „Cache 42 min", bis der Prompt-Cache abläuft, danach „Cache kalt". Standard aus, weil der Wert in der Desktop-App nur eine Schätzung ist. Quelle ist die Brücken-Datei `~/.claude/prompt-cache/<session-id>.json`, die das Statuszeilen-Skript `aios-statusline.js` aus dem Objekt `prompt_cache` schreibt (echte TTL und Ablaufzeit von Claude Code, ab 2.1.251, auch nach dem Wechsel auf 5 Minuten bei Extra Usage). Fehlt die Datei, zählt der Mod selbst ab der letzten Modell-Anfrage mit der Option `cacheTtl` (`1h` Standard, `5m`), ein Modellwechsel korrigiert die TTL aus dem Hook-Ereignis. Kamen in einem Turn keine Cache-Tokens, steht dort „Cache aus".
 - To-do-Bilanz nach dem Wrap-up: „N erledigt · N überarbeitet · N neu", Vergleich der To-do-Liste gegen den Stand beim Session-Start.
 - Zahl offener To-dos im Band neben den Knöpfen (`- [ ]` in `.planning/TODO.md`, Fallback `TODO.md` in der Projektwurzel). Nicht in der Statuszeile, weil Claude Code dort den Mod-Namen als Label vorsetzt.
