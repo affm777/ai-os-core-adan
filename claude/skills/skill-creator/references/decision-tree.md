@@ -11,7 +11,7 @@ Stand April 2026. Slash Commands sind in Skills aufgegangen — fuer Neubau imme
 | Multi-Step Workflow mit Reference Docs | **Skill** mit Supporting Files | Progressive Disclosure |
 | Side-Task mit viel Read-Noise (Codebase-Map, Research) | **Skill** mit `context: fork` | `agent: general-purpose` oder `Explore` |
 | Skill ruft langlebigen Worker auf | **Skill mit `context: fork`** | spawn Subagent isoliert |
-| Reusable Worker-Persona mit eigenem Memory | **Subagent** | `~/.claude/agents/<name>.md` |
+| Reusable Worker-Persona (Wissen liegt im Second Brain) | **Subagent** | `~/.claude/agents/<name>.md` |
 | Simple "Insert Template Text" | **Skill** mit User-Invocation | wie alter Slash Command |
 
 ## Entscheidungs-Heuristik (3 Fragen)
@@ -26,10 +26,9 @@ Stand April 2026. Slash Commands sind in Skills aufgegangen — fuer Neubau imme
 - > 5k Tokens Reads ODER > 5 Items zu verarbeiten → Skill mit `context: fork`
 - Permanent isolierte Persona mit eigenem Tool-Set → Subagent
 
-**Frage 3: Braucht es Memory ueber Sessions hinweg?**
+**Frage 3: Braucht es Wissen ueber Sessions hinweg?**
 - Nein → Skill
-- Ja, projekt-spezifisch → Subagent mit `memory: project`
-- Ja, user-weit → Subagent mit `memory: user`
+- Ja → Skill oder Subagent liest und schreibt das Second Brain (Lesen per `vault-find.sh`, neues Wissen als Notiz in `01_Inbox/`). Kein `memory:`-Feld setzen und nie das Claude-Memory-Verzeichnis nutzen, Auto Memory ist bewusst aus.
 
 ## Anti-Pattern: Wann KEINEN Skill bauen
 

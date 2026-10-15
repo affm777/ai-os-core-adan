@@ -491,6 +491,11 @@ check_security_keys() {
       SECURITY_GAPS="${SECURITY_GAPS}${key}"$'\n'
     fi
   done
+  # Auto Memory muss aus sein, neues Wissen gehoert ins Second Brain, nie in
+  # das Claude-Memory-Verzeichnis (fehlt der Schluessel, ist Auto Memory an).
+  if ! grep -qE '"autoMemoryEnabled"[[:space:]]*:[[:space:]]*false' "$CLAUDE_DIR/settings.json" 2>/dev/null; then
+    SECURITY_GAPS="${SECURITY_GAPS}\"autoMemoryEnabled\": false (Auto Memory aus, Wissen gehoert ins Second Brain)"$'\n'
+  fi
 }
 
 # =============================================================================
