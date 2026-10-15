@@ -1,5 +1,5 @@
 // Mod „Session-Assistent": nimmt Nicht-Technikern das Merken von Befehlen ab.
-// Kontext-Hinweis ab 60 und 75 Prozent, To-do-Bilanz nach dem Wrap-up,
+// Kontext-Batterie mit Tokens, Hinweis ab 60 und 75 Prozent, To-do-Bilanz nach dem Wrap-up,
 // offene To-dos im Band, Knöpfe für Wrap-up, Dashboard, Meetings holen und Eingang sortieren.
 // Kein Netzwerk, keine Connectoren, kein Vault-Zugriff.
 
@@ -10,6 +10,8 @@ import type { Bilanz } from '../types'
 
 
 const contextPercent = atom({ plugin: 'session-assistent', key: 'contextPercent' } as const, 0)
+const contextTokens = atom({ plugin: 'session-assistent', key: 'contextTokens' } as const, 0)
+const contextWindow = atom({ plugin: 'session-assistent', key: 'contextWindow' } as const, 0)
 const snoozedBelow = atom({ plugin: 'session-assistent', key: 'snoozedBelow' } as const, 0)
 const lastTurnAt = atom({ plugin: 'session-assistent', key: 'lastTurnAt' } as const, 0)
 const cacheTtlMs = atom({ plugin: 'session-assistent', key: 'cacheTtlMs' } as const, 0)
@@ -20,10 +22,13 @@ const openTodos = atom({ plugin: 'session-assistent', key: 'openTodos' } as cons
 const wrapup = atom({ plugin: 'session-assistent', key: 'wrapup' } as const, { isRunning: false, hasWritten: false })
 const bilanz = atom({ plugin: 'session-assistent', key: 'bilanz' } as const, null as Bilanz | null)
 
-// Schwellen des Kontext-Hinweises (Entscheidung 13.10.: keine Prozentzahl im
-// Band, die zeigt die App schon; ab HINT_SOFT dezent, ab HINT_HARD deutlich).
+// Schwellen des Kontext-Hinweises und der Batteriefarbe: ab HINT_SOFT dezent
+// bzw. orange, ab HINT_HARD deutlich bzw. rot.
 const HINT_SOFT = 60
 const HINT_HARD = 75
+// Die Desktop-App zeigt das Kontextfenster seit 2.37337 nicht mehr im
+// Nutzungs-Popover (15.10.), deshalb steht die Batterie wieder im Band.
+const BATTERY_CELLS = 8
 // Lebensdauer des Prompt-Caches (Option cacheTtl im Manifest).
 const TTL_MS: Record<string, number> = { '5m': 5 * 60_000, '1h': 60 * 60_000 }
 const TTL_DEFAULT = '1h'
@@ -32,6 +37,39 @@ const TICK_MS = 30_000
 const TODO_RE = /^- \[ \] /
 
 // ---------- Kontext-Anzeige ----------
+
+export function battery(pct: number): string {
+  const filled = Math.round((Math.min(100, Math.max(0, pct)) / 100) * BATTERY_CELLS)
+  return '▰'.repeat(filled) + '▱'.repeat(BATTERY_CELLS - filled)
+}
+
+export function contextColor(pct: number): 'success' | 'warning' | 'error' {
+  if (pct >= HINT_HARD) return 'error'
+  if (pct >= HINT_SOFT) return 'warning'
+  return 'success'
+}
+
+// Kurzform für Token-Zahlen: 950, 120k, 1M, 1,2M.
+export function tokenShort(n: number): string {
+  if (n >= 1_000_000) {
+    const m = Math.round(n / 100_000) / 10
+    return `${String(m).replace('.', ',')}M`
+  }
+  if (n >= 1_000) return `${Math.round(n / 1_000)}k`
+  return String(Math.round(n))
+}
+
+// Prozent gegen das volle Modellfenster (1M ist 1M, nicht die
+// Kompaktierungsgrenze). Ohne Fenstergröße gilt der Wert aus dem Ereignis.
+export function fullWindowPercent(tokens: number, window: number, fallback: number): number {
+  if (window > 0 && tokens >= 0) return Math.min(100, Math.round((tokens / window) * 100))
+  return fallback
+}
+
+export function contextText(pct: number, tokens: number, window: number): string {
+  const base = `${battery(pct)} ${pct} %`
+  return window > 0 ? `${base} · ${tokenShort(tokens)} / ${tokenShort(window)}` : base
+}
 
 export function hintTier(pct: number): number {
   return pct >= HINT_HARD ? HINT_HARD : pct >= HINT_SOFT ? HINT_SOFT : 0
@@ -169,13 +207,19 @@ export const register: Register = (on, options) => {
     // Bewusst gegen das volle Modellfenster (Entscheidung 13.10.): das
     // Kompaktierungsfenster ist je Nutzer anders (Env, Settings, Experiment),
     // die Desktop-App zeigt deshalb eine etwas höhere Zahl.
-    const pct = e.context.percent
-    if (typeof pct === 'number') {
+    const tokens = typeof e.context.tokens === 'number' ? e.context.tokens : 0
+    const window = typeof e.context.window === 'number' ? e.context.window : 0
+    const raw = e.context.percent
+    if (typeof raw === 'number' || window > 0) {
+      const pct = fullWindowPercent(tokens, window, typeof raw === 'number' ? raw : 0)
       const prev = await read($, contextPercent)
+      const prevTokens = await read($, contextTokens)
       await update($, contextPercent, () => pct)
+      await update($, contextTokens, () => tokens)
+      await update($, contextWindow, () => window)
       // Das Band zeichnet nur auf Anstoss neu; ohne invalidate bliebe die
       // Anzeige bis zum nächsten Ereignis stehen.
-      if (prev !== pct) $.ui.invalidate('ui.render')
+      if (prev !== pct || prevTokens !== tokens) $.ui.invalidate('ui.render')
     }
     return next(e)
   })
@@ -242,6 +286,8 @@ export const register: Register = (on, options) => {
     if (e.props.hasSurvey) return next(e)
 
     const pct = await read($, contextPercent)
+    const ctxTokens = await read($, contextTokens)
+    const ctxWindow = await read($, contextWindow)
     const last = await read($, lastTurnAt)
     // Vor session.start (Hot Reload, Test) steht noch kein Wert im State.
     const ttl = (await read($, cacheTtlMs)) || ttlFromOption(options.cacheTtl)
@@ -269,6 +315,13 @@ export const register: Register = (on, options) => {
     if (options.showCache !== true) cache = null
 
     const { Box, Text, Button } = $.ui.resolve(e)
+    const meter = (
+      <Box key="ctx-meter" flexShrink={0}>
+        <Text color={contextColor(pct)} bold={pct >= HINT_HARD}>
+          {contextText(pct, ctxTokens, ctxWindow)}
+        </Text>
+      </Box>
+    )
 
     return (
       <Box flexDirection="column">
@@ -303,6 +356,7 @@ export const register: Register = (on, options) => {
             <Box flexShrink={0}>
               <Button key="hint-later" label="Später" dimColor onPress={() => update($, snoozedBelow, () => tier)} />
             </Box>
+            {meter}
           </Box>
         )}
 
@@ -353,6 +407,7 @@ export const register: Register = (on, options) => {
               <Text dimColor>{cache}</Text>
             </Box>
           )}
+          {meter}
         </Box>
         )}
       </Box>

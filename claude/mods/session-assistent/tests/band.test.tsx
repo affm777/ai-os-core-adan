@@ -18,13 +18,12 @@ function measure(percent: number) {
   return { context: { window: 200000, tokens: Math.round(200000 * percent / 100), percent }, rateLimits: [], changed: ['context' as const] }
 }
 
-test('Knöpfe stehen im Band, ohne Prozentzahl und ohne Kontext-Hinweis', async ($, on) => {
+test('Knöpfe stehen im Band, ohne Kontext-Hinweis', async ($, on) => {
   mock.clock(on)
   for (const surface of ['terminal', 'desktop'] as const) {
     const ui = await $.ui.mount({ ...BAND, surface })
     expect(await ui.find({ key: 'btn-wrapup' })).toBeDefined()
     expect(await ui.find({ key: 'btn-dashboard' })).toBeDefined()
-    expect(await ui.find({ type: 'Text', text: / %/ })).toBeUndefined()
     expect(await ui.find({ type: 'Text', text: /Wrap-up und eine neue Session/ })).toBeUndefined()
     expect(await ui.find({ type: 'Text', text: /Cache/ })).toBeUndefined()
     await ui.unmount()
@@ -187,5 +186,25 @@ test('Zahl offener To-dos kommt aus der Projektwurzel, nicht aus dem Arbeitsverz
   await $.turn.complete({ answer: 'ok', durationMs: 100, isAborted: false, turnId: 't-2', reason: 'answer' })
   const ui = await $.ui.mount({ ...BAND, surface: 'terminal' })
   expect(await ui.find({ type: 'Text', text: /3 offene To-dos/ })).toBeDefined()
+  await ui.unmount()
+})
+
+test('Batterie zeigt Prozent und Tokens gegen das volle Modellfenster', async ($, on) => {
+  mock.clock(on)
+  on('session.measure', (_$, e) => ({ changed: e.changed }))
+
+  // Ereignis meldet 40 Prozent (Kompaktierungsfenster), gezählt wird gegen 1M.
+  await $.session.measure({ context: { window: 1_000_000, tokens: 230_000, percent: 40 }, rateLimits: [], changed: ['context' as const] })
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const ui = await $.ui.mount({ ...BAND, surface })
+    expect(await ui.find({ type: 'Text', text: /▰▰▱▱▱▱▱▱ 23 % · 230k \/ 1M/ })).toBeDefined()
+    await ui.unmount()
+  }
+
+  // Auch neben dem Kontext-Hinweis bleibt die Batterie sichtbar.
+  await $.session.measure({ context: { window: 1_000_000, tokens: 800_000, percent: 95 }, rateLimits: [], changed: ['context' as const] })
+  const ui = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect(await ui.find({ type: 'Text', text: /Jetzt Wrap-up machen/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /80 % · 800k \/ 1M/ })).toBeDefined()
   await ui.unmount()
 })
