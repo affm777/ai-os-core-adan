@@ -338,6 +338,7 @@ export const register: Register = (on, options) => {
             gedrückt wird. Später blendet bis zur nächsten Schwelle aus. */}
         {showHint && (
           <Box flexDirection="row" flexWrap="wrap" columnGap={1}>
+            {meter}
             <Box flexShrink={0}>
               <Text color={tier === HINT_HARD ? 'warning' : undefined} dimColor={tier === HINT_SOFT} bold={tier === HINT_HARD}>
                 {tier === HINT_HARD
@@ -356,7 +357,6 @@ export const register: Register = (on, options) => {
             <Box flexShrink={0}>
               <Button key="hint-later" label="Später" dimColor onPress={() => update($, snoozedBelow, () => tier)} />
             </Box>
-            {meter}
           </Box>
         )}
 
@@ -365,6 +365,18 @@ export const register: Register = (on, options) => {
             je Element. */}
         {!showHint && (
         <Box flexDirection="row" flexWrap="wrap" columnGap={1}>
+          {/* Reihenfolge (Affom 15.10.): erst Status (Kontext, To-dos, Cache), dann Knöpfe. */}
+          {meter}
+          {todos >= 0 && (
+            <Box flexShrink={0}>
+              <Text dimColor>{todoText(todos)}</Text>
+            </Box>
+          )}
+          {cache !== null && (
+            <Box flexShrink={0}>
+              <Text dimColor>{cache}</Text>
+            </Box>
+          )}
           <Box flexShrink={0}>
             <Button
               key="btn-wrapup"
@@ -397,17 +409,6 @@ export const register: Register = (on, options) => {
               onPress={() => void $.command.run({ command: 'brain:sort-inbox' })}
             />
           </Box>
-          {todos >= 0 && (
-            <Box flexShrink={0}>
-              <Text dimColor>{todoText(todos)}</Text>
-            </Box>
-          )}
-          {cache !== null && (
-            <Box flexShrink={0}>
-              <Text dimColor>{cache}</Text>
-            </Box>
-          )}
-          {meter}
         </Box>
         )}
       </Box>
