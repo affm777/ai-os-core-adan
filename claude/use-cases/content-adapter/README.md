@@ -1,6 +1,6 @@
 # Ein Text, alle Kanäle, in deinem Ton
 
-Mit diesem Use Case machst du aus einer Idee oder einem fertigen Text die passenden Fassungen für LinkedIn, Instagram, Newsletter, Mail und Website, auf Deutsch und auf Englisch. Claude schreibt nichts Neues dazu, sondern formt deinen Text für jeden Kanal um. Damit die Texte nach dir klingen und nicht nach Standard-KI, legt Claude einmal einen Stil-Korpus aus deinen eigenen Texten an. Den Ton und die letzte Kontrolle behältst du.
+Mit diesem Use Case machst du aus einer Idee oder einem fertigen Text die passenden Fassungen für LinkedIn, Instagram, Newsletter, Mail und Website, auf Deutsch und auf Englisch. Claude schreibt nichts Neues dazu, sondern formt deinen Text für jeden Kanal um. Damit die Texte nach dir klingen und nicht nach Standard-KI, merkt sich Claude deinen Ton in einem Stil-Korpus. Er startet mit sechs kurzen Fragen und wird mit jedem eigenen Text, den du nachreichst, genauer. Den Ton und die letzte Kontrolle behältst du.
 
 ```
 Du                           Claude                          Ergebnis
@@ -20,9 +20,9 @@ eine Idee                    Aufruf und Termine ab,          ein fertiger Text z
 ## Voraussetzungen
 
 - Dein Setup ist installiert. Mehr brauchst du nicht.
-- Für den Stil-Korpus 5 bis 10 eigene Texte (Posts, Newsletter, Website-Texte). Ohne eigene Texte geht es auch, dann stellt Claude dir sechs kurze Fragen zu deinem Ton.
+- Optional 5 bis 10 eigene Texte (Posts, Newsletter, Website-Texte). Du kannst sie jederzeit nachreichen, zum Start reichen sechs kurze Fragen.
 
-Zeitbedarf: Der Stil-Korpus dauert einmalig etwa 10 Minuten. Danach dauert ein Text für alle fünf Kanäle in beiden Sprachen etwa 5 Minuten, das meiste davon arbeitet Claude allein.
+Zeitbedarf: Die sechs Fragen beim ersten Lauf dauern rund zwei Minuten. Danach dauert ein Text für alle fünf Kanäle in beiden Sprachen etwa 5 Minuten, das meiste davon arbeitet Claude allein.
 
 ## Schritt 1: Installieren
 
@@ -39,25 +39,9 @@ Zeig mir danach in einfachen Worten, ob alles geklappt hat.
 
 Starte danach eine neue Session, damit Claude den neuen Skill kennt.
 
-## Schritt 2: Deinen Stil-Korpus anlegen (einmalig)
+## Schritt 2: Erster Lauf
 
-Öffne Claude in dem Ordner, in dem deine Texte entstehen sollen (zum Beispiel ein Kommunikations-Ordner). Leg dort am besten einen Ordner `content/beispiele/` an und kopiere 5 bis 10 eigene Texte hinein. Deutsch und Englisch gemischt ist in Ordnung. Sag Claude:
-
-```
-Leg meinen Stil-Korpus an. Meine Texte liegen in content/beispiele/.
-```
-
-Das passiert dann:
-
-1. Claude liest deine Texte und leitet ab, wie du schreibst: Anrede, Satzlänge, typische Einstiege und Schlüsse, Wörter die du magst und nie nutzt, Emojis, Hashtags, Humor.
-2. Zu jeder Regel stehen zwei wörtliche Belege aus deinen Texten, damit du siehst, woher sie kommt.
-3. Du bekommst eine kurze Zusammenfassung und sagst, was nicht stimmt. Claude trägt deine Korrekturen sofort ein.
-
-Das Ergebnis liegt in `content/voice.md`. Du kannst die Datei jederzeit selbst öffnen und ändern, deine Änderungen gelten immer vor allem anderen.
-
-## Schritt 3: Einen Text für deine Kanäle aufbereiten
-
-Sag Claude:
+Öffne Claude in dem Ordner, in dem deine Texte entstehen sollen (zum Beispiel ein Kommunikations-Ordner). Sag Claude:
 
 ```
 Mach aus diesem Text Fassungen für meine Kanäle:
@@ -67,12 +51,23 @@ Mach aus diesem Text Fassungen für meine Kanäle:
 
 Das passiert dann:
 
-1. Ist dein Text nur eine kurze Idee, fragt Claude zuerst nach dem Kern in zwei, drei Sätzen.
-2. Eine Fragerunde mit vier Klicks: welche Kanäle, welche Sprachen, welcher Aufruf oder Link, gibt es Bild, Termin oder Deadline.
-3. Claude schreibt je Kanal und Sprache eine Fassung und prüft jede selbst: Steht jede Aussage in deinem Text? Ist etwas aus der Verbotsliste drin? Stimmt die Länge für den Kanal?
-4. Du bekommst alle Fassungen im Chat zum Kopieren. Fehlt etwas, das ein Kanal braucht (zum Beispiel ein Link oder ein Datum), steht an der Stelle `[FEHLT: ...]`. Claude rät nie.
+1. Beim allerersten Mal stellt Claude dir sechs kurze Fragen zu deinem Ton (rund zwei Minuten): Du oder Sie, drei Wörter für deinen Ton, Humor, Emojis, Hashtags und je ein Text, der dir gefällt und nicht gefällt. Daraus entsteht dein Stil-Korpus `content/voice.md`, zunächst als vorläufige Fassung.
+2. Ist dein Text nur eine kurze Idee, fragt Claude nach dem Kern in zwei, drei Sätzen.
+3. Eine Fragerunde mit vier Klicks: welche Kanäle, welche Sprachen, welcher Aufruf oder Link, gibt es Bild, Termin oder Deadline.
+4. Claude schreibt je Kanal und Sprache eine Fassung und prüft jede selbst: Steht jede Aussage in deinem Text? Ist etwas aus der Verbotsliste drin? Stimmt die Länge für den Kanal?
+5. Du bekommst alle Fassungen im Chat zum Kopieren. Fehlt etwas, das ein Kanal braucht (zum Beispiel ein Link oder ein Datum), steht an der Stelle `[FEHLT: ...]`. Claude rät nie.
 
-Alles zu einem Text liegt im Ordner `content/ausgabe/<datum>-<thema>/`, je Fassung eine Datei (zum Beispiel `linkedin-de.txt`) und eine `uebersicht.md` mit allen Fassungen auf einen Blick.
+Alles zu einem Text liegt im Ordner `content/ausgabe/<datum>-<thema>/`, je Fassung eine Datei (zum Beispiel `linkedin-de.txt`) und eine `uebersicht.md` mit allen Fassungen auf einen Blick. Ab dem zweiten Lauf entfallen die sechs Fragen.
+
+## Schritt 3: Beispieltexte nachreichen
+
+Mit fünf bis zehn eigenen Texten trifft Claude deinen Ton deutlich besser als nur mit den sechs Fragen. Solange sie fehlen, erinnert Claude dich am Ende einer Ausgabe mit einem halben Satz daran. Leg die Texte zum Beispiel in einen Ordner `content/beispiele/` (Deutsch und Englisch gemischt ist in Ordnung) und sag Claude:
+
+```
+Hier sind Beispieltexte für meine Voice: content/beispiele/
+```
+
+Das geht jederzeit, auch mitten in einem Lauf. Claude liest die Texte, ersetzt die Annahmen aus den Fragen durch Regeln mit wörtlichen Belegen aus deinen Texten, zeigt dir kurz die Änderungen und fragt, was nicht stimmt. Die vorherige Fassung deines Stil-Korpus bleibt in `content/_alt/` liegen. Du kannst `content/voice.md` jederzeit selbst öffnen und ändern, deine Änderungen gelten immer vor allem anderen.
 
 ## Schritt 4: Nachbessern und kopieren
 
@@ -85,6 +80,10 @@ Die LinkedIn-Fassung auf Deutsch ist mir zu förmlich.
 Claude ändert nur diese eine Fassung, die alte bleibt im Unterordner `_alt/` liegen. Sagst du dasselbe ein zweites Mal (etwa wieder „zu förmlich“), fragt Claude, ob das als feste Regel in deinen Stil-Korpus soll. So wird der Korpus mit jeder Runde genauer.
 
 Soll eine Fassung direkt in die Zwischenablage, sag einfach „Kopier mir die Instagram-Fassung auf Englisch“.
+
+## Dein Stil-Korpus pflegt sich selbst
+
+Damit dein Stil-Korpus mit der Zeit nicht ausufert, hat er ein festes Budget (120 Zeilen, höchstens zehn gelernte Regeln, höchstens 20 eigene Verbote). Wird es mehr, legt Claude eine Sicherung in `content/_alt/` ab, sortiert die gelernten Regeln ein, fasst Doppeltes zusammen und fragt dich, wenn sich zwei Regeln widersprechen.
 
 ## Was die Verbotsliste verhindert
 
@@ -130,6 +129,7 @@ In deinem Arbeitsordner entsteht beim ersten Lauf:
 ```
 content/
 ├── voice.md                           ← dein Stil-Korpus
+├── _alt/                              ← frühere Fassungen deines Stil-Korpus
 ├── beispiele/                         ← deine eigenen Texte als Quelle
 └── ausgabe/<datum>-<thema>/           ← alle Fassungen eines Laufs
 ```
