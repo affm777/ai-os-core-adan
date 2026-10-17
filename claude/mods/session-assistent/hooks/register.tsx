@@ -1,6 +1,8 @@
 // Mod „Session-Assistent": nimmt Nicht-Technikern das Merken von Befehlen ab.
 // Kontext-Batterie mit Tokens, Hinweis ab 60 und 75 Prozent, To-do-Bilanz nach dem Wrap-up,
-// offene To-dos im Band, Knöpfe für Wrap-up, Dashboard, Meetings holen und Eingang sortieren.
+// offene To-dos im Band, Knöpfe für Wrap-up, Dashboard, Meetings holen und Brain einsortieren.
+// Der Hinweis bietet zusätzlich „Wrap-up & neue Session“: der Wrap-up bekommt
+// den Auftrag mit, danach selbst eine neue Session zu starten (kein /clear).
 // Kein Netzwerk, keine Connectoren, kein Vault-Zugriff.
 
 import { atom, read, update } from 'claude-code'
@@ -35,6 +37,13 @@ const TTL_DEFAULT = '1h'
 // Takt, in dem die Cache-Restzeit neu gezeichnet wird.
 const TICK_MS = 30_000
 const TODO_RE = /^- \[ \] /
+// Schreibt der Wrap-up eine dieser Dateien, gilt er als gesichert.
+const WRAPUP_FILE_RE = /(^|[\/\\])(TODO|STATE)\.md$/
+// Zusatz zum Wrap-up (Argument des Befehls). Steht im Wrap-up selbst, damit er
+// auch greift, wenn nichts geschrieben wird. Nur ein Satz als Auftrag, die
+// neue Session liest die STATE.md über die CLAUDE.md-Regel ohnehin selbst.
+export const NEW_SESSION_ARGS =
+  'Starte danach eine neue Session, die hier weitermacht. Gib ihr als Auftrag nur einen prägnanten Satz mit, wo es weitergeht, keine weiteren Anweisungen.'
 
 // ---------- Kontext-Anzeige ----------
 
@@ -188,6 +197,14 @@ async function refreshTodos($: EngineInterface): Promise<string[]> {
   return lines
 }
 
+// Knöpfe starten den Wrap-up selbst: der eigene command.run-Hook sieht Aufrufe
+// des Mods nicht (nur getippte), deshalb den Zustand hier direkt setzen.
+async function startWrapup($: EngineInterface, withNewSession: boolean): Promise<void> {
+  await update($, wrapup, () => ({ isRunning: true, hasWritten: false }))
+  await update($, bilanz, () => null)
+  $.command.run({ command: 'wrap-up', args: withNewSession ? NEW_SESSION_ARGS : '' }).catch(() => undefined)
+}
+
 // ---------- Registrierung ----------
 
 export const register: Register = (on, options) => {
@@ -249,10 +266,10 @@ export const register: Register = (on, options) => {
     if (e.agentId === undefined) await touchCache($)
     const ran = await next(e)
     if (e.agentId !== undefined) return ran
-    // Schreibt das Wrap-up die To-do-Liste?
+    // Schreibt das Wrap-up die To-do-Liste oder die STATE.md?
     if (e.tool === 'Edit' || e.tool === 'Write') {
       const path = String((e as any).file_path ?? '')
-      if (/(^|\/)TODO\.md$/.test(path)) {
+      if (WRAPUP_FILE_RE.test(path)) {
         const w = await read($, wrapup)
         if (w.isRunning) await update($, wrapup, () => ({ isRunning: true, hasWritten: true }))
       }
@@ -342,8 +359,8 @@ export const register: Register = (on, options) => {
             <Box flexShrink={0}>
               <Text color={tier === HINT_HARD ? 'warning' : undefined} dimColor={tier === HINT_SOFT} bold={tier === HINT_HARD}>
                 {tier === HINT_HARD
-                  ? 'Jetzt Wrap-up machen und eine neue Session beginnen.'
-                  : 'Guter Zeitpunkt für Wrap-up und eine neue Session.'}
+                  ? 'Jetzt einen Wrap-up machen.'
+                  : 'Guter Zeitpunkt für einen Wrap-up.'}
               </Text>
             </Box>
             <Box flexShrink={0}>
@@ -351,7 +368,14 @@ export const register: Register = (on, options) => {
                 key="hint-wrapup"
                 label="Wrap-up"
                 variant="primary"
-                onPress={() => void $.command.run({ command: 'wrap-up' })}
+                onPress={() => startWrapup($, false)}
+              />
+            </Box>
+            <Box flexShrink={0}>
+              <Button
+                key="hint-wrapup-new"
+                label="Wrap-up & neue Session"
+                onPress={() => startWrapup($, true)}
               />
             </Box>
             <Box flexShrink={0}>
@@ -382,7 +406,7 @@ export const register: Register = (on, options) => {
               key="btn-wrapup"
               label="Wrap-up"
               dimColor
-              onPress={() => void $.command.run({ command: 'wrap-up' })}
+              onPress={() => startWrapup($, false)}
             />
           </Box>
           <Box flexShrink={0}>
@@ -404,7 +428,7 @@ export const register: Register = (on, options) => {
           <Box flexShrink={0}>
             <Button
               key="btn-inbox"
-              label="Eingang sortieren"
+              label="Brain einsortieren"
               dimColor
               onPress={() => void $.command.run({ command: 'brain:sort-inbox' })}
             />

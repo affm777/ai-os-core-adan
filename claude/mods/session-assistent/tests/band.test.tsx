@@ -42,7 +42,7 @@ test('Kontext-Hinweis ab 60 Prozent ersetzt die Knopfzeile, „Später" blendet 
 
   await $.session.measure(measure(62))
   ui = await $.ui.mount({ ...BAND, surface: 'terminal' })
-  expect(await ui.find({ type: 'Text', text: /Guter Zeitpunkt für Wrap-up/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /Guter Zeitpunkt für einen Wrap-up/ })).toBeDefined()
   expect(await ui.find({ key: 'hint-wrapup' })).toBeDefined()
   expect(await ui.find({ key: 'btn-dashboard' })).toBeUndefined()
   await ui.press({ key: 'hint-later' })
@@ -52,7 +52,7 @@ test('Kontext-Hinweis ab 60 Prozent ersetzt die Knopfzeile, „Später" blendet 
 
   await $.session.measure(measure(80))
   const ui2 = await $.ui.mount({ ...BAND, surface: 'desktop' })
-  expect(await ui2.find({ type: 'Text', text: /Jetzt Wrap-up machen/ })).toBeDefined()
+  expect(await ui2.find({ type: 'Text', text: /Jetzt einen Wrap-up machen/ })).toBeDefined()
   await ui2.unmount()
 })
 
@@ -204,7 +204,50 @@ test('Batterie zeigt Prozent und Tokens gegen das volle Modellfenster', async ($
   // Auch neben dem Kontext-Hinweis bleibt die Batterie sichtbar.
   await $.session.measure({ context: { window: 1_000_000, tokens: 800_000, percent: 95 }, rateLimits: [], changed: ['context' as const] })
   const ui = await $.ui.mount({ ...BAND, surface: 'desktop' })
-  expect(await ui.find({ type: 'Text', text: /Jetzt Wrap-up machen/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /Jetzt einen Wrap-up machen/ })).toBeDefined()
   expect(await ui.find({ type: 'Text', text: /80 % · 800k \/ 1M/ })).toBeDefined()
+  await ui.unmount()
+})
+
+test('„Wrap-up & neue Session" gibt dem Wrap-up den Auftrag für die neue Session mit', async ($, on) => {
+  mock.clock(on)
+  noProject(on)
+  on('session.measure', (_$, e) => ({ changed: e.changed }))
+  const runs: { command: string; args: string }[] = []
+  on('command.run', (_$, e) => {
+    runs.push({ command: e.command, args: e.args })
+    return { text: '' }
+  })
+  await $.session.measure(measure(65))
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const ui = await $.ui.mount({ ...BAND, surface })
+    expect(await ui.find({ type: 'Text', text: /Guter Zeitpunkt für einen Wrap-up\./ })).toBeDefined()
+    expect(await ui.find({ key: 'hint-wrapup' })).toBeDefined()
+    await ui.press({ key: 'hint-wrapup-new' })
+    await ui.unmount()
+  }
+  expect(runs.length).toBe(2)
+  expect(runs[0]!.command).toBe('wrap-up')
+  expect(runs[0]!.args).toMatch(/^Starte danach eine neue Session/)
+})
+
+test('Knopf-Wrap-up zieht die To-do-Bilanz, auch ohne eigenen command.run-Hook', async ($, on) => {
+  mock.clock(on)
+  noProject(on)
+  const runs: string[] = []
+  on('command.run', (_$, e) => {
+    runs.push(e.args)
+    return { text: '' }
+  })
+  on('tool.call', () => ({ result: { isError: false, text: 'ok' } }) as any)
+  on('turn.complete', (_$, e) => ({ text: e.answer }))
+  const ui1 = await $.ui.mount({ ...BAND, surface: 'terminal' })
+  await ui1.press({ key: 'btn-wrapup' })
+  await ui1.unmount()
+  expect(runs).toEqual([''])
+  await $.tool.call({ tool: 'Edit', file_path: '/projekt/.planning/STATE.md', old_string: 'a', new_string: 'b' } as any)
+  await $.turn.complete({ answer: 'fertig', durationMs: 100, isAborted: false, turnId: 't-1', reason: 'answer' })
+  const ui = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect(await ui.find({ type: 'Text', text: /To-do-Liste: 0 erledigt/ })).toBeDefined()
   await ui.unmount()
 })
