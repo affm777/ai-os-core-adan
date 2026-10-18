@@ -52,7 +52,8 @@ Genau eine Vorschau, immer mit diesen drei Überschriften in dieser Reihenfolge:
 - Kein „Empfohlen" und kein „Optional" als Rubrik. „(optional)" nur ausnahmsweise hinter einer einzelnen, wirklich verzichtbaren Notiz.
 - Der Session-Log wird immer geschrieben und steht NICHT zur Auswahl. Gibt es sonst nichts abzulegen, lautet die Zeile „nur der Session-Log".
 - Typen so nennen, wie sie im Second Brain heißen (Decision, Learning, Session-Log, Meeting, Person, Concept), nicht eindeutschen.
-- Abschluss mit genau einer Frage: „Passt das so, oder soll ich etwas ändern?" Der User bestätigt, streicht oder sagt „alles". Danach DIREKT schreiben, nicht nochmal nachfragen.
+- Die Vorschau ist der Block oben, als Text in der Antwort, nie ein Satz wie „Jetzt aktualisiere ich den Projektstatus". Sie kommt auch dann vollständig, wenn Decision oder Learning in der Session schon festgehalten wurden (dann unter Second Brain „nur der Session-Log" plus das bereits Abgelegte als „liegt schon im Eingang").
+- Abschluss mit genau einer Frage direkt unter dem Block: „Passt das so, oder soll ich etwas ändern?" Kein Frage-Werkzeug (AskUserQuestion) dafür, die Frage steht im selben Text wie die Vorschau. Nie auf etwas verweisen, das der Nutzer nicht sieht („steht oben", „wie du siehst"). Der User bestätigt, streicht oder sagt „alles". Danach DIREKT schreiben, nicht nochmal nachfragen.
 
 **Sprache gegenüber dem Nutzer (PFLICHT für Vorschau, Rückfragen und Abschluss).** Business-Begriffe statt Dateinamen und Technik-Jargon:
 
