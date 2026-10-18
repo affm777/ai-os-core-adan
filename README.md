@@ -1,4 +1,4 @@
-# AI Operating System: Core
+# AI Operating System
 
 Dieses Repository enthält das komplette AI Operating System: Claude Code mit vorbereiteten globalen Instructions, Skills (auto-invokable Workflows), Slash-Commands, Hooks, einem Obsidian Second Brain und dem lokalen Dashboard.
 
@@ -150,8 +150,6 @@ Startmenü öffnen (`Windows`-Taste), "PowerShell" eintippen, öffnen (normale P
 ```powershell
 irm https://raw.githubusercontent.com/affm777/ai-os-core-adan/main/windows/setup.ps1 | iex
 ```
-
-> `https://raw.githubusercontent.com/affm777/ai-os-core-adan/main/windows/setup.ps1` ist die raw-Adresse von `windows/setup.ps1` in deinem Setup-Repository, in der Form `https://raw.githubusercontent.com/<OWNER>/<REPO>/main/windows/setup.ps1`. In einem abgeleiteten Repo steht an dieser Stelle die fertige Adresse, siehe `docs/ableitung.md`.
 
 Das Skript prüft zuerst deine Windows-Version, installiert danach Git, Node.js, Python und Claude Code über `winget` und klont zuletzt das Setup-Repository nach `~/ai-os-core`. Ist das Repository öffentlich, läuft der Klon ohne Anmeldung durch; ist es privat, öffnet sich ein Browserfenster mit GitHub-Login.
 
@@ -359,24 +357,6 @@ Ein Use-Case-Bundle ist ein fertiges, in der Praxis erprobtes Paket aus README u
 - `requirements-board`: Notion-Board für Anforderungen, vom Gespräch zur sauber geschriebenen Karte.
 
 Jedes Bundle-Verzeichnis enthält eine eigene `README.md` mit Voraussetzungen, Installations-Anleitung und (wo zutreffend) belegten Testergebnissen. Ein Bundle wird genutzt, indem sein `skills/`-Unterordner global nach `~/.claude/skills/` kopiert wird, damit es in jedem Projekt zur Verfügung steht, siehe die Anleitung in der jeweiligen Bundle-README.
-
-### Werkstatt (nur Core, nicht in abgeleiteten Repos)
-
-Diese Dateien gehören zur Weiterentwicklung des Core-Repos und werden beim Ableiten eines Teilnehmer-Repos entfernt. Details: `docs/ableitung.md`.
-
-```
-├── CONTRIBUTING.md                        # Rollen, Branch + PR, Gleichlauf-Regel
-├── .github/CODEOWNERS                     # Auto-Review-Zuweisung
-├── .github/workflows/smoke.yml            # CI (Lint + Windows-Smoke)
-├── windows/MANIFEST.md                    # Mac-Windows-Gleichlauf-Tabelle
-├── dashboard/collectors/check-repo-drift.sh  # Check 10, Drift gegen den Repo-Klon
-└── docs/
-    ├── ableitung.md                       # Checkliste fürs Duplizieren
-    ├── smoke-test.md                      # Verifikations-Prozedur (macOS)
-    └── windows/smoke-test.md              # Verifikations-Prozedur (Windows)
-```
-
----
 
 ## Lizenz
 

@@ -1,23 +1,19 @@
 # =============================================================================
 # setup.ps1 - AI Operating System: Windows-Ersteinrichtung
 # =============================================================================
-# Wird per "irm <SETUP-URL> | iex" in einer normalen PowerShell ausgefuehrt
+# Wird per "irm <raw-Adresse dieser Datei> | iex" in einer normalen PowerShell ausgefuehrt
 # (funktioniert auch unter Execution Policy "Restricted", weil kein Skript-
 # File auf der Platte liegt). Bewusst simpel und stabil gehalten - alle
 # veraenderliche Pruef-Logik lebt in windows/preflight.sh im Repo.
 #
 # Ablauf: Windows-Check -> winget-Check -> Installationen -> Repo klonen ->
 # Hinweis, wie es in Git Bash weitergeht.
-#
-# ABLEITUNG: $RepoUrl unten ist die einzige Stelle, die pro Einsatz angepasst
-# werden muss. Siehe docs/ableitung.md.
 # =============================================================================
 
 $ErrorActionPreference = 'Stop'
 $failedInstalls = @()
 
-# Quelle des Setup-Repos. Bei einer Ableitung auf das jeweilige
-# Teilnehmer-Repo umstellen.
+# Quelle des Setup-Repos.
 $RepoUrl = 'https://github.com/affm777/ai-os-core-adan.git'
 
 function Write-Step {

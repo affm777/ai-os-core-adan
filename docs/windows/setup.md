@@ -12,8 +12,6 @@ Diese Seite ergänzt die Kurzanleitung in der [README](../../README.md#setup-fü
 irm https://raw.githubusercontent.com/affm777/ai-os-core-adan/main/windows/setup.ps1 | iex
 ```
 
-`https://raw.githubusercontent.com/affm777/ai-os-core-adan/main/windows/setup.ps1` ist die raw-Adresse von `windows/setup.ps1` in deinem Setup-Repository, in der Form `https://raw.githubusercontent.com/<OWNER>/<REPO>/main/windows/setup.ps1`.
-
 `irm` (Invoke-RestMethod) lädt den Inhalt dieser Adresse herunter, `iex` (Invoke-Expression) führt ihn als PowerShell-Code aus. Das funktioniert auch, wenn deine Execution Policy auf "Restricted" steht, weil dabei keine `.ps1`-Datei auf der Festplatte landet, die die Policy blockieren könnte.
 
 
@@ -111,5 +109,4 @@ Danach lässt sich Git Bash über den Dropdown-Pfeil im Windows Terminal direkt 
 ## Weiterführend
 
 - Bekannte Probleme: [troubleshooting.md](troubleshooting.md)
-- Manueller End-to-End-Test: [smoke-test.md](smoke-test.md)
-- Mac-Gegenstück (falls zum Vergleich): [../smoke-test.md](../smoke-test.md), [../troubleshooting.md](../troubleshooting.md)
+- Mac-Gegenstück (falls zum Vergleich): [../troubleshooting.md](../troubleshooting.md)

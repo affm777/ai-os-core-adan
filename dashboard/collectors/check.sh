@@ -757,7 +757,7 @@ check_all_projects_state_md() {
 
 # =============================================================================
 # Check 10 (full): Repo-Drift Live vs. Starter
-# Ausgelagert nach check-repo-drift.sh (Werkstatt-Datei, siehe dort).
+# Optionaler Repo-Drift-Check, nur wenn check-repo-drift.sh daneben liegt.
 # Wird weiter unten per source eingebunden, wenn die Datei vorhanden ist.
 # Fehlt sie, entfaellt Check 10 ersatzlos.
 # =============================================================================
@@ -869,8 +869,8 @@ check_vault_machinery
 check_vault_lint
 check_all_projects_state_md
 
-# Optionaler Check 10 (Werkstatt): nur vorhanden, wenn check-repo-drift.sh
-# neben diesem Skript liegt. In abgeleiteten Repos fehlt die Datei bewusst.
+# Optionaler Check 10: nur vorhanden, wenn check-repo-drift.sh
+# neben diesem Skript liegt.
 COLLECTOR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ -f "$COLLECTOR_DIR/check-repo-drift.sh" ]]; then
   # shellcheck source=/dev/null
