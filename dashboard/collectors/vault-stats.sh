@@ -30,19 +30,18 @@ EOF
   exit 0
 fi
 
-TOTAL=$(awk -F'\t' 'BEGIN{c=0} /^```tsv/{f=1;next} /^```/{if(f)exit} f && NR>0 && $1!="path" {c++} END{print c}' "$VAULT_INDEX")
+# Datenzeile = mindestens 7 Tab-Spalten, kein Header, kein Code-Zaun. So
+# zaehlt der Collector den Index mit ```tsv-Zaun (rebuild-index) und ohne
+# (Vault-Skeleton plus sort-inbox-Patches) gleich. Befund Cloud PC 18.10.
+TOTAL=$(awk -F'\t' 'NF>=7 && $1!="path" && $1!~/^```/ {c++} END{print c+0}' "$VAULT_INDEX")
 
 TYPE_COUNTS=$(awk -F'\t' '
-  /^```tsv/{f=1;next}
-  /^```/{if(f)exit}
-  f && $1!="path" && $3!="" {count[$3]++}
+  NF>=7 && $1!="path" && $1!~/^```/ && $3!="" {count[$3]++}
   END{for (t in count) printf "%s\t%d\n", t, count[t]}
 ' "$VAULT_INDEX" | sort)
 
 CLUSTER_COUNTS=$(awk -F'\t' '
-  /^```tsv/{f=1;next}
-  /^```/{if(f)exit}
-  f && $1!="path" {
+  NF>=7 && $1!="path" && $1!~/^```/ {
     n = split($4, tags, " ");
     for (i=1;i<=n;i++) {
       if (index(tags[i], "cluster/") == 1) {
@@ -57,9 +56,7 @@ CLUSTER_COUNTS=$(awk -F'\t' '
 CUTOFF_DATE=$(date -v-30d +%Y-%m-%d 2>/dev/null || date -d "-30 days" +%Y-%m-%d)
 
 NEW_30D=$(awk -F'\t' -v cutoff="$CUTOFF_DATE" '
-  /^```tsv/{f=1;next}
-  /^```/{if(f)exit}
-  f && $1!="path" {
+  NF>=7 && $1!="path" && $1!~/^```/ {
     n = split($1, parts, "/");
     fname = parts[n];
     if (match(fname, /^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
