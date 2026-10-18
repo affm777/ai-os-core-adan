@@ -1,6 +1,6 @@
 # Mod „Session-Assistent"
 
-Claude-Code-Mod (Plugin mit Funktions-Hooks), gebaut gegen Claude Code 2.1.295. Nimmt Nicht-Technikern das Merken von Befehlen ab.
+Claude-Code-Mod (Plugin mit Funktions-Hooks), gebaut gegen Claude Code 2.1.295, geprüft bis 2.1.302 (macOS und Windows). Nimmt Nicht-Technikern das Merken von Befehlen ab.
 
 ## Was er zeigt
 

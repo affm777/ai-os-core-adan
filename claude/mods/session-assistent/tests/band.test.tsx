@@ -9,6 +9,13 @@ const BAND = {
 
 const MIN = 60_000
 
+// Unter Windows liefert die Engine Pfade mit Backslash und Laufwerk
+// (C:\\projekt\\...), deshalb nie zeichengenau vergleichen.
+function samePath(actual: string, expected: string): boolean {
+  const norm = (p: string) => p.replace(/\\/g, '/').replace(/^[A-Za-z]:/, '')
+  return norm(actual).endsWith(norm(expected))
+}
+
 function noProject(on: On) {
   on('session.root', () => ({ value: '/projekt' }))
   on('fs.exists', () => ({ value: false }))
@@ -94,8 +101,8 @@ test('Brücken-Datei der Statuszeile hat Vorrang vor dem eigenen Zähler', { opt
   on('env.get', (_$, e) => ({ value: e.name === 'HOME' ? '/home/tester' : undefined }))
   on('session.id', () => ({ value: 'sess-1' }))
   on('session.root', () => ({ value: '/projekt' }))
-  on('fs.exists', (_$, e) => ({ value: e.path === file }))
-  on('fs.read', (_$, e) => ({ value: e.path === file ? JSON.stringify({ ttl: '5m', expires_at: (100 * MIN) / 1000 + 180, warm: true }) : '' }))
+  on('fs.exists', (_$, e) => ({ value: samePath(e.path, file) }))
+  on('fs.read', (_$, e) => ({ value: samePath(e.path, file) ? JSON.stringify({ ttl: '5m', expires_at: (100 * MIN) / 1000 + 180, warm: true }) : '' }))
   on('session.start', (_$, e) => ({ cwd: e.cwd }))
   on('turn.complete', (_$, e) => ({ text: e.answer }))
 
@@ -179,7 +186,7 @@ test('Zahl offener To-dos kommt aus der Projektwurzel, nicht aus dem Arbeitsverz
   mock.clock(on)
   on('session.root', () => ({ value: '/projekt' }))
   on('session.cwd', () => ({ value: '/projekt/repo/unterordner' }))
-  on('fs.exists', (_$, e) => ({ value: e.path === '/projekt/.planning/TODO.md' }))
+  on('fs.exists', (_$, e) => ({ value: samePath(e.path, '/projekt/.planning/TODO.md') }))
   on('fs.read', () => ({ value: '# TODO\n\n- [ ] eins\n- [ ] zwei\n- [x] erledigt\n- [ ] drei\n' }))
   on('turn.complete', (_$, e) => ({ text: e.answer }))
 

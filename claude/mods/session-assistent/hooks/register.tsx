@@ -119,11 +119,18 @@ async function readBridge($: EngineInterface, file: string): Promise<Bridge | nu
   return parseBridge(await $.fs.read(file))
 }
 
+// Pfade mit dem Trenner des Basispfads zusammensetzen, unter Windows
+// kommt `C:\\Users\\...` aus HOME und Projektwurzel.
+function joinPath(base: string, rel: string): string {
+  const sep = base.includes('\\') ? '\\' : '/'
+  return base.replace(/[\/\\]+$/, '') + sep + rel.split('/').join(sep)
+}
+
 async function bridgePath($: EngineInterface): Promise<string> {
   const home = await $.env.get('HOME') ?? await $.env.get('USERPROFILE')
   const id = await $.session.id()
   if (!home || !id || !/^[A-Za-z0-9._-]+$/.test(id)) return ''
-  return `${home}/.claude/prompt-cache/${id}.json`
+  return joinPath(home, `.claude/prompt-cache/${id}.json`)
 }
 
 function ttlFromOption(value: unknown): number {
@@ -143,7 +150,7 @@ async function todoPath($: EngineInterface): Promise<string | null> {
   // Shell-Befehl verschiebt sonst die Suche in einen Unterordner ohne TODO.md.
   const root = await $.session.root()
   for (const rel of ['.planning/TODO.md', 'TODO.md']) {
-    const path = `${root}/${rel}`
+    const path = joinPath(root, rel)
     if (await $.fs.exists(path)) return path
   }
   return null
