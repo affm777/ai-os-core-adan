@@ -129,7 +129,7 @@ Tools:            <liste>
 Was er tut:       <1-Satz-Klartext>
 ```
 
-Zeige diese Skizze, dann **eine** AskUserQuestion:
+Zeige diese Skizze als Text in der Antwort (nicht in der Frage-Box), dann **eine** AskUserQuestion:
 
 ```
 question: "Stimmt diese Skizze fuer deinen Skill?"
@@ -144,7 +144,7 @@ Bei "Wizard": springe zu Wizard-Modus.
 
 ## Autonomous-Modus
 
-Inferiere alles, zeige NUR finale Skizze + Pfad als einzige AskUserQuestion:
+Inferiere alles, zeige NUR finale Skizze + Pfad als Text in der Antwort, danach eine einzige AskUserQuestion:
 
 ```
 question: "Ich lege folgenden Skill an:\n  Name: <name>\n  Pfad: ~/.claude/skills/<name>/SKILL.md\n  Was er tut: <1-Satz>\nOK?"
