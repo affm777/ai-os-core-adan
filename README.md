@@ -264,17 +264,6 @@ Backup-Files findest du via:
 ls ~/.claude/*.bak.* ~/.claude/**/*.bak.* 2>/dev/null
 ```
 
-### Was sich für bestehende Installationen ändert (Kontext-Diät)
-
-Wer schon eine ältere Version installiert hat, bekommt mit `git pull && bash mac/bootstrap.sh` (bzw. `bash windows/bootstrap.sh`) einen deutlich schlankeren Start. Für den Alltag heißt das:
-
-- **Chat öffnen und loslegen.** Den Befehl `/resume-session` gibt es nicht mehr, der Bootstrap verschiebt ihn ins Backup (`~/.claude/backups/skills/`). Claude liest zu Beginn nur den kurzen Projektstatus (`.planning/STATE.md`), der SessionStart-Hook zeigt eine knappe Vault-Karte statt langer Titel-Listen.
-- **Wissen wird gezielt gesucht** statt vorab geladen: `~/.claude/bin/vault-find.sh <stichworte>` (Varianten per `a|b`, `--all` für den ganzen Vault). Die feste Themenliste `00_Meta/themenliste.md` bleibt im Vault, wird aber nicht mehr bei jedem Start importiert.
-- **To-do-Liste als eigene Datei.** Neue Projekte bekommen neben der `STATE.md` (höchstens 60 Zeilen, nur `## Current Position` und `## Session Continuity`) eine `TODO.md` mit den offenen Aufgaben. Bestehende STATE.md-Dateien werden nicht automatisch umgebaut, Projekte ohne `TODO.md` funktionieren wie bisher.
-- **`/wrap-up` bleibt** der einzige Abschluss-Schritt. Neu sind eine feste Vorschau vor dem Schreiben (Projektstatus, To-do-Liste, Second Brain) und ein kurzer, fester Abschluss.
-- **Schlankere Regeln:** `CLAUDE.md`, `rules/vault-workflow.md` und `rules/security-basics.md` sind verdichtet. OWASP, Input Validation und Quality Gates stehen jetzt in `~/.claude/rules-archive/security-code-quality.md` und werden nur bei Code-Arbeit gelesen.
-- **Bestehende `settings.json`** wird wie immer nicht überschrieben. Wer `vault-find.sh` ohne Rückfrage erlauben will, übernimmt die beiden `vault-find`-Zeilen aus `~/.claude/settings.json.template` in die eigene `permissions.allow`-Liste.
-
 ---
 
 ## Troubleshooting
@@ -349,12 +338,15 @@ ai-os-core/
 
 ### Use-Case-Bundles (`claude/use-cases/`)
 
-Ein Use-Case-Bundle ist ein fertiges, in der Praxis erprobtes Paket aus README und einem oder mehreren Skills für eine konkrete wiederkehrende Aufgabe, gedacht zum Installieren statt zum Selberbauen. Aktuell liegen vier Bundles vor:
+Ein Use-Case-Bundle ist ein fertiges, in der Praxis erprobtes Paket aus README und einem oder mehreren Skills für eine konkrete wiederkehrende Aufgabe, gedacht zum Installieren statt zum Selberbauen. Für ADAN sind drei Bundles vorbereitet:
 
-- `cost-tracker`: Kostenüberblick je Kostenblock und Standort, mit Belegen statt Bauchgefühl.
-- `posteingang-triage`: sichtet neue Mails, ordnet sie Kategorien zu und zeigt eine Abarbeitungsreihenfolge.
-- `rechnungseingang-opos`: überträgt Rechnungs-Mails in die offene-Posten-Liste (Excel).
-- `requirements-board`: Notion-Board für Anforderungen, vom Gespräch zur sauber geschriebenen Karte.
+- `content-adapter`: macht aus einer Idee oder einem Text die Fassungen für LinkedIn, Instagram, Newsletter, Mail und Website, auf Deutsch und Englisch, im eigenen Ton.
+- `motion-graphic`: baut aus einer Beschreibung ein kurzes animiertes Video für Social Media oder die Website (16:9 und 9:16).
+- `posteingang-triage`: sichtet neue Mails, ordnet sie Vereins-Kategorien zu und schlägt To-dos und Antwortentwürfe vor.
+
+Dazu liegen drei weitere Bundles als Beispiele aus anderen Projekten bei: `cost-tracker` (Kostenüberblick mit Belegen), `rechnungseingang-opos` (Rechnungs-Mails in die offene-Posten-Liste) und `requirements-board` (Notion-Board für Anforderungen).
+
+Die Bundles kommen mit dem Download des Repos mit, werden vom Bootstrap aber **nicht automatisch installiert**. Installiert wird ein Bundle gezielt, wenn es gebraucht wird, bei `content-adapter` und `motion-graphic` per `bash claude/use-cases/<bundle>/install.sh`. Am einfachsten sagst du Claude „installier mir den Use Case content-adapter".
 
 Jedes Bundle-Verzeichnis enthält eine eigene `README.md` mit Voraussetzungen, Installations-Anleitung und (wo zutreffend) belegten Testergebnissen. Ein Bundle wird genutzt, indem sein `skills/`-Unterordner global nach `~/.claude/skills/` kopiert wird, damit es in jedem Projekt zur Verfügung steht, siehe die Anleitung in der jeweiligen Bundle-README.
 
