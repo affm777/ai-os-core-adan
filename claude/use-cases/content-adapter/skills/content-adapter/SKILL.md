@@ -26,7 +26,7 @@ Der Skill ist kein Textgenerator, er formt um. **Der Rohtext ist Wahrheit.**
 
 ## Pfade
 
-- Skill-Ordner `S=~/.claude/skills/content-adapter`. Kanalkarten `$S/kanaele/<kanal>.md`, Verbotsliste `$S/verbotsliste.md`, Korpus-Vorlage `$S/voice-vorlage.md`, Prüfung `bash "$S/scripts/pruefen.sh" <laufordner>`.
+- Skill-Ordner `S=~/.claude/skills/content-adapter`. Kanalkarten `$S/kanaele/<kanal>.md`, Verbotsliste `$S/verbotsliste.md`, Korpus-Vorlage `$S/voice-vorlage.md`, Korpus-Pflege `$S/korpus.md`, Prüfung `bash "$S/scripts/pruefen.sh" <laufordner>`.
 - Arbeitsordner ist das aktuelle Verzeichnis. Nutzerdaten liegen nur dort, nie im Skill:
   - `content/voice.md` Stil-Korpus des Nutzers (Budget 120 Zeilen, 8 KB)
   - `content/_alt/` Sicherungen von voice.md vor jeder Verdichtung oder Neuableitung
@@ -44,66 +44,9 @@ Der Skill ist kein Textgenerator, er formt um. **Der Rohtext ist Wahrheit.**
 
 > Bevor wir loslegen, sechs kurze Fragen zu deinem Ton (rund zwei Minuten), damit die Texte nach dir klingen.
 
-### 1a. Erster Lauf: Interview
+### 1a. Korpus aufbauen und pflegen
 
-Zwei AskUserQuestion-Runden zu je drei Fragen.
-
-Runde 1:
-1. Anrede: Du, Sie, ihr (Mehrfachauswahl, falls je Kanal verschieden, Freitext über „Sonstiges“).
-2. Ton: drei Wörter, die deinen Ton beschreiben (Optionen z. B. „sachlich, klar, ruhig“, „herzlich, direkt, locker“, „kurz, nahbar, humorvoll“, eigene über „Sonstiges“).
-3. Humor: nein, leise, gern.
-
-Runde 2:
-4. Emoji: keine, sparsam (höchstens eins), gern.
-5. Hashtags: keine, zwei bis drei, nach Kanalkarte.
-6. Je ein Text, der dir gefällt oder nicht gefällt: „Füge ich ein“, „Nenne ich als Datei oder Link“, „Überspringen“.
-
-Bei „Füge ich ein“ oder Datei kurz warten und beide Texte lesen. Daraus sofort eine erste `content/voice.md` nach `voice-vorlage.md` schreiben, mit der Statuszeile
-
-`Stand: vorläufig, aus Interview vom <JJJJ-MM-TT>, 0 Belegtexte, <N> Regeln, 0 gelernte Regeln`
-
-Belege sind die Antworten des Nutzers, gekennzeichnet als „(Interview)“. Was aus dem Text, der nicht gefällt, folgt, kommt als Muster unter „Eigene Verbote“ oder als Regel unter „Wörter, die du nie nutzt“. Danach genau ein Satz:
-
-> Dein Ton wird deutlich besser, sobald ich fünf bis zehn eigene Texte von dir kenne. Sag dafür jederzeit „hier sind Beispieltexte für meine Voice“ und nenn Dateien oder einen Ordner.
-
-Dann weiter zu Schritt 2. Bricht der Nutzer das Interview ab, ohne voice.md weiter (Kanalkarten allein, in der Übersicht „ohne Stil-Korpus erstellt“).
-
-### 1b. Beispieltexte nachreichen (jederzeit, auch mitten in einem Lauf)
-
-Auslöser: „hier sind Beispieltexte für meine Voice“, „lern meinen Stil aus diesen Texten“ oder Dateien, die erkennbar als Stilvorlage gemeint sind. Ein laufender Lauf wird dafür unterbrochen und danach an derselben Stelle fortgesetzt.
-
-Nennt der Nutzer eine Marke („Beispieltexte für die Marke ADAN Careers“), gilt der Korpus dieser Marke, fehlt er, wird `content/stil/<marke>/` angelegt. Gibt es mehrere Marken und keine ist genannt, zuerst nach der Marke fragen. Kommt eine zweite Marke dazu und es gibt noch ein `content/voice.md` ohne Marke, fragen, zu welcher Marke es gehört, es nach `content/stil/<marke>/voice.md` kopieren und das Original nach `content/_alt/voice-<JJJJ-MM-TT>.md` verschieben (nie löschen).
-
-Eingefügte Texte als `content/beispiele/NN-<kurzname>.md` speichern, genannte Dateien nur lesen (nicht kopieren, nicht verschieben). Nennt der Nutzer einen fertigen Korpus-Entwurf im Aufbau von `voice-vorlage.md` (etwa `voice-entwurf.md`), ist er der Ausgangspunkt für den aktiven Korpus und wird mit den Belegen aus den Texten abgeglichen. Dann ableiten:
-
-Anrede (Du, Sie, ihr), Satzlänge, Rhythmus, typische Einstiege, typische Schlüsse, wie über die Zielgruppe gesprochen wird, Wörter die der Nutzer nutzt, Wörter die er nie nutzt, Emoji-Praxis, Hashtag-Praxis, Humor ja oder nein, EN-Tonalität falls EN-Beispiele da sind.
-
-Pro Regel höchstens zwei Originalzitate als Beleg, wörtlich und mit Quelldatei. Gibt es keine zwei Belege, steht dort „zu wenig Belege, vorläufig“ und die Regel ist weich formuliert. Nichts als Regel festschreiben, was nur einmal vorkommt.
-
-Vor dem Schreiben eine Kopie nach `content/_alt/voice-<JJJJ-MM-TT>.md` (gibt es die schon, `-2` anhängen). Dann einarbeiten:
-- Interview-Annahmen, die die Texte bestätigen, bekommen Textbelege statt „(Interview)“.
-- Interview-Annahmen, denen die Texte widersprechen, werden ersetzt. Ausnahme Anrede und alles, was der Nutzer ausdrücklich gesagt hat: dann eine Frage stellen statt ersetzen.
-- Neue Regeln aus den Texten kommen dazu, „Gelernte Regeln“ und „Eigene Verbote“ bleiben stehen.
-- Statuszeile auf `Stand: belegt, <N> Texte, aktualisiert <JJJJ-MM-TT>, <R> Regeln, <G> gelernte Regeln` setzen (N = Zahl aller gelesenen Beispieltexte, R = Abschnitte mit Regel, G = Einträge unter „Gelernte Regeln“). Unter drei Texten zusätzlich sagen, dass der Korpus noch dünn ist.
-
-Danach in höchstens zehn Zeilen zusammenfassen („So schreibst du, so habe ich es verstanden“, was sich gegenüber dem Interview geändert hat) und fragen, was falsch oder zu streng ist. Korrekturen sofort einschreiben, Korrekturen des Nutzers gehen jedem Beleg vor. Danach Budget prüfen (1c).
-
-### 1c. Budget und Selbstverdichtung von voice.md
-
-Budget: höchstens 120 Zeilen und 8 KB, höchstens zehn Einträge unter „Gelernte Regeln“, höchstens 20 Muster unter „Eigene Verbote“. Nach jeder Änderung an voice.md prüfen:
-
-`wc -l < content/voice.md; wc -c < content/voice.md`
-
-Gelernte Regeln zählen (Zeilen, die mit `- ` beginnen, im Abschnitt „Gelernte Regeln“), Muster im Block von „Eigene Verbote“ zählen. Ist eine Grenze überschritten:
-1. Kopie nach `content/_alt/voice-<JJJJ-MM-TT>.md` (bei Bedarf `-2`).
-2. Gelernte Regeln in die passenden Abschnitte einsortieren (Anrede, Satzlänge, Einstiege, Schlüsse, Wörter, Emoji, Hashtags, Humor, Englisch). Der Abschnitt „Gelernte Regeln“ ist danach leer bis auf Regeln, die nirgends passen.
-3. Doppelte oder überlappende Regeln zu einer zusammenführen.
-4. Je Regel höchstens zwei Belege, die kürzesten bleiben.
-5. Eigene Verbote über 20 zu gemeinsamen Mustern zusammenfassen (z. B. `event|veranstaltung` statt zwei Zeilen), nichts weglassen.
-6. Widersprechen sich zwei Regeln, nicht selbst entscheiden: eine Frage an den Nutzer mit beiden Regeln, erst nach der Antwort eintragen.
-7. Statuszeile aktualisieren, erneut `wc` laufen lassen. Bleibt es über Budget, die längsten Abschnitte nennen und fragen, was gekürzt werden darf.
-
-Ergebnis in einem Satz nennen: „Stil-Korpus verdichtet, vorher X Zeilen, nachher Y, Kopie in content/_alt/.“
+Interview beim ersten Lauf, Beispieltexte nachreichen (jederzeit, auch mitten in einem Lauf, Auslöser „hier sind Beispieltexte für meine Voice“, „lern meinen Stil aus diesen Texten“ oder Dateien, die erkennbar als Stilvorlage gemeint sind) sowie Budget und Selbstverdichtung von voice.md stehen in `$S/korpus.md`. Diese Datei lesen, sobald einer der Fälle eintritt, dann an derselben Stelle weiter.
 
 ### 2. Briefing
 
@@ -141,16 +84,16 @@ Vorher lesen: die Kanalkarten der gewählten Kanäle, `verbotsliste.md`, `conten
 
 **Prüfen, bevor der Nutzer etwas sieht.**
 1. `bash "$S/scripts/pruefen.sh" content/ausgabe/<lauf>` ausführen. Das Script prüft Verbotsliste, Gedankenstriche, Markdown-Zeichen, Emoji als Aufzählung, Hashtag-Anzahl, Großschreibung, Fragezeilen am Anfang, Längen und zählt `[FEHLT]`. Steht im Abschnitt „Eigene Verbote“ von voice.md ein Begriff, wird er mit `--zusatz content/voice.md` mitgeprüft.
-2. Jeden VERSTOSS beheben und erneut prüfen, bis keiner mehr da ist. HINWEISE einzeln ansehen (z. B. ist „ADAN“ kein Großschreib-Verstoß) und nur beheben, wenn sie zutreffen.
+2. Jeden VERSTOSS beheben und erneut prüfen, bis keiner mehr da ist. HINWEISE einzeln ansehen und nur beheben, wenn sie zutreffen. Abkürzungen aus dem Block `abkuerzungen` der Verbotsliste (und aus voice.md mit `--zusatz`) meldet das Script nicht als Großschreibung.
 3. Selbst gegen die Faktenliste lesen, Satz für Satz. Jede Aussage, die nicht in der Liste steht, streichen oder in `[FEHLT]` umwandeln. Drei Adjektive in Reihe und rhetorische Fragen als Einstieg zusätzlich mit eigenem Blick prüfen, das Script findet nicht alle.
 
 **Design-Auftrag je Fassung.** Zu jeder Fassung (Kanal und Sprache) einen kurzen Auftrag fürs Bild schreiben, den der Nutzer in Claude Design, Figma oder den Skill `social-post` übergeben kann. Klartext mit festen Kennzeilen in dieser Reihenfolge, in der Sprache der Fassung:
 - `Headline:` höchstens sechs Wörter, nur aus der Faktenliste.
 - `Bildtext:` höchstens 20 Wörter, nur aus der Faktenliste, sonst `[FEHLT: ...]`.
-- `Format:` LinkedIn 1:1 (1200 x 1200), Instagram 4:5 (1080 x 1350), Newsletter und Mail Kopfbild 2:1 (1200 x 600), Website 16:9 (1920 x 1080). Nennt das Briefing ein anderes Format (etwa Story 9:16, Karussell), gilt das.
+- `Format:` LinkedIn 1:1 (1200 x 1200), Instagram 4:5 (1080 x 1350), Newsletter und Mail Kopfbild 2:1 (1200 x 600, nicht in social-post, Claude Design oder Figma), Website 16:9 (1920 x 1080, nicht in social-post, Claude Design oder Figma). Nennt das Briefing ein anderes Format (etwa Story 9:16, Karussell), gilt das.
 - `Kanal:` und `Marke:` (ohne Marken-Korpus der Name aus dem Rohtext oder `[FEHLT: Marke]`).
 - `Stimmung:` ein Satz aus Rohtext und Korpus, ohne neue Fakten.
-Verbotsliste und Gedankenstrich-Regel gelten auch hier, das Script prüft die Aufträge nicht, also selbst lesen. Farben, Schriften und Logos nennt der Auftrag nicht, die kommen aus dem Design-System der Marke.
+Verbotsliste, Gedankenstrich-Regel und die Wortgrenzen gelten auch hier. Nach dem Schreiben von `uebersicht.md` pruefen.sh erneut laufen lassen, es prüft dann den Abschnitt „Design-Aufträge“ mit. Farben, Schriften und Logos nennt der Auftrag nicht, die kommen aus dem Design-System der Marke.
 
 **`uebersicht.md`** im Laufordner: Kopfzeile mit Datum, Slug, Marke (falls gewählt), Kanälen, Sprachen und Korpus-Status („Stil-Korpus belegt, N Texte“, „Stil-Korpus vorläufig aus Interview“ oder „ohne Stil-Korpus“). Dann alle Fassungen in Codeblöcken (dort darf Markdown stehen, die Kanaltexte selbst bleiben Klartext). Danach der Abschnitt `## Design-Aufträge` mit je einem Codeblock pro Fassung, überschrieben mit Kanal und Sprache. Am Ende ein Prüfprotokoll mit dem Ergebnis von `pruefen.sh`, der Liste aller `[FEHLT]`-Stellen und der Faktenliste mit dem Vermerk, welche Fakten in welchen Fassungen vorkommen.
 
@@ -164,7 +107,7 @@ Verbotsliste und Gedankenstrich-Regel gelten auch hier, das Script prüft die Au
 
 > Das ist das zweite Mal „<Art>“. Soll ich das als feste Regel in deinen Stil-Korpus schreiben, damit es künftig gleich passt?
 
-Bei Ja in `content/voice.md` unter „Gelernte Regeln“ eintragen (Datum, Regel in einem Satz, Anlass). Ein neues Verbotswort kommt unter „Eigene Verbote“. Ohne voice.md bei Ja die Datei aus `voice-vorlage.md` anlegen (Status vorläufig) und nur diese Regel eintragen. Danach Statuszeile aktualisieren und Budget prüfen (1c).
+Bei Ja in `content/voice.md` unter „Gelernte Regeln“ eintragen (Datum, Regel in einem Satz, Anlass). Ein neues Verbotswort kommt unter „Eigene Verbote“. Ohne voice.md bei Ja die Datei aus `voice-vorlage.md` anlegen (Status vorläufig) und nur diese Regel eintragen. Danach Statuszeile aktualisieren und Budget prüfen (`$S/korpus.md`).
 
 ### 5. Zwischenablage (nur auf Wunsch)
 

@@ -22,7 +22,7 @@ Ergebnis: ein oder mehrere PNG-Bilder in Originalgröße der Plattform, im Arbei
 
 ## Pfade
 
-- Skill-Ordner `S=~/.claude/skills/social-post` mit `templates/` (statement, info, karussell plus basis.css und basis.js), `marken/<slug>/` (STYLE-GUIDE.md, marke.css, logos.conf, logo/) und `scripts/` (vorbereiten.sh, render.sh).
+- Skill-Ordner `S=~/.claude/skills/social-post` mit `templates/` (statement, info, karussell plus basis.css, basis.js und `fonts/` mit Rubik), `marken/<slug>/` (STYLE-GUIDE.md, marke.css, logos.conf, logo/) und `scripts/` (vorbereiten.sh, render.sh).
 - Arbeitsordner ist das aktuelle Verzeichnis. Dort entsteht:
   - `social/build/<datum>-<marke>-<format>[-<thema>]/` je Post ein Build-Ordner (index.html, inhalt.json, Kopien von CSS, Logos) plus `vorschau-NN.png`
   - `social/ausgabe/<datum>-<marke>-<format>-NN.png` die fertigen Bilder
@@ -83,7 +83,7 @@ bash "$S/scripts/render.sh" social/build/<name> social/build/<name>/vorschau
 
 Das Skript startet einen lokalen Server, öffnet die Seite mit playwright-cli, wartet auf Schrift und Einpassung, macht je Seite ein PNG (`vorschau-01.png`, ...) und räumt Browser und Server wieder ab. Ausgabe lesen:
 
-- `Schrift: Rubik NICHT geladen` heißt kein Internet, die Bilder nutzen die Systemschrift. Dem Nutzer sagen, für das Endbild bitte mit Internet neu rendern.
+- `Schrift: Rubik NICHT geladen` heißt, die Schriftdateien fehlen im Build-Ordner (`fonts/`). `vorbereiten.sh` erneut ausführen, hilft das nicht, das Bundle neu installieren. Rubik liegt lokal im Skill, Internet braucht der Render nicht.
 - `ÜBERLAUF` (Exit-Code 3) heißt, der Text passt auch verkleinert nicht. Kürzung vorschlagen, nicht still kürzen.
 - Schriftgröße unter 85 Prozent: Text passt, wirkt aber gedrängt. Kürzere Headline vorschlagen.
 
@@ -114,7 +114,7 @@ Gibt es Dateien mit dem Präfix schon, hänge `-v2`, `-v3` an das Präfix an, ni
 
 - Die Skripte suchen selbst `python3`, `python` oder `py -3` (unter Windows ist `python3` oft nur ein Store-Platzhalter).
 - Pfade für das Öffnen im Explorer mit Backslashes angeben, die Skripte selbst arbeiten mit normalen Schrägstrichen.
-- Meldet `render.sh`, dass der Browser fehlt: `npx playwright install chromium` ausführen (lädt den Browser, dem Nutzer vorher sagen, dass gut 100 MB geladen werden).
+- Meldet `render.sh`, dass der Browser fehlt: playwright-cli rendert mit Google Chrome. Nach Okay des Nutzers `playwright-cli install-browser chrome` ausführen (lädt Chrome, dem Nutzer vorher sagen, dass gut 100 MB geladen werden).
 
 ## Was du nicht tust
 

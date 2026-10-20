@@ -9,6 +9,7 @@ Unterbefehle:
   pruefen                         Werkzeuge prüfen (Python, pypdf oder pdftotext, openpyxl)
   lesen <pdf> --belege DIR        Felder vorschlagen und Dubletten prüfen (JSON, schreibt nichts)
   ablegen <pdf> --belege DIR ...  Datei umbenennen, ablegen, Übersicht ergänzen
+                                  (--muster "{datum}_{lieferant}_{betrag}-EUR_{nummer}" für eigene Namen)
   status --belege DIR --datei REL --status hochgeladen
   uebersicht --belege DIR [--excel]
   base64 <datei>                  Datei als Base64 für den SharePoint-Upload (bis 1 MB)
@@ -61,6 +62,18 @@ DATUM_LABEL = re.compile(
 DATUM = re.compile(r"\b(\d{1,2}\.\d{1,2}\.\d{4}|\d{4}-\d{2}-\d{2})\b")
 
 
+MUSTER_FELDER = ("datum", "lieferant", "betrag", "nummer", "art")
+NOTIZEN = "## Notizen"
+
+
+def pip_zeile(paket):
+    """Installationszeile für genau dieses Python (Mac python3, Windows py -3 oder voller Pfad)."""
+    exe = sys.executable or "python3"
+    if " " in exe:
+        exe = '"' + exe + '"'
+    return f"{exe} -m pip install --user {paket}"
+
+
 def ausgabe(obj, code=0):
     print(json.dumps(obj, ensure_ascii=False, indent=2))
     sys.exit(code)
@@ -101,12 +114,12 @@ def cmd_pruefen(_a):
         if shutil.which("pdftotext"):
             erg["pdf_text"] = "pdftotext"
     if not erg["pdf_text"]:
-        erg["hinweise"].append("PDF-Text nicht lesbar. Installieren mit: python3 -m pip install --user pypdf")
+        erg["hinweise"].append("PDF-Text nicht lesbar. Installieren mit: " + pip_zeile("pypdf"))
     try:
         import openpyxl  # noqa: F401
         erg["excel"] = True
     except ImportError:
-        erg["hinweise"].append("Excel-Übersicht optional. Dafür: python3 -m pip install --user openpyxl")
+        erg["hinweise"].append("Excel-Übersicht optional. Dafür: " + pip_zeile("openpyxl"))
     erg["ok"] = bool(erg["pdf_text"])
     ausgabe(erg, 0 if erg["ok"] else 1)
 
@@ -260,8 +273,11 @@ def dubletten(index, hashwert, nummer, lieferant):
 
 def cloud_ordner(pfad):
     p = os.path.realpath(pfad)
-    marker = ("/Library/Mobile Documents/", "/Library/CloudStorage/", "/OneDrive", "/Dropbox", "/iCloud")
-    if any(m in p for m in marker):
+    # Windows liefert Backslashes, deshalb vor dem Vergleich auf Schrägstriche normalisieren
+    norm = p.replace("\\", "/").lower()
+    marker = ("/library/mobile documents/", "/library/cloudstorage/", "/onedrive", "/dropbox", "/icloud",
+              "/google drive")
+    if any(m in norm for m in marker):
         return True
     heim = os.path.expanduser("~")
     icloud = os.path.join(heim, "Library", "Mobile Documents", "com~apple~CloudDocs")
@@ -277,7 +293,7 @@ def cmd_lesen(a):
         fehler("Datei nicht gefunden: " + a.pdf)
     text, werkzeug = text_aus_pdf(a.pdf)
     if text is None:
-        fehler("Kein Werkzeug zum Lesen von PDF-Text. Installieren mit: python3 -m pip install --user pypdf")
+        fehler("Kein Werkzeug zum Lesen von PDF-Text. Installieren mit: " + pip_zeile("pypdf"))
     zeilen = [z for z in text.splitlines() if z.strip()]
     hashwert = sha256(a.pdf)
     erg = {"ok": True, "datei": a.pdf, "werkzeug": werkzeug, "sha256": hashwert,
@@ -330,11 +346,7 @@ def cmd_ablegen(a):
                  "hinweis": "Nicht abgelegt. Nur mit --trotzdem nach ausdrücklicher Bestätigung."}, 2)
     jahr, monat = datum[:4], datum[5:7]
     ordner = os.path.join(belege, jahr, monat)
-    teile = [datum, slug(a.lieferant), betrag_de(betrag).replace(".", "") + "-EUR",
-             slug(a.nummer, 30) if a.nummer else "ohne-Nr"]
-    if a.art and a.art.lower() in ("gutschrift", "mahnung"):
-        teile.insert(1, a.art.capitalize())
-    name = "_".join(teile) + ".pdf"
+    name = dateiname(a.muster, datum, a.lieferant, betrag, a.nummer, a.art)
     ziel = os.path.join(ordner, name)
     n = 2
     while os.path.exists(ziel):
@@ -360,6 +372,27 @@ def cmd_ablegen(a):
     ausgabe({"ok": True, "ziel": rel, "eintrag": eintrag})
 
 
+def dateiname(muster, datum, lieferant, betrag, nummer, art):
+    werte = {"datum": datum, "lieferant": slug(lieferant), "betrag": betrag_de(betrag).replace(".", ""),
+             "nummer": slug(nummer, 30) if nummer else "ohne-Nr", "art": slug(art or "Rechnung", 20)}
+    if not muster:
+        teile = [werte["datum"], werte["lieferant"], werte["betrag"] + "-EUR", werte["nummer"]]
+        if art and art.lower() in ("gutschrift", "mahnung"):
+            teile.insert(1, art.capitalize())
+        return "_".join(teile) + ".pdf"
+    muster = muster.strip()
+    if muster.lower().endswith(".pdf"):
+        muster = muster[:-4]
+    felder = re.findall(r"\{([^{}]*)\}", muster)
+    falsch = [f for f in felder if f not in MUSTER_FELDER]
+    if falsch or "datum" not in felder:
+        fehler("Muster ungültig. Erlaubt sind {" + "}, {".join(MUSTER_FELDER) + "}, {datum} ist Pflicht."
+               + (" Unbekannt: " + ", ".join(falsch) if falsch else ""))
+    name = re.sub(r"\{(\w+)\}", lambda m: werte[m.group(1)], muster)
+    name = re.sub(r'[\\/:*?"<>|]+', "-", name).strip(" .-_")
+    return (name or "unbekannt") + ".pdf"
+
+
 def cmd_status(a):
     belege = os.path.abspath(a.belege)
     index = lade_index(belege)
@@ -374,9 +407,24 @@ def cmd_status(a):
     fehler("Eintrag nicht gefunden: " + a.datei)
 
 
+def alte_notizen(pfad):
+    """Alles ab der Überschrift '## Notizen' aus der bisherigen Übersicht, damit es erhalten bleibt."""
+    if not os.path.isfile(pfad):
+        return None
+    with open(pfad, encoding="utf-8") as f:
+        zeilen = f.read().splitlines()
+    for i, z in enumerate(zeilen):
+        if z.strip() == NOTIZEN:
+            return zeilen[i:]
+    return None
+
+
 def schreibe_uebersicht(belege, index):
+    pfad = os.path.join(belege, "UEBERSICHT.md")
+    notizen = alte_notizen(pfad) or [NOTIZEN, "", "Hier ist Platz für eigene Notizen, sie bleiben bei jedem Lauf erhalten.", ""]
     zeilen = ["# Beleg-Übersicht", "",
-              "Wird von Claude geführt. Eigene Notizen bitte unterhalb der Tabellen, nicht in den Zeilen.", ""]
+              "Wird von Claude geführt. Die Tabellen werden bei jedem Lauf neu geschrieben, eigene Notizen "
+              "deshalb nur unter der Überschrift „Notizen“ am Ende, die bleibt erhalten.", ""]
     nach_monat = {}
     for e in sorted(index, key=lambda e: (e["datum"], e["lieferant"] or "")):
         nach_monat.setdefault(e["datum"][:7], []).append(e)
@@ -393,8 +441,11 @@ def schreibe_uebersicht(belege, index):
                           f"{e.get('art', '')} | [{os.path.basename(e['datei'])}]({e['datei']}) | "
                           f"{zelle(e['quelle'])} | {status} |")
         zeilen.append("")
-    with open(os.path.join(belege, "UEBERSICHT.md"), "w", encoding="utf-8") as f:
-        f.write("\n".join(zeilen))
+    zeilen += notizen
+    tmp = pfad + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write("\n".join(zeilen).rstrip("\n") + "\n")
+    os.replace(tmp, pfad)
 
 
 def cmd_uebersicht(a):
@@ -407,7 +458,7 @@ def cmd_uebersicht(a):
             from openpyxl import Workbook
             from openpyxl.utils import get_column_letter
         except ImportError:
-            fehler("openpyxl fehlt. Installieren mit: python3 -m pip install --user openpyxl")
+            fehler("openpyxl fehlt. Installieren mit: " + pip_zeile("openpyxl"))
         wb = Workbook()
         ws = wb.active
         ws.title = "Belege"
@@ -494,6 +545,8 @@ def main():
     s.add_argument("--art")
     s.add_argument("--quelle")
     s.add_argument("--patientenbezug", action="store_true")
+    s.add_argument("--muster", help="Namensmuster mit {datum} {lieferant} {betrag} {nummer} {art}, "
+                                    "ohne Angabe gilt der Standard")
     s.add_argument("--kopieren", action="store_true", help="Original liegen lassen statt verschieben")
     s.add_argument("--trotzdem", action="store_true", help="trotz Dublette ablegen (nur nach Bestätigung)")
     s.add_argument("--cloud-ok", action="store_true")

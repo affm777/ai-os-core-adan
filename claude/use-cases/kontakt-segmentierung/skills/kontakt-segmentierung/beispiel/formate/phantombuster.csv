@@ -1,0 +1,5 @@
+profileUrl,fullName,firstName,lastName,companyName,title,companyUrl,location,connectionDegree,timestamp
+https://www.example.org/in/pb-01,Amara Beispiel,Amara,Beispiel,Musterbank AG,Head of Talent Acquisition,https://www.example.org/musterbank,"Frankfurt am Main, Hessen",1st,2026-10-01T09:12:44.123Z
+https://www.example.org/in/pb-02,Jonas Muster,Jonas,Muster,Beispiel Mobility GmbH,Recruiter Early Careers,https://www.example.org/beispiel-mobility,"München, Bayern",1st,2026-10-01T09:12:45.001Z
+https://www.example.org/in/pb-03,Dr. Lea Fiktiv,Dr. Lea,Fiktiv,Fiktiva Pharma AG,Chief People Officer,https://www.example.org/fiktiva-pharma,"Darmstadt, Hessen",1st,2026-10-01T09:12:46.500Z
+https://www.example.org/in/pb-04,Noah Demo,Noah,"Demo, MBA",Demo Consulting Partners,Managing Partner,https://www.example.org/demo-consulting,"Köln, Nordrhein-Westfalen",1st,2026-10-01T09:12:47.900Z

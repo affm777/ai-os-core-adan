@@ -20,7 +20,7 @@ Teal liegt sehr nah an der Primärfarbe von ADAN Impact (`#00AB97`).
 
 ## Schriften
 
-In der Event-Grafik steht eine geometrische Grotesk (ähnlich Poppins), nicht bestätigt. Bis zur Klärung nutzt der Skill Rubik wie bei ADAN e.V. und ADAN Impact (SIL Open Font License 1.1, über Google Fonts).
+In der Event-Grafik steht eine geometrische Grotesk (ähnlich Poppins), nicht bestätigt. Bis zur Klärung nutzt der Skill Rubik wie bei ADAN e.V. und ADAN Impact (SIL Open Font License 1.1, lokal im Skill unter `templates/fonts/`).
 
 ## Logo
 

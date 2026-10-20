@@ -5,9 +5,9 @@
 # Aufruf:  bash vorbereiten.sh <marke> <vorlage> <build-ordner>
 #   marke     adan-ev | adan-impact | adan-careers (oder eigener Slug mit brand/<slug>/)
 #   vorlage   statement | info | karussell
-# Kopiert Vorlage (als index.html), basis.css, basis.js, marke.css und die Logos
-# in den Build-Ordner. Vorrang hat immer der Arbeitsordner: brand/<marke>/marke.css
-# und brand/<marke>/logos.conf schlagen die Fassung im Skill.
+# Kopiert Vorlage (als index.html), basis.css, basis.js, marke.css, die Schrift
+# (fonts/) und die Logos in den Build-Ordner. Vorrang hat immer der Arbeitsordner:
+# brand/<marke>/marke.css und brand/<marke>/logos.conf schlagen die Fassung im Skill.
 # Ein vorhandenes inhalt.json bleibt unangetastet. Löscht nichts.
 # Kompatibel mit bash 3.2 (macOS) und Git Bash (Windows).
 # =============================================================================
@@ -47,6 +47,25 @@ cp "$SKILL_DIR/templates/basis.js" "$BUILD/basis.js"
 cp "$MARKE_CSS" "$BUILD/marke.css"
 echo "Vorlage:   $VORLAGE"
 echo "Marke:     $MARKE_CSS"
+
+# Schrift Rubik: lokal aus templates/fonts/ (rendert ohne Internet). Nur wenn dort
+# Dateien fehlen, lädt basis.css die Schrift ersatzweise von Google Fonts.
+FONTS="$SKILL_DIR/templates/fonts"
+fehlt=""
+for w in 300 400 500 600 700; do
+  [ -f "$FONTS/rubik-latin-$w-normal.woff2" ] || fehlt="$fehlt $w"
+done
+if [ -z "$fehlt" ]; then
+  mkdir -p "$BUILD/fonts"
+  cp "$FONTS"/rubik-latin-*-normal.woff2 "$BUILD/fonts/"
+  [ -f "$FONTS/OFL.txt" ] && cp "$FONTS/OFL.txt" "$BUILD/fonts/OFL.txt"
+  echo "Schrift:   Rubik lokal ($FONTS)"
+else
+  awk 'index($0,"schrift-start"){print "@import url(\"https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=block\");"; weg=1}
+       !weg{print}
+       index($0,"schrift-ende"){weg=0}' "$SKILL_DIR/templates/basis.css" > "$BUILD/basis.css"
+  echo "WARNUNG:   Rubik-Schnitte fehlen im Skill (Gewicht$fehlt), Schrift kommt ersatzweise von Google Fonts und braucht Internet." >&2
+fi
 
 if [ -n "$LOGO_CONF" ]; then
   CONF_DIR="$(dirname "$LOGO_CONF")"

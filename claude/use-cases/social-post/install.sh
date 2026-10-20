@@ -5,7 +5,8 @@
 # Was das Skript tut:
 #   1. kopiert skills/social-post/ nach ~/.claude/skills/social-post/
 #      (ältere Fassung wird nach ~/.claude/backups/ verschoben, nie gelöscht)
-#   2. prüft, ob playwright-cli und Python 3 da sind (beides bringt das Setup mit)
+#   2. prüft, ob playwright-cli, Google Chrome (rendert die Bilder) und Python 3
+#      da sind und ob die Schrift Rubik lokal im Bundle liegt
 #
 # Was das Skript nie tut: Ordner im Arbeitsordner anlegen (social/ entsteht
 # erst beim ersten Lauf des Skills), Programme installieren, Shell-Config oder
@@ -55,6 +56,10 @@ for pflicht in SKILL.md scripts/vorbereiten.sh scripts/render.sh \
                marken/adan-careers/marke.css marken/adan-careers/logos.conf marken/adan-careers/STYLE-GUIDE.md; do
   [ -f "$SRC/$pflicht" ] || { err "Bundle unvollständig: $SRC/$pflicht fehlt."; exit 1; }
 done
+SCHRIFT_FEHLT=""
+for w in 300 400 500 600 700; do
+  [ -f "$SRC/templates/fonts/rubik-latin-$w-normal.woff2" ] || SCHRIFT_FEHLT="$SCHRIFT_FEHLT $w"
+done
 
 [ "$DRY" -eq 1 ] && echo "Probelauf (--dry-run): es wird nichts verändert."
 echo "social-post installieren"
@@ -101,6 +106,43 @@ if command -v playwright-cli >/dev/null 2>&1; then
   info "playwright-cli gefunden (rendert die Bilder)"
 else
   warn "playwright-cli fehlt. Das Setup installiert es, bitte Setup-Prüfung (Pre-flight) erneut laufen lassen."
+fi
+
+# playwright-cli öffnet ohne --browser das installierte Google Chrome. Fehlt es,
+# scheitert sonst erst der erste Render mit einer schwer lesbaren Meldung.
+CHROME=""
+if [ "$OS" = mac ]; then
+  for c in "/Applications/Google Chrome.app" "$HOME/Applications/Google Chrome.app"; do
+    [ -d "$c" ] && { CHROME="$c"; break; }
+  done
+elif [ "$OS" = win ]; then
+  for c in "${PROGRAMFILES:-C:/Program Files}/Google/Chrome/Application/chrome.exe" \
+           "${LOCALAPPDATA:-}/Google/Chrome/Application/chrome.exe" \
+           "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"; do
+    [ -f "$c" ] && { CHROME="$c"; break; }
+  done
+else
+  for c in google-chrome google-chrome-stable; do
+    command -v "$c" >/dev/null 2>&1 && { CHROME="$c"; break; }
+  done
+fi
+if [ -n "$CHROME" ]; then
+  info "Google Chrome gefunden (playwright-cli rendert damit die Bilder)"
+else
+  warn "Google Chrome fehlt. Ohne Chrome kann playwright-cli keine Bilder rendern."
+  if [ "$OS" = win ]; then warn "Nachladen mit: playwright-cli install-browser chrome (oder: winget install Google.Chrome)"
+  elif [ "$OS" = mac ]; then warn "Nachladen mit: playwright-cli install-browser chrome (oder: brew install --cask google-chrome)"
+  else warn "Nachladen mit: playwright-cli install-browser chrome"; fi
+  if [ "$OS" = win ]; then PWCACHE="${LOCALAPPDATA:-}/ms-playwright"; else PWCACHE="$HOME/Library/Caches/ms-playwright"; fi
+  if ls -d "$PWCACHE"/chromium-* >/dev/null 2>&1; then
+    warn "Im Playwright-Cache liegt zwar Chromium ($PWCACHE), playwright-cli nutzt ohne --browser aber Chrome."
+  fi
+fi
+
+if [ -z "$SCHRIFT_FEHLT" ]; then
+  info "Schrift Rubik liegt lokal im Bundle (Bilder entstehen auch ohne Internet)"
+else
+  warn "Rubik-Schnitte fehlen im Bundle (Gewicht$SCHRIFT_FEHLT). Die Bilder laden die Schrift dann von Google Fonts und brauchen Internet."
 fi
 
 PYBIN=""

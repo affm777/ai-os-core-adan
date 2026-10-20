@@ -11,7 +11,7 @@ Diese Liste gilt für jede Fassung in jedem Kanal und jeder Sprache. Sie ist ein
 5. Kein „Lass uns gemeinsam“ oder „Lasst uns gemeinsam“ und keine englische Entsprechung („Let's build together“).
 6. Keine Gedankenstriche, weder „–“ noch „—“ noch ein Bindestrich mit Leerzeichen davor und dahinter. Stattdessen Komma, Punkt, Doppelpunkt oder Klammern.
 7. Kein Hashtag-Teppich. Höchstzahl je Kanal steht in der Kanalkarte, im Fließtext stehen keine Hashtags.
-8. Keine Großschreibung zur Betonung („Das ist WICHTIG“). Abkürzungen wie ADAN oder EU sind erlaubt.
+8. Keine Großschreibung zur Betonung („Das ist WICHTIG“). Abkürzungen aus dem Block `abkuerzungen` unten sind erlaubt.
 9. Kein Markdown-Schmuck in Kanaltexten (Sternchen, Rauten als Überschrift, Unterstriche zur Betonung).
 10. Keine Wertung ohne Beleg aus dem Rohtext (Superlative wie „großartig“, „unglaublich“, „einzigartig“).
 11. Keine Mehrfach-Satzzeichen („!!!“, „?!“).
@@ -65,3 +65,16 @@ incredible
 amazing
 !!+
 \?!
+
+## Abkürzungen
+
+Großgeschriebene Wörter aus diesem Block meldet `scripts/pruefen.sh` nicht als Großschreibung zur Betonung. Eine Abkürzung pro Zeile, Groß- und Kleinschreibung wie im Text, Punkte zählen nicht. Eigene Abkürzungen gehören in `content/voice.md` in denselben Block, geprüft wird mit `--zusatz content/voice.md`.
+
+```abkuerzungen
+ADAN
+EU
+KI
+HR
+CEO
+e.V.
+```

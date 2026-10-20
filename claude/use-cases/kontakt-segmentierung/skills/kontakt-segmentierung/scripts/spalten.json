@@ -1,0 +1,19 @@
+{
+ "_hinweis": "Spaltenkatalog für einlesen.py. Je Zielfeld die Spaltennamen, die erkannt werden. Groß- und Kleinschreibung, Leerzeichen, Unterstriche, Bindestriche, Punkte und Umlaute spielen keine Rolle (companyName, Company Name und company_name sind gleich). Eigene Schreibweisen einfach in die passende Liste eintragen.",
+ "felder": {
+  "vorname": ["First Name", "firstName", "first_name", "Given Name", "Vorname"],
+  "nachname": ["Last Name", "lastName", "last_name", "Surname", "Family Name", "Nachname", "Familienname", "Zuname"],
+  "name_komplett": ["Full Name", "fullName", "Name", "Vollständiger Name", "Kontakt", "Kontaktname", "Ansprechpartner", "Ansprechpartnerin", "Ansprechperson", "Teilnehmer", "Teilnehmerin", "Teilnehmende", "Attendee", "Attendee Name", "Contact", "Contact Name"],
+  "titel": ["Akademischer Titel", "Namenszusatz", "Academic Title", "Prefix", "Name Prefix", "Titel"],
+  "firma": ["Company", "Company Name", "companyName", "Current Company", "Organization", "Organisation", "Organization Name", "Unternehmen", "Firma", "Firmenname", "Arbeitgeber", "Account Name", "Employer"],
+  "position": ["Position", "Title", "Job Title", "jobTitle", "job_title", "Current Job", "Current Position", "Role", "Funktion", "Rolle", "Jobtitel", "Berufsbezeichnung", "Stellenbezeichnung", "Job"],
+  "position_notloesung": ["Headline", "Subtitle", "Überschrift", "Profilslogan", "Tagline", "Bio"],
+  "email": ["Email Address", "E-Mail Address", "Email", "E-Mail", "E-Mail-Adresse", "Mail", "Mailadresse", "Professional Email", "Work Email", "Business Email"],
+  "profil_url": ["URL", "Profile URL", "profileUrl", "LinkedIn URL", "linkedin", "LinkedIn Profile", "LinkedIn-Profil", "Profile Link", "Profil-Link", "Profil-URL", "linkedinProfileUrl", "linkedin_url"],
+  "ort": ["Location", "Standort", "Ort", "City", "Stadt", "Country", "Land"],
+  "branche": ["Industry", "Branche", "companyIndustry", "Company Industry"],
+  "verbunden_am": ["Connected On", "connectedOn", "connected_on", "Verbunden am", "Verbunden seit", "Vernetzt am", "Vernetzt seit"],
+  "notizen": ["Notes", "Notizen", "Notiz", "Bemerkung", "Bemerkungen", "Gesprächsnotiz", "Kommentar", "Comment"],
+  "telefon": ["Phone", "Phone Number", "Telefon", "Telefonnummer", "Mobil", "Mobile", "Handy"]
+ }
+}

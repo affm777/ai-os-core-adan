@@ -2,9 +2,11 @@
 # =============================================================================
 # render.sh: rendert alle Seiten eines Build-Ordners als PNG
 # =============================================================================
-# Aufruf:  bash render.sh <build-ordner> <ziel-praefix>
+# Aufruf:  bash render.sh <build-ordner> <ziel-praefix> [--offline]
 #   Beispiel: bash render.sh social/build/2026-10-20-adan-ev-ig-1x1 social/ausgabe/2026-10-20-adan-ev-ig-1x1
 #   ergibt   social/ausgabe/2026-10-20-adan-ev-ig-1x1-01.png, -02.png, ...
+#   --offline sperrt im Browser alle Adressen außer 127.0.0.1 (Test, ob der Post
+#             ohne Internet mit Rubik rendert)
 # Ablauf: lokaler HTTP-Server (python), playwright-cli öffnet die Seite, wartet
 # auf Schrift und Einpassung, prüft Überlauf, macht je Seite (.sp-frame) einen
 # Screenshot, schließt Browser und Server wieder.
@@ -12,9 +14,15 @@
 # =============================================================================
 set -u
 
-BUILD="${1:-}"; ZIEL="${2:-}"
+BUILD=""; ZIEL=""; OFFLINE=0
+for arg in "$@"; do
+  case "$arg" in
+    --offline) OFFLINE=1 ;;
+    *) if [ -z "$BUILD" ]; then BUILD="$arg"; elif [ -z "$ZIEL" ]; then ZIEL="$arg"; fi ;;
+  esac
+done
 fehler() { echo "FEHLER: $*" >&2; exit 1; }
-[ -n "$BUILD" ] && [ -n "$ZIEL" ] || fehler "Aufruf: bash render.sh <build-ordner> <ziel-praefix>"
+[ -n "$BUILD" ] && [ -n "$ZIEL" ] || fehler "Aufruf: bash render.sh <build-ordner> <ziel-praefix> [--offline]"
 [ -f "$BUILD/index.html" ] || fehler "$BUILD/index.html fehlt, zuerst vorbereiten.sh ausführen."
 [ -f "$BUILD/inhalt.json" ] || fehler "$BUILD/inhalt.json fehlt."
 command -v playwright-cli >/dev/null 2>&1 || fehler "playwright-cli nicht gefunden. Das Setup bringt es mit, bitte Setup prüfen lassen."
@@ -63,8 +71,13 @@ for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
 done
 [ "$bereit" -eq 1 ] || fehler "Der lokale Server startet nicht (Port $PORT)."
 
-playwright-cli -s="$SITZUNG" open "http://127.0.0.1:$PORT/index.html" >/dev/null || fehler "playwright-cli konnte den Browser nicht öffnen. Fehlt Chromium, hilft: npx playwright install chromium"
+playwright-cli -s="$SITZUNG" open "http://127.0.0.1:$PORT/index.html" >/dev/null || fehler "playwright-cli konnte den Browser nicht öffnen. playwright-cli rendert mit Google Chrome. Fehlt Chrome, hilft: playwright-cli install-browser chrome (oder Chrome normal installieren)"
 playwright-cli -s="$SITZUNG" resize 1400 2100 >/dev/null 2>&1 || true
+if [ "$OFFLINE" -eq 1 ]; then
+  playwright-cli -s="$SITZUNG" run-code "async page => { await page.context().route(u => !/^http:[/][/]127[.]0[.]0[.]1[:/]/.test(u.href), r => r.abort('internetdisconnected')); }" >/dev/null \
+    || fehler "Netzsperre für --offline ließ sich nicht setzen."
+  echo "Netz:      gesperrt (--offline), nur 127.0.0.1 erreichbar"
+fi
 playwright-cli -s="$SITZUNG" reload >/dev/null 2>&1 || true
 
 ok=0
@@ -78,7 +91,9 @@ done
 FEHLERTEXT="$(playwright-cli -s="$SITZUNG" --raw eval "document.body.getAttribute('data-fehler') || ''" 2>/dev/null | tr -d '\r"')"
 [ -z "$FEHLERTEXT" ] || fehler "Vorlage meldet: $FEHLERTEXT"
 
-SCHRIFT="$(playwright-cli -s="$SITZUNG" --raw eval "document.fonts.check('500 40px Rubik') ? 'Rubik geladen' : 'Rubik NICHT geladen, Ersatzschrift system-ui'" 2>/dev/null | tr -d '\r"')"
+# Zählt nur tatsächlich geladene Rubik-Schnitte. document.fonts.check() meldet auch
+# dann "true", wenn gar keine Rubik-Datei eingebunden ist, taugt hier also nicht.
+SCHRIFT="$(playwright-cli -s="$SITZUNG" --raw eval "Array.from(document.fonts).some(f => f.family.replace(/[\"']/g, '') === 'Rubik' && f.status === 'loaded') ? 'Rubik geladen' : 'Rubik NICHT geladen, Ersatzschrift system-ui'" 2>/dev/null | tr -d '\r"')"
 echo "Schrift:   $SCHRIFT"
 
 BERICHT="$(playwright-cli -s="$SITZUNG" --raw eval "Array.from(document.querySelectorAll('.sp-frame')).map((f,i)=>'Seite '+(i+1)+': '+(f.getAttribute('data-ueberlauf')==='ja'?'ÜBERLAUF, Text kürzen':'passt')+' (Schriftgröße '+Math.round(parseFloat(f.getAttribute('data-stufe')||'1')*100)+' Prozent)').join(' | ')" 2>/dev/null | tr -d '\r"')"

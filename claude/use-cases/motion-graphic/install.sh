@@ -66,6 +66,7 @@ hf() { HYPERFRAMES_NO_TELEMETRY=1 npx --yes "hyperframes@$HF_VERSION" "$@"; }
 
 [ "$DRY" -eq 1 ] && echo "Probelauf (--dry-run): es wird nichts verändert."
 echo "motion-graphic installieren, HyperFrames gepinnt auf $HF_VERSION"
+echo "Einmaliger Download rund 250 MB (Render-Browser rund 150 MB, Python-Umgebung für Ton rund 100 MB)."
 echo ""
 
 # -----------------------------------------------------------------------------
@@ -107,7 +108,7 @@ if ! command -v node >/dev/null 2>&1; then
 fi
 if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
   FEHLT_BASIS=1
-  if [ "$OS" = win ]; then err "ffmpeg fehlt. Installieren: winget install Gyan.FFmpeg (danach Git Bash neu öffnen)"; else err "ffmpeg fehlt. Installieren: brew install ffmpeg"; fi
+  if [ "$OS" = win ]; then err "ffmpeg fehlt. Installieren: winget install --id Gyan.FFmpeg -e (danach Git Bash und Claude in einem neuen Fenster öffnen, fehlt ffmpeg dann noch, \$LOCALAPPDATA/Microsoft/WinGet/Links in den PATH)"; else err "ffmpeg fehlt. Installieren: brew install ffmpeg"; fi
 fi
 if [ "$FEHLT_BASIS" -eq 1 ]; then
   err "Bitte das Fehlende installieren und install.sh danach erneut starten."
@@ -147,6 +148,7 @@ else
   echo "Installiere die HyperFrames-Skills (fehlen:$SKILLS_FEHLEN) ..."
   hf skills update && info "HyperFrames-Skills installiert" || warn "HyperFrames-Skills nicht installiert. Später: npx --yes hyperframes@$HF_VERSION skills update"
 fi
+echo "       HyperFrames bringt zehn Skills mit (hyperframes, hyperframes-*, media-use). motion-graphic nutzt vier davon, die übrigen bleiben bewusst installiert und stören nicht."
 
 # -----------------------------------------------------------------------------
 # 4. Python-Umgebung für Stimme und Mastering (optional)

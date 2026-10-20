@@ -27,7 +27,7 @@ Die Technik kommt aus den HyperFrames-Skills (`/hyperframes`, `/hyperframes-anim
 - Skill-Ordner `S=~/.claude/skills/motion-graphic`, HyperFrames-Version `V=$(cat "$S/VERSION")`.
 - HyperFrames immer so aufrufen: `HYPERFRAMES_NO_TELEMETRY=1 npx --yes hyperframes@$V <befehl>`. Nie ohne Version, nie global installieren.
 - Arbeitsordner ist das aktuelle Verzeichnis. Je Video ein Ordner `videos/<slug>/` mit `brief/`, `referenzen/`, `film-vN/` (bei beiden Formaten zusätzlich `film-vN-9x16/`), `renders/vN/`, `final/`, `_pruefung/` (Snapshots, nur für Claude).
-- Plattform: macOS oder Windows mit Git Bash. Scripts immer mit `bash "$S/scripts/<name>.sh"` starten, Dateien mit `bash "$S/scripts/oeffnen.sh" <datei>` öffnen (macOS `open`, Windows `start`). Python für Stimme und Messung: macOS `"$S/.venv/bin/python" -I`, Windows `"$S/.venv/Scripts/python.exe" -I`.
+- Plattform: macOS oder Windows mit Git Bash. Scripts immer mit `bash "$S/scripts/<name>.sh"` starten, Dateien mit `bash "$S/scripts/oeffnen.sh" <datei>` öffnen (macOS `open`, Windows `cmd //c start`). Python für Stimme und Messung: macOS `"$S/.venv/bin/python" -I`, Windows `"$S/.venv/Scripts/python.exe" -I`.
 
 ## Ablauf
 
@@ -62,7 +62,7 @@ Bei „generiert“ prüfen, ob eine ElevenLabs-Anbindung da ist (ToolSearch nac
 
 > Gibt es einen Style-Guide oder Brand-Dateien (Logo, Farben, Schrift)? Du kannst mir Dateien oder einen Ordner nennen, ich kann im Projekt suchen, oder wir legen es jetzt kurz fest.
 
-Beim ersten Lauf zuerst fragen, für welche Marke das Video ist (bei ADAN gibt es ADAN e.V. und ADAN Impact, keine Vorentscheidung, der Nutzer wählt je Video). Reihenfolge der Quellen: genannte Dateien, dann `brand/<marke>/STYLE-GUIDE.md`, dann jeder `STYLE-GUIDE.md` oder `brand/`-Ordner im Projekt (Glob), dann kurze Abfrage (Primärfarbe, Akzentfarbe, Schrift, Logo-Datei). Neu Festgelegtes als `brand/<marke>/STYLE-GUIDE.md` im Arbeitsordner speichern, damit es beim nächsten Video wieder da ist. Eine Kopie als `videos/<slug>/STYLE-GUIDE.md` hält fest, mit welchem Stand das Video gebaut wurde. Schriften nur, wenn sie lokal eingebunden werden dürfen (Dateien des Nutzers oder freie Schriften, keine Systemschriften wie SF Pro oder Segoe). Fehlt ein Logo, Wortmarke als Text setzen und das im Storyboard sagen.
+Beim ersten Lauf zuerst fragen, für welche Marke das Video ist (bei ADAN gibt es ADAN e.V., ADAN Impact und ADAN Careers, keine Vorentscheidung, der Nutzer wählt je Video). Für ADAN Careers liegt ein vorläufiges Profil im social-post-Skill unter `~/.claude/skills/social-post/marken/adan-careers/STYLE-GUIDE.md`, es ist ein Platzhalter und wird beim ersten Video kurz bestätigt. Reihenfolge der Quellen: genannte Dateien, dann `brand/<marke>/STYLE-GUIDE.md`, dann jeder `STYLE-GUIDE.md` oder `brand/`-Ordner im Projekt (Glob), dann kurze Abfrage (Primärfarbe, Akzentfarbe, Schrift, Logo-Datei). Neu Festgelegtes als `brand/<marke>/STYLE-GUIDE.md` im Arbeitsordner speichern, damit es beim nächsten Video wieder da ist. Eine Kopie als `videos/<slug>/STYLE-GUIDE.md` hält fest, mit welchem Stand das Video gebaut wurde. Schriften nur, wenn sie lokal eingebunden werden dürfen (Dateien des Nutzers oder freie Schriften, keine Systemschriften wie SF Pro oder Segoe). Fehlt ein Logo, Wortmarke als Text setzen und das im Storyboard sagen.
 
 **b) Vorbilder.** Fragen:
 

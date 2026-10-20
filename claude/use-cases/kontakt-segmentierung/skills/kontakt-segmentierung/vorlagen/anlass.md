@@ -32,6 +32,9 @@ Diese Datei beschreibt, wofür die Ansprache ist. Claude nimmt den Anlass-Teil j
 | Organisation | <Verein oder Firma> |
 | Anrede | <Sie oder Du> |
 | Ton | <etwa freundlich und direkt, kurz> |
+| Webseite | <Webseite der Organisation, für die Signatur> |
+| Datenschutz-Link | <Seite mit den Datenschutzhinweisen, Pflicht bei E-Mail, sonst [FEHLT: Datenschutz-Link]> |
+| Impressumszeile | <bei einem Verein etwa „ADAN e.V., Sitz <Stadt>, Amtsgericht <Ort> VR <Nummer>, vertreten durch den Vorstand <Namen>", Pflicht bei E-Mail, sonst [FEHLT: Impressumszeile]> |
 
 ## Recherche
 

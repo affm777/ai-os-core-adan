@@ -291,6 +291,7 @@ ai-os-core/
 │   ├── bootstrap.sh          # Idempotenter Installer Windows/Git Bash (Windows-Schritt 4)
 │   └── claude/hooks/         # Overlay-Dateien (z.B. noderun.sh), legen sich nach claude/ über
 ├── README.md                 # Dieses Dokument
+├── scripts/leak-scan.sh      # Leak-Scan vor dem Push (Mailadressen, Home-Pfade, Tokens, lokale Blockliste)
 ├── .gitignore                # Schützt .claude.json, .bak-Files, Logs, Dashboard-Runtime
 ├── claude/                   # Mappt zu ~/.claude/
 │   ├── CLAUDE.md             # Globale Claude Code Instructions (nach ~/.claude/CLAUDE.md)
@@ -343,14 +344,14 @@ Ein Use-Case-Bundle ist ein fertiges, in der Praxis erprobtes Paket aus README u
 
 - `content-adapter`: macht aus einer Idee oder einem Text die Fassungen für LinkedIn, Instagram, Newsletter, Mail und Website, auf Deutsch und Englisch, im eigenen Ton je Marke. Installation per `install.sh`.
 - `motion-graphic`: baut aus einer Beschreibung ein kurzes animiertes Video für Social Media oder die Website (16:9 und 9:16). Installation per `install.sh`.
-- `posteingang-triage`: sichtet neue Mails je Postfach und Einheit, ordnet sie als Verläufe den eigenen Labels zu (beim ersten Lauf im Gespräch festgelegt, Startsets für Verein, Pflegedienst sowie Vertrieb und Projekte), markiert Chancen und schlägt To-dos und Antwortentwürfe vor, dazu ein Rückblick auf Liegengebliebenes. Installation durch Kopieren des Skill-Ordners laut Bundle-README.
+- `posteingang-triage`: sichtet neue Mails je Postfach und Einheit, ordnet sie als Verläufe den eigenen Labels zu (beim ersten Lauf im Gespräch festgelegt, Startsets für Verein, Pflegedienst sowie Vertrieb und Projekte), markiert Chancen und schlägt To-dos und Antwortentwürfe vor, dazu ein Rückblick auf Liegengebliebenes. Installation per `install.sh`.
 - `social-post`: macht aus einem Kerntext fertige Social-Visuals (Instagram, Story, LinkedIn, Karussell) im Look von ADAN e.V., ADAN Impact oder ADAN Careers. Installation per `install.sh`.
-- `kontakt-segmentierung`: Outreach-Pipeline vom LinkedIn-Kontaktexport bis zum Nachrichtenentwurf, für den Career Day oder jeden anderen Anlass. Sortiert Kontakte nach Rollen und Prioritäten (Excel-Datei), legt Firmenakten an, recherchiert die Firmen öffentlich und schreibt persönliche LinkedIn-Texte oder Outlook-Entwürfe in Batches, versendet nie selbst. Installation per `install.sh`.
+- `kontakt-segmentierung`: Outreach-Pipeline vom LinkedIn-Kontaktexport bis zum Nachrichtenentwurf, für den Career Day oder jeden anderen Anlass. Sortiert Kontakte nach Rollen und Prioritäten (Excel-Datei), legt Firmenakten an, recherchiert die Firmen öffentlich und schreibt persönliche LinkedIn-Texte in Batches (Outlook-Entwurf nur je Kontakt nach Bestätigung), versendet nie selbst. Installation per `install.sh`.
 - `beleg-ablage`: findet Rechnungen und Belege im Postfach, markiert die Mails, benennt die abgelegten PDFs einheitlich, sortiert sie nach Jahr und Monat, führt eine Übersicht und lädt sie auf Wunsch nach SharePoint hoch. Installation per `install.sh`.
 
 Dazu liegen drei weitere Bundles als Beispiele aus anderen Projekten bei: `cost-tracker` (Kostenüberblick mit Belegen), `rechnungseingang-opos` (Rechnungs-Mails in die offene-Posten-Liste) und `requirements-board` (Notion-Board für Anforderungen).
 
-Die Bundles kommen mit dem Download des Repos mit, werden vom Bootstrap aber **nicht automatisch installiert**. Installiert wird ein Bundle gezielt, wenn es gebraucht wird, bei `content-adapter`, `motion-graphic`, `social-post`, `kontakt-segmentierung` und `beleg-ablage` per `bash claude/use-cases/<bundle>/install.sh`, bei `posteingang-triage` durch Kopieren des Skill-Ordners. Am einfachsten sagst du Claude „installier mir den Use Case content-adapter".
+Die Bundles kommen mit dem Download des Repos mit, werden vom Bootstrap aber **nicht automatisch installiert**. Installiert wird ein Bundle gezielt, wenn es gebraucht wird, bei `content-adapter`, `motion-graphic`, `social-post`, `kontakt-segmentierung`, `beleg-ablage` und `posteingang-triage` per `bash claude/use-cases/<bundle>/install.sh`. Am einfachsten sagst du Claude „installier mir den Use Case content-adapter".
 
 Jedes Bundle-Verzeichnis enthält eine eigene `README.md` mit Voraussetzungen, Installations-Anleitung und (wo zutreffend) belegten Testergebnissen. Ein Bundle wird genutzt, indem sein `skills/`-Unterordner global nach `~/.claude/skills/` kopiert wird, damit es in jedem Projekt zur Verfügung steht, siehe die Anleitung in der jeweiligen Bundle-README.
 
@@ -361,6 +362,10 @@ Ein Werkzeug ist ein Programm oder eine Anbindung, die Claude neue Fähigkeiten 
 - `codex`: OpenAI Codex als zweiter Coding-Agent für Zweitmeinungen, Aufträge und Bilder, angemeldet über das ChatGPT-Konto.
 - `google-workspace-cli`: Claude arbeitet direkt in Gmail, Kalender, Drive, Docs und Sheets.
 - `ffmpeg`: verarbeitet Videos und Ton, Voraussetzung für den Use Case motion-graphic.
+
+## Vor dem Push
+
+Vor jedem Push `bash scripts/leak-scan.sh` laufen lassen, es prüft getrackte und ungetrackte Dateien auf Mailadressen, Home-Pfade und Token-Formate und bricht bei Treffern mit Exit 1 ab. Echte Namen von Teilnehmern und Kunden gehören in die lokale `.leak-blocklist` (gitignored, Vorlage `.leak-blocklist.example`), die das Skript zusätzlich prüft.
 
 ## Lizenz
 

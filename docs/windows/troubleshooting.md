@@ -48,7 +48,7 @@ Bekannte Probleme beim Windows-Setup, jeweils Symptom → Ursache → Lösung. F
 
 ## 4) Benutzername mit Leerzeichen oder Umlaut
 
-**Symptom:** `npm install`, `bootstrap.sh` oder Node-basierte Hooks brechen mit kryptischen Pfad-Fehlern ab, wenn dein Windows-Benutzerkonto einen Namen mit Leerzeichen (z.B. `Max Mustermann`) oder Umlaut (z.B. `Jörg Müller`) trägt. Der Windows-Benutzerordner heißt dann entsprechend `C:\Users\Max Mustermann` bzw. `C:\Users\Jörg Müller`.
+**Symptom:** `npm install`, `bootstrap.sh` oder Node-basierte Hooks brechen mit kryptischen Pfad-Fehlern ab, wenn dein Windows-Benutzerkonto einen Namen mit Leerzeichen (z.B. `Max Mustermann`) oder Umlaut (z.B. `Jürgen Müller`) trägt. Der Windows-Benutzerordner heißt dann entsprechend `C:\Users\Max Mustermann` bzw. `C:\Users\Jürgen Müller`.
 
 **Ursache:** Manche Node-/npm-interne Tools und ältere Windows-Build-Tools kommen mit Leerzeichen oder Nicht-ASCII-Zeichen im Pfad nicht zuverlässig zurecht.
 

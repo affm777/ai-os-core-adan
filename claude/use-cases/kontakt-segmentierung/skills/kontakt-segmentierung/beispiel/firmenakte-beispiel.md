@@ -49,19 +49,16 @@ Stand 20.10.2026, Tiefe Standard. Trockenlauf mit erfundenen Fakten, alle Quelle
 ```
 Guten Tag Sarah Demo,
 
-wir sind hier auf LinkedIn vernetzt, deshalb schreibe ich Ihnen direkt.
+wir sind hier auf LinkedIn vernetzt. Fiktiva Pharma baut Frankfurt aus und sucht mit dem Traineeprogramm Life Sciences genau unsere Zielgruppe.
 
-Ich habe gesehen, dass Fiktiva Pharma den Forschungsstandort Frankfurt ausbaut und mit dem Traineeprogramm Life Sciences gezielt Absolventinnen und Absolventen anspricht. Genau diese Zielgruppe kommt zu unserer Messe.
+Am [FEHLT: Termin] ist in Frankfurt der ADAN Career Day, die Karrieremesse für afrodeutsche und afrodiasporische Akademikerinnen und Akademiker.
 
-Ich organisiere den ADAN Career Day, eine Karrieremesse für afrodeutsche und afrodiasporische Akademikerinnen und Akademiker in Frankfurt am Main, am [FEHLT: Termin]. Aussteller treffen dort qualifizierte Talente, die sie über klassische Kanäle schwer erreichen.
+Darf ich Ihnen die Ausstellerinfos schicken?
 
-Hätten Sie Interesse an einem kurzen Austausch, wie Fiktiva Pharma dabei sein kann?
-
-Falls das gerade nicht passt, sagen Sie es mir gern, dann melde ich mich nicht wieder.
+Falls nicht, melde ich mich nicht wieder.
 
 Viele Grüße
-[Dein Name]
-Projektleitung ADAN Career Day, ADAN e.V.
+[Dein Name], ADAN e.V.
 ```
 
 ## Verlauf

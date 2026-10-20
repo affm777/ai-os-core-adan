@@ -18,7 +18,7 @@ Sag mir am Ende in einfachen Worten, ob alles geklappt hat.
 
 Das tut Claude dann:
 
-1. Installiert ffmpeg in der aktuellsten Version. Auf dem Mac mit `brew install ffmpeg` (ist es schon da, bringt `brew upgrade ffmpeg` es auf den neuesten Stand). Unter Windows mit `winget install --id Gyan.FFmpeg --accept-source-agreements --accept-package-agreements` (ist es schon da, `winget upgrade --id Gyan.FFmpeg`).
+1. Installiert ffmpeg in der aktuellsten Version. Auf dem Mac mit `brew install ffmpeg` (ist es schon da, bringt `brew upgrade ffmpeg` es auf den neuesten Stand). Unter Windows mit `winget install --id Gyan.FFmpeg -e --accept-source-agreements --accept-package-agreements` (ist es schon da, `winget upgrade --id Gyan.FFmpeg -e`).
 2. Unter Windows bittet Claude dich danach, Git Bash und Claude einmal zu schließen und neu zu öffnen. Erst dann ist der neue Befehl bekannt.
 3. Prüft mit `ffmpeg -version` und `ffprobe -version`, ob beide Teile gefunden werden. Danach nennt Claude dir die installierte Version.
 
@@ -26,5 +26,5 @@ Das tut Claude dann:
 
 - ffmpeg arbeitet nur mit Dateien auf deinem Rechner, nicht mit Videos direkt aus dem Netz oder aus Cloud-Ordnern, die nicht heruntergeladen sind.
 - Lange oder hochauflösende Videos brauchen Zeit und Speicherplatz. Ein paar Minuten Rechenzeit sind normal.
-- Die Installation unter Windows braucht einmal einen Neustart von Git Bash. Wird `ffmpeg` danach immer noch nicht gefunden, hilft ein Neustart des Rechners.
+- Die Installation unter Windows braucht einmal einen Neustart von Git Bash. Wird `ffmpeg` danach immer noch nicht gefunden, gehört `$LOCALAPPDATA/Microsoft/WinGet/Links` in den PATH (Claude prüft das mit `ls "$LOCALAPPDATA/Microsoft/WinGet/Links"`), sonst hilft ein Neustart des Rechners.
 - Zuschnitte und Umwandlungen ändern die Qualität. Claude legt deshalb immer eine neue Datei an und lässt das Original unverändert.

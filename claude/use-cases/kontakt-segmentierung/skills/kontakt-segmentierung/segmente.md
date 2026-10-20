@@ -1,12 +1,12 @@
 # Segmentregeln für den ADAN Career Day
 
-Diese Datei legt fest, wie Claude deine Kontakte einordnet. Du kannst sie jederzeit selbst ändern oder Claude darum bitten („nimm Ausbildungsleitung zu Talent Acquisition dazu"). Claude zeigt dir die Regeln vor jedem Lauf einmal zur Freigabe.
+Diese Datei legt fest, wie Claude deine Kontakte einordnet. Du kannst sie jederzeit selbst ändern oder Claude darum bitten („nimm Ausbildungsleitung zu Talent Acquisition dazu"). Liegt im Ordner `kontakte/` deines Arbeitsordners eine eigene `segmente.md`, gilt diese, so kann jeder Anlass eigene Regeln haben. Claude zeigt dir die Regeln vor jedem Lauf einmal zur Freigabe.
 
 So liest Claude die Regeln:
 
 - Grundlage ist nur die Positionsbezeichnung und die Firma aus deinem Export. Namen, Fotos oder vermutete Herkunft spielen für die Einordnung nie eine Rolle.
 - Die Stichwörter sind Beispiele, keine starre Liste. Claude erkennt auch Schreibweisen auf Deutsch und Englisch, die hier nicht stehen (etwa „Recruiterin", „Talent Acquisition Specialist", „Personalgewinnung").
-- Passt eine Position zu mehreren Segmenten, gilt diese Reihenfolge. Talent Acquisition geht vor Employer Branding und Diversity, das vor HR-Leitung, das vor Geschäftsführung.
+- Passt eine Position zu mehreren Segmenten, gilt diese Reihenfolge. Talent Acquisition geht vor Employer Branding und Diversity, das vor HR-Leitung, das vor Geschäftsführung. Die Abschnitte unten stehen in genau dieser Reihenfolge, in der Excel-Datei auch.
 - Jede Person bekommt genau ein Segment, eine Priorität und eine kurze Begründung.
 
 Prioritäten für den Career Day:
@@ -25,14 +25,6 @@ Stichwörter: talent acquisition, recruiting, recruiter, recruiterin, recruitmen
 - B: Recruiterinnen und Recruiter, Sourcer, Talent Acquisition Partner ohne Leitungsfunktion
 - C: externe Personalberatung, Headhunter, Executive Search, Freelance-Recruiter (sie stellen nicht selbst ein)
 
-## Segment: HR-Leitung und People
-
-Stichwörter: hr, human resources, personal, personalleitung, personalleiterin, personalleiter, personalvorstand, arbeitsdirektor, chro, chief people officer, people & culture, people operations, hr business partner, hrbp, personalreferentin, personalreferent, personalentwicklung, learning & development
-
-- A: CHRO, Chief People Officer, Personalvorstand, Leitung HR oder Personal, People & Culture Lead
-- B: HR Business Partner, Personalreferentinnen und Personalreferenten, People Operations, Personalentwicklung
-- C: Lohnbuchhaltung, Payroll, HR-Administration, Zeitwirtschaft
-
 ## Segment: Employer Branding und Diversity
 
 Stichwörter: employer branding, employer brand, arbeitgebermarke, personalmarketing, hochschulmarketing, talent marketing, recruitment marketing, diversity, diversität, dei, d&i, equity, inclusion, inklusion, chancengleichheit, antidiskriminierung, belonging, mitarbeiternetzwerk, employee resource group
@@ -40,6 +32,14 @@ Stichwörter: employer branding, employer brand, arbeitgebermarke, personalmarke
 - A: Leitung Diversity, DEI, Employer Branding oder Personalmarketing sowie Diversity-Managerinnen und Diversity-Manager (verfügen oft über Budget für Messen)
 - B: Referentinnen, Specialists, Koordination
 - C: kommt selten vor, etwa Agenturen für Employer Branding
+
+## Segment: HR-Leitung und People
+
+Stichwörter: hr, human resources, personal, personalleitung, personalleiterin, personalleiter, personalvorstand, arbeitsdirektor, chro, chief people officer, people & culture, people operations, hr business partner, hrbp, personalreferentin, personalreferent, personalentwicklung, learning & development
+
+- A: CHRO, Chief People Officer, Personalvorstand, Leitung HR oder Personal, People & Culture Lead
+- B: HR Business Partner, Personalreferentinnen und Personalreferenten, People Operations, Personalentwicklung
+- C: Lohnbuchhaltung, Payroll, HR-Administration, Zeitwirtschaft
 
 ## Segment: Geschäftsführung und Gründer
 

@@ -31,8 +31,8 @@ Jede Phase ist für sich nützlich. Du kannst nach Phase A aufhören und nur die
 
 - Dein Setup ist installiert.
 - Python 3 mit dem Paket openpyxl für die Excel-Datei. Das Installationsskript prüft beides und nennt dir den Befehl, falls etwas fehlt.
-- Dein LinkedIn-Export `Connections.csv` (so bekommst du ihn, siehe Schritt 2) oder eine eigene Excel-Liste mit Spalten wie Vorname, Nachname, Firma, Position. Zum Ausprobieren reicht der mitgelieferte Beispieldatensatz mit rund 40 erfundenen Kontakten.
-- Für Phase F mit E-Mail-Entwürfen der Microsoft-365-Connector in Claude (Outlook). Ohne ihn bekommst du die Mailtexte zum Kopieren.
+- Dein LinkedIn-Export `Connections.csv` (so bekommst du ihn, siehe Schritt 2) oder eine eigene Liste mit Spalten wie Vorname, Nachname, Firma, Position. Auch Exporte aus Werkzeugen wie Phantombuster, Evaboot oder Wiza und Teilnehmer- oder Messelisten als CSV oder Excel gehen, Claude zeigt dir dann, welche Spalte wofür genommen wird. Zum Ausprobieren reicht der mitgelieferte Beispieldatensatz mit rund 40 erfundenen Kontakten.
+- Nur falls du einzelne Kontakte per E-Mail ansprechen willst, der Microsoft-365-Connector in Claude (Outlook). Ohne ihn bekommst du die Mailtexte zum Kopieren.
 
 ## Zeitbedarf
 
@@ -67,7 +67,9 @@ Starte danach eine neue Session, damit Claude den neuen Skill kennt.
 
 ## Schritt 2: LinkedIn-Export holen
 
-Auf LinkedIn oben auf dein Profilbild (Ich), dann Einstellungen und Datenschutz, Datenschutz, „Kopie Ihrer Daten abrufen" (je nach Version leicht anders benannt). Wähle die Option, bei der du einzelne Daten auswählst, hake nur „Verbindungen" an und fordere das Archiv an. LinkedIn schickt dir einen Link per Mail. In der ZIP-Datei liegt `Connections.csv`.
+Auf LinkedIn oben auf dein Profilbild (Ich), dann Einstellungen und Datenschutz, Datenschutz, „Kopie Ihrer Daten abrufen" (je nach Version leicht anders benannt). Wähle die Option, bei der du einzelne Daten auswählst, hake nur „Verbindungen" an und fordere das Archiv an. LinkedIn schickt dir einen Link per Mail, wenn du nur die Verbindungen anforderst meist nach etwa zehn Minuten, spätestens nach 24 Stunden. In der ZIP-Datei liegt `Connections.csv`. Auf einer englischen Oberfläche heißt der Punkt „Get a copy of your data".
+
+Hast du deine Kontakte aus einem anderen Werkzeug oder von einer Messe, etwa als Excel-Liste, nimm einfach diese Datei.
 
 Leg die Datei nicht in iCloud, OneDrive oder einen geteilten Ordner. Der Ordner Downloads auf deinem Rechner ist in Ordnung.
 
@@ -91,7 +93,7 @@ Segmentier meine LinkedIn-Kontakte für den Career Day.
 
 und zieh die Datei `Connections.csv` ins Fenster, wenn Claude danach fragt. Das passiert dann:
 
-1. Claude liest die Datei und nennt dir den Umfang: wie viele Kontakte und Firmen, wie viele ohne Position, wie viele doppelt waren.
+1. Claude liest die Datei und zeigt dir in einer kleinen Tabelle, welche Spalte deiner Datei als Name, Firma, Position usw. genommen wird. Passt etwas nicht, sagst du es („die Rolle steht in der Spalte Funktion"). Namen wie „Muster, Anna" und Titel wie Dr. erkennt Claude selbst. Danach nennt Claude den Umfang: wie viele Kontakte und Firmen, wie viele ohne Position, wie viele doppelt waren.
 2. Claude zeigt dir einmal die Segmentregeln als kurze Tabelle und fragt, ob sie passen, ob du Du oder Sie schreibst und was du für den Anlass suchst.
 3. Claude ordnet jeden Kontakt zu, bei großen Listen in Blöcken zu 100. Dabei sieht Claude nur Position und Firma, keine Namen.
 4. Du siehst die Verteilung, die Top-20-Firmen, alle Kontakte mit Priorität A und die Textbausteine als Tabellen im Chat. Du kannst korrigieren, etwa „Nr. 12 ist Sonstiges" oder „Firma X ganz raus".
@@ -149,7 +151,7 @@ Claude fragt nach der Tiefe:
 | Standard | dazu Karriereseite, Einstiegs-, Trainee- und Ausbildungsprogramme, Diversity und Employer Branding, frühere Messeteilnahmen |
 | Tief | dazu aktuelle Stellenanzeigen für den Einstieg, Presse der letzten 12 Monate, ob es die Rolle deiner Ansprechperson dort sichtbar gibt |
 
-Dann arbeiten Recherche-Agenten (eigene Claude-Helfer im Hintergrund) jeweils 5 bis 10 Firmen ab, A-Firmen zuerst. Nach jedem Batch siehst du eine Tabelle mit den wichtigsten Funden und entscheidest, ob es weitergeht. Jeder Fakt steht mit Quelle und Datum in der Akte.
+Dann arbeiten Recherche-Agenten (eigene Claude-Helfer im Hintergrund, die nur im Netz suchen und Webseiten lesen können, aber keine deiner Dateien) jeweils 5 bis 10 Firmen ab, A-Firmen zuerst. Nach jedem Batch siehst du eine Tabelle mit den wichtigsten Funden und entscheidest, ob es weitergeht. Sagst du „Stopp, das reicht", merkt sich Claude das und schlägt beim nächsten Mal Phase E vor, statt dich wieder in die Recherche zu schicken. Jeder Fakt steht mit Quelle und Datum in der Akte.
 
 ## Phase E: Aufbau der Nachrichten festlegen
 
@@ -165,13 +167,15 @@ Claude schlägt einen festen Aufbau vor und zeigt eine Beispielnachricht:
 |---|---|
 | Anrede | persönlich, mit dem Namen aus dem Export |
 | Einstieg | woher ihr euch kennt („wir sind hier auf LinkedIn vernetzt") |
-| Firmenteil | ein bis zwei Sätze aus der Akte, passend zur Rolle der Person |
-| Anlass-Teil | immer gleich, aus ANLASS.md |
-| Aufruf | etwa ein kurzer Austausch |
-| Ausstiegssatz | „Falls das gerade nicht passt, melde ich mich nicht wieder." |
-| Signatur | dein Name, deine Rolle, deine Organisation |
+| Firmenteil | ein Satz aus der Akte, passend zur Rolle der Person |
+| Anlass-Teil | ein Satz, immer gleich, aus ANLASS.md |
+| Aufruf | genau eine Frage, die man mit Ja beantworten kann, etwa „Darf ich Ihnen die Ausstellerinfos schicken?" |
+| Ausstiegssatz | „Falls nicht, melde ich mich nicht wieder." |
+| Signatur | dein Name und deine Organisation |
 
-Danach legt Claude die Tabelle `kontakte/anlass/ansprache.md` an, eine Zeile je Kontakt mit Kanal (LinkedIn oder E-Mail), Kontext-Stichworten aus der Akte und Status. Du korrigierst, was nicht passt, etwa „Nr. 5 lieber über LinkedIn".
+Eine LinkedIn-Nachricht hat 250 bis 450 Zeichen. Kurze Nachrichten werden deutlich öfter beantwortet. Preise und Anhänge kommen erst, wenn jemand Ja gesagt hat.
+
+Danach legt Claude die Tabelle `kontakte/anlass/ansprache.md` an, eine Zeile je Kontakt mit Kanal, Kontext-Stichworten aus der Akte und Status. Der Kanal ist immer LinkedIn, denn eine LinkedIn-Verbindung ist keine Erlaubnis für Werbung per Mail. Hast du mit einer Person schon geschäftlich zu tun oder hat sie eingewilligt, sag es Claude, etwa „Nr. 5 kenne ich aus einem Projekt, lieber per Mail". Claude fragt einmal nach und stellt nur diesen Kontakt um. Die Mail nennt dann, woher die Daten stammen, mit Link zu euren Datenschutzhinweisen und trägt die Impressumszeile deines Vereins.
 
 ## Phase F: Entwürfe schreiben
 
@@ -181,7 +185,7 @@ Sag Claude:
 Schreib die nächsten Entwürfe.
 ```
 
-Claude nimmt die nächsten 10 Kontakte (A zuerst), zeigt dir die Auswahl und schreibt nach deinem Okay für jeden einen persönlichen Text. Du gehst sie durch: „1 passt, 2 kürzer, 3 streichen". Danach liegen die LinkedIn-Texte in der Akte und gesammelt in `kontakte/ausgabe/entwuerfe-<datum>.md` zum Kopieren. Für Kontakte mit E-Mail-Adresse im Export legt Claude einen Entwurf in deinem Outlook an, mit Empfänger und Betreff, ungesendet.
+Claude nimmt die nächsten 10 Kontakte (A zuerst), zeigt dir die Auswahl und schreibt nach deinem Okay für jeden einen persönlichen Text. Du gehst sie durch: „1 passt, 2 kürzer, 3 streichen". Danach liegen die LinkedIn-Texte in der Akte und gesammelt in `kontakte/ausgabe/entwuerfe-<datum>.md` zum Kopieren. Vorher prüft Claude jeden Text gegen eine Liste mit 15 Punkten (Länge, eine Frage, keine Preise, Ausstiegssatz und mehr). Nur für Kontakte, die du ausdrücklich auf E-Mail gestellt hast, legt Claude einen Entwurf in deinem Outlook an, mit Empfänger und Betreff, ungesendet.
 
 Hast du Nachrichten verschickt, sag es Claude:
 
@@ -199,7 +203,7 @@ Sag Claude:
 Wo stehen wir beim Outreach?
 ```
 
-Claude liest den Ordner `kontakte/` und sagt dir in drei Zeilen, was fertig ist. Dann bietet Claude an, dort weiterzumachen.
+Claude liest den Ordner `kontakte/` und sagt dir in drei Zeilen, was fertig ist und was noch offen liegt. Dann bietet Claude an, dort weiterzumachen, wo du zuletzt aufgehört hast.
 
 ## So sieht das Ergebnis aus
 
@@ -260,24 +264,21 @@ Stand 20.10.2026, Tiefe Standard.
 - Das Traineeprogramm Life Sciences richtet sich genau an die Zielgruppe des Career Day.
 ```
 
-Der Entwurf für die Talent-Acquisition-Leitung dieser Firma, zum Kopieren in LinkedIn:
+Der Entwurf für die Talent-Acquisition-Leitung dieser Firma, zum Kopieren in LinkedIn (437 Zeichen):
 
 ```
 Guten Tag Sarah Demo,
 
-wir sind hier auf LinkedIn vernetzt, deshalb schreibe ich Ihnen direkt.
+wir sind hier auf LinkedIn vernetzt. Fiktiva Pharma baut Frankfurt aus und sucht mit dem Traineeprogramm Life Sciences genau unsere Zielgruppe.
 
-Ich habe gesehen, dass Fiktiva Pharma den Forschungsstandort Frankfurt ausbaut und mit dem Traineeprogramm Life Sciences gezielt Absolventinnen und Absolventen anspricht. Genau diese Zielgruppe kommt zu unserer Messe.
+Am [FEHLT: Termin] ist in Frankfurt der ADAN Career Day, die Karrieremesse für afrodeutsche und afrodiasporische Akademikerinnen und Akademiker.
 
-Ich organisiere den ADAN Career Day, eine Karrieremesse für afrodeutsche und afrodiasporische Akademikerinnen und Akademiker in Frankfurt am Main, am [FEHLT: Termin]. Aussteller treffen dort qualifizierte Talente, die sie über klassische Kanäle schwer erreichen.
+Darf ich Ihnen die Ausstellerinfos schicken?
 
-Hätten Sie Interesse an einem kurzen Austausch, wie Fiktiva Pharma dabei sein kann?
-
-Falls das gerade nicht passt, sagen Sie es mir gern, dann melde ich mich nicht wieder.
+Falls nicht, melde ich mich nicht wieder.
 
 Viele Grüße
-[Dein Name]
-Projektleitung ADAN Career Day, ADAN e.V.
+[Dein Name], ADAN e.V.
 ```
 
 Die vollständige Beispiel-Akte liegt im Bundle unter `skills/kontakt-segmentierung/beispiel/firmenakte-beispiel.md`.
@@ -294,17 +295,17 @@ Nimm die Musterbank in die Ausschlussliste auf, die ist schon Partner.
 Ausbildungsleitung soll immer Priorität A bekommen.
 ```
 
-`segmente.md` enthält Stichwörter und Prioritäten je Segment, `ausschluss.md` die Firmen, die Claude weglassen soll (etwa bestehende Partner). Beide liegen im Skill-Ordner `~/.claude/skills/kontakt-segmentierung/`. Installierst du das Bundle neu, bleiben deine Änderungen erhalten.
+`segmente.md` enthält Stichwörter und Prioritäten je Segment, `ausschluss.md` die Firmen, die Claude weglassen soll (etwa bestehende Partner). Änderungen legt Claude im Ordner `kontakte/` deines Projektordners ab. Sie gelten dann nur dort, so kann der Career Day andere Regeln haben als die Sponsorensuche in einem anderen Ordner. Sagst du „für alle Anlässe", ändert Claude die Standardfassung im Skill-Ordner `~/.claude/skills/kontakt-segmentierung/`. Installierst du das Bundle neu, bleiben deine Änderungen erhalten.
 
 ## Datenschutz
 
 - **Nur der offizielle Export.** Claude arbeitet mit der Datei, die LinkedIn dir selbst gibt, oder mit deiner eigenen Liste. Kein automatisches Auslesen von LinkedIn-Seiten im Browser, das verbieten die Nutzungsbedingungen von LinkedIn.
 - **Recherche nur zu Firmen und nur öffentlich.** Die Recherche-Agenten lesen Firmenwebseiten, Karriereseiten, Pressemitteilungen und Messeseiten. Sie rufen nie LinkedIn-Profile auf, recherchieren keine einzelnen Menschen und bekommen keine Namen oder Adressen aus deiner Liste. Jeder Fakt steht mit Quelle und Datum in der Akte.
 - **Keine erratenen Adressen.** Der Export enthält E-Mail-Adressen nur bei Kontakten, die das erlaubt haben. Fehlende Adressen bleiben leer. Claude rät keine Adressen und nutzt keine Dienste, die Adressen nachliefern.
-- **Nur das Nötige.** Verarbeitet werden Name, Firma, Position, Verbunden seit, Profil-Link und eine vorhandene E-Mail-Adresse. Für die Einordnung schaut Claude nur auf Position und Firma, nie auf Namen oder vermutete Herkunft. Akten gibt es nur für Kontakte mit Priorität A oder B.
+- **Nur das Nötige.** Verarbeitet werden Name, Titel, Firma, Position, Verbunden seit, Profil-Link, eine vorhandene E-Mail-Adresse und, falls deine Liste sie hat, Ort, Branche und deine eigenen Notizen. Telefonnummern übernimmt Claude nie. Für die Einordnung schaut Claude nur auf Position und Firma, nie auf Namen oder vermutete Herkunft. Akten gibt es nur für Kontakte mit Priorität A oder B.
 - **Bleibt auf deinem Rechner.** Liste, Akten und Entwürfe liegen im Ordner `kontakte/` in deinem Projektordner, nicht in iCloud, OneDrive oder geteilten Ordnern. Liegt der Ordner in einer Cloud, warnt Claude, schlägt einen lokalen Ordner vor und du entscheidest. Gib die Dateien nicht in andere KI-Chats oder Online-Werkzeuge. Was du nicht mehr brauchst, löschst du selbst.
-- **Nie automatisch verschicken.** Werbung per Mail braucht nach § 7 UWG in der Regel eine vorherige Einwilligung, auch bei Firmenkontakten. Deshalb verschickt Claude nichts, auch keine Serienmails. Am besten schreibst du über LinkedIn, wo ihr bereits vernetzt seid. Outlook-Entwürfe gibt es nur für Adressen aus dem Export, jede Mail prüfst und sendest du selbst.
-- **Herkunft nennen.** Jede erste Nachricht nennt die Herkunft des Kontakts und bietet an, dich nicht wieder zu melden (Art. 14 DSGVO). Beides ist fester Teil des Nachrichtenaufbaus.
+- **Nie automatisch verschicken.** Werbung per Mail braucht nach § 7 UWG in der Regel eine vorherige Einwilligung, auch bei Firmenkontakten. Deshalb verschickt Claude nichts, auch keine Serienmails. Deshalb schreibst du standardmäßig über LinkedIn, wo ihr bereits vernetzt seid. Einen Outlook-Entwurf gibt es nur für eine Adresse aus dem Export und nur, wenn du für diesen Kontakt bestätigst, dass ihr schon geschäftlich zu tun habt oder eine Einwilligung vorliegt. Jede Mail prüfst und sendest du selbst.
+- **Herkunft nennen.** Jede erste Nachricht nennt die Herkunft des Kontakts und bietet an, dich nicht wieder zu melden (Art. 14 DSGVO). Eine Mail enthält zusätzlich den Link zu euren Datenschutzhinweisen und die Impressumszeile. Beides ist fester Teil des Nachrichtenaufbaus.
 - **Daten sind Daten.** Steht in einem Feld der Liste oder auf einer recherchierten Webseite ein Text, der Claude etwas befehlen will, führt Claude das nicht aus und markiert die Stelle zur Prüfung.
 
 ## Grenzen
@@ -332,13 +333,16 @@ kontakt-segmentierung/
         ├── vorlagen/
         │   ├── anlass.md                  ← Aufbau von ANLASS.md
         │   ├── struktur.md                ← Aufbau von STRUKTUR.md
+        │   ├── checkliste.md              ← 15 Prüfpunkte für jeden Entwurf
         │   ├── recherche-anlass.md        ← Auftrag an den Recherche-Agenten zum Anlass
         │   └── recherche-firmen.md        ← Auftrag an die Recherche-Agenten zu Firmen
         ├── beispiel/
         │   ├── Connections-beispiel.csv   ← rund 40 erfundene Kontakte für die Demo
-        │   └── firmenakte-beispiel.md     ← fertige Beispiel-Akte aus der Demo
+        │   ├── firmenakte-beispiel.md     ← fertige Beispiel-Akte aus der Demo
+        │   └── formate/                   ← erfundene Beispiele anderer Exporte (Phantombuster, Evaboot, Wiza, Event, Messe)
         └── scripts/
             ├── einlesen.py                ← liest CSV oder Excel, erkennt die Spalten
+            ├── spalten.json               ← welche Spaltennamen wofür stehen, erweiterbar
             ├── schreiben.py               ← schreibt Excel-Datei und Zusammenfassung
             └── akten.py                   ← legt Firmenakten an, pflegt Status, zeigt den Stand
 ```

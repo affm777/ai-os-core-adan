@@ -39,7 +39,8 @@ Zu langer Text wird automatisch etwas kleiner gesetzt. Passt er trotzdem nicht, 
 ## Voraussetzungen
 
 - Dein Setup ist installiert. Playwright (der Browser, mit dem Claude die Bilder erzeugt) und Python sind darin schon enthalten.
-- Eine Internetverbindung beim Erzeugen der Bilder, damit die Markenschrift Rubik geladen wird. Ohne Internet nimmt Claude die Systemschrift und sagt dir das.
+- Google Chrome, damit Playwright die Bilder erzeugen kann. `install.sh` prüft das und nennt den Befehl zum Nachladen.
+- Kein Internet beim Erzeugen der Bilder. Die Markenschrift Rubik liegt im Bundle.
 - Unter Windows läuft alles in Git Bash aus deinem Setup. Claude nimmt dort automatisch `python` oder `py -3` statt `python3` und öffnet die Vorschau im Explorer (Pfade mit Backslashes). Fehlt der Browser zum Erzeugen der Bilder, lädt Claude ihn nach deinem Okay nach (gut 100 MB).
 
 Zeitbedarf: Ein Post von der ersten Frage bis zur Vorschau dauert rund zwei Minuten, jede Änderungsrunde rund eine Minute.
@@ -117,7 +118,7 @@ Ab dann gilt dein Ordner vor den Profilen im Skill.
 
 - Kein Ersatz für Figma. Der Skill liefert saubere Standard-Posts aus drei Vorlagen. Fotos, Illustrationen und freie Layouts machst du weiter in Figma oder Claude Design, dort auch den Feinschliff.
 - Die Marken-Guides sind vorläufig, ADAN Careers ist ein Platzhalter. Prüf Farben und Logo, bevor ein Post veröffentlicht wird.
-- Schrift ist Rubik (frei nutzbar unter der SIL Open Font License, geladen über Google Fonts). Nutzt eure Marke eine andere Schrift, muss sie mit Lizenz im `brand/`-Ordner liegen.
+- Schrift ist Rubik (frei nutzbar unter der SIL Open Font License, liegt mit Lizenz unter `templates/fonts/`). Nutzt eure Marke eine andere Schrift, muss sie mit Lizenz im `brand/`-Ordner liegen.
 - Claude postet nichts, plant keine Veröffentlichungen und lädt nichts hoch.
 - Die Texte selbst (Captions, Hashtags) macht der Use Case content-adapter. Beide lassen sich hintereinander nutzen: erst die Texte je Kanal, dann die Bilder dazu.
 

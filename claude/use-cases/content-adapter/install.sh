@@ -49,7 +49,7 @@ case "$(uname -s 2>/dev/null || echo unbekannt)" in
   *) OS=anderes; warn "Unbekanntes Betriebssystem, getestet sind macOS und Windows (Git Bash)." ;;
 esac
 
-for pflicht in SKILL.md verbotsliste.md voice-vorlage.md scripts/pruefen.sh \
+for pflicht in SKILL.md verbotsliste.md voice-vorlage.md korpus.md scripts/pruefen.sh \
                kanaele/linkedin.md kanaele/instagram.md kanaele/newsletter.md kanaele/mail.md kanaele/website.md; do
   [ -f "$SRC/$pflicht" ] || { err "Bundle unvollständig: $SRC/$pflicht fehlt."; exit 1; }
 done

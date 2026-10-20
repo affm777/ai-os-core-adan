@@ -4,7 +4,9 @@
 schreiben.py: zugeordnete Kontakte als Excel-Datei und Markdown-Zusammenfassung schreiben.
 
 Aufruf:
-  python3 schreiben.py --arbeit <ordner> --segmente <segmente.md> --ausgabe <ordner> [--datum JJJJ-MM-TT] [--vorschau] [--cloud-ok]
+  python3 schreiben.py --arbeit <ordner> [--segmente <segmente.md>] --ausgabe <ordner> [--datum JJJJ-MM-TT] [--vorschau] [--cloud-ok]
+
+Ohne --segmente gilt kontakte/segmente.md im Arbeitsordner, sonst die Fassung im Skill-Ordner.
 
 Erwartet im Arbeitsordner:
   kontakte.json          aus einlesen.py
@@ -32,7 +34,7 @@ import zipfile
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from einlesen import cloud_hinweis, firma_schluessel  # noqa: E402
+from einlesen import cloud_hinweis, firma_schluessel, regeldatei  # noqa: E402
 
 PRIOS = ("A", "B", "C")
 # Angaben im Feld Firma, die keine Firma sind, landen in der Firmenübersicht unter (ohne Firma)
@@ -394,13 +396,15 @@ def markdown_schreiben(pfad, meta, zeilen, segmente, firmen, datum, xlsx_name):
 def main():
     ap = argparse.ArgumentParser(description="Segmentierte Kontakte als Excel und Markdown schreiben")
     ap.add_argument("--arbeit", required=True)
-    ap.add_argument("--segmente", required=True)
+    ap.add_argument("--segmente", help="Standard: kontakte/segmente.md, sonst die im Skill-Ordner")
     ap.add_argument("--ausgabe", default=os.path.join("kontakte", "ausgabe"))
     ap.add_argument("--datum", default=dt.date.today().isoformat())
     ap.add_argument("--vorschau", action="store_true")
     ap.add_argument("--cloud-ok", action="store_true",
                     help="Ausgabeordner in iCloud oder OneDrive bewusst zulassen (Nutzer hat entschieden)")
     args = ap.parse_args()
+    args.segmente = regeldatei("segmente.md", os.path.dirname(os.path.dirname(os.path.abspath(args.arbeit))),
+                               args.segmente)
 
     meta, zeilen, segmente, anrede, texte = laden(args)
     if args.vorschau:

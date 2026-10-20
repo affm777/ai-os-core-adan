@@ -14,6 +14,9 @@
 # npm-Befehl führt Claude laut README selbst aus), sich anmelden, Shell-Config
 # oder PATH ändern, etwas löschen.
 #
+# Nebenwirkung auch mit --dry-run: die Statusabfrage `codex login status`
+# legt bei vorhandenem Codex den Ordner ~/.codex/tmp an. Das ist harmlos.
+#
 # Aufruf:
 #   bash install.sh [--dry-run]
 # Kompatibel mit bash 3.2 (macOS) und Git Bash (Windows). Idempotent.

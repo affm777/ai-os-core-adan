@@ -19,8 +19,8 @@ es gehen soll                Marke und Vorbilder ab,         in 9:16 (Reel) und 
 ## Voraussetzungen
 
 - Dein Setup ist installiert (Node ist damit schon da).
-- ffmpeg, ein kleines Programm zum Verarbeiten von Videos. Fehlt es, sagt dir die Installation genau, was du eingeben musst (Mac `brew install ffmpeg`, Windows `winget install Gyan.FFmpeg`).
-- Internet beim ersten Lauf. Die Installation lädt das Video-Werkzeug HyperFrames und einen Browser zum Rendern herunter (einmalig rund 300 MB, etwa 5 bis 10 Minuten).
+- ffmpeg, ein kleines Programm zum Verarbeiten von Videos. Fehlt es, sagt dir die Installation genau, was du eingeben musst (Mac `brew install ffmpeg`, Windows `winget install --id Gyan.FFmpeg -e`, danach Git Bash und Claude in einem neuen Fenster öffnen).
+- Internet beim ersten Lauf. Die Installation lädt das Video-Werkzeug HyperFrames und einen Browser zum Rendern herunter (einmalig rund 250 MB inklusive der Python-Umgebung für Ton, etwa 5 bis 10 Minuten). Dabei kommen zehn HyperFrames-Skills mit, von denen motion-graphic vier nutzt. Die übrigen bleiben bewusst installiert, das ist in Ordnung.
 - Für eine generierte Stimme oder Musik eine ElevenLabs-Anbindung. Ohne sie geht alles andere trotzdem, dann ohne Ton oder mit einer eigenen Audiodatei.
 
 Zeitbedarf: Ein 15-Sekunden-Video dauert vom ersten Satz bis zur fertigen Datei etwa 20 bis 40 Minuten, das meiste davon arbeitet Claude allein. Das reine Rendern dauert nur wenige Minuten.
@@ -52,7 +52,7 @@ Das passiert dann:
 
 1. Claude bittet dich, frei zu erzählen, worum es geht, für wen und ob du schon eine Idee für die Abfolge hast. Danach fasst Claude in drei Sätzen zusammen, was es verstanden hat.
 2. Eine Fragerunde mit vier Klicks: Kanal und Format, Länge (etwa 15, 30 oder 60 Sekunden), Stimme, Musik.
-3. Eine Runde zum Look. Für welche Marke ist das Video (ADAN e.V. oder ADAN Impact)? Gibt es einen Style-Guide, ein Logo oder Farben? Gibt es Videos, Bilder oder Links, die dir gefallen? Ohne Vorbilder schlägt Claude zwei passende Stile vor und du wählst.
+3. Eine Runde zum Look. Für welche Marke ist das Video (ADAN e.V., ADAN Impact oder ADAN Careers)? Gibt es einen Style-Guide, ein Logo oder Farben? Gibt es Videos, Bilder oder Links, die dir gefallen? Ohne Vorbilder schlägt Claude zwei passende Stile vor und du wählst.
 4. Du bekommst das Storyboard als Tabelle (Szene, Text, Bildidee, Bewegung, Sekunden) und sagst „passt“ oder was anders sein soll.
 5. Claude baut das Video allein, prüft es selbst und öffnet dir die Vorschau.
 6. Du sagst, was geändert werden soll, oder „passt“. Jede Änderung wird eine neue Fassung, die alte bleibt liegen.

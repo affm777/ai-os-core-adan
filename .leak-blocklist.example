@@ -1,0 +1,8 @@
+# Vorlage für die lokale Blockliste des Leak-Scans.
+# Kopieren nach .leak-blocklist (ist gitignored, wird nie gepusht) und mit
+# echten Namen von Teilnehmern, Kunden und Firmen füllen.
+# Eine Zeile ein Begriff, Groß- und Kleinschreibung egal, es zählen ganze Wörter.
+# Umlaute zusätzlich in Umschreibung eintragen (müller und mueller).
+vorname-beispiel
+nachname-beispiel
+firmenname-beispiel

@@ -40,7 +40,7 @@ fi
 if command -v ffmpeg >/dev/null 2>&1 && command -v ffprobe >/dev/null 2>&1; then
   ok "ffmpeg $(ffmpeg -version 2>/dev/null | head -1 | awk '{print $3}')"
 else
-  fehlt "ffmpeg (Videoschnitt und Messung)" "$(zeile 'brew install ffmpeg' 'winget install Gyan.FFmpeg  (danach Git Bash neu öffnen)')"
+  fehlt "ffmpeg (Videoschnitt und Messung)" "$(zeile 'brew install ffmpeg' 'winget install --id Gyan.FFmpeg -e  (danach Git Bash und Claude in einem neuen Fenster öffnen, fehlt ffmpeg dann noch, $LOCALAPPDATA/Microsoft/WinGet/Links in den PATH)')"
 fi
 
 # HyperFrames in der gepinnten Version und der Render-Browser

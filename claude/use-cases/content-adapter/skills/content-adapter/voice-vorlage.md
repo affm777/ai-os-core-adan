@@ -66,5 +66,10 @@ Ein Muster pro Zeile im Block, wird bei jeder Prüfung zusätzlich zur Standard-
 ```muster
 ```
 
+Abkürzungen, die großgeschrieben bleiben dürfen (eine pro Zeile, zusätzlich zur Liste im Skill):
+
+```abkuerzungen
+```
+
 ## Gelernte Regeln
 Entstehen aus wiederholten Korrekturen. Format: `- JJJJ-MM-TT, Regel in einem Satz, Anlass`. Ab elf Einträgen sortiert Claude sie in die Abschnitte oben ein.

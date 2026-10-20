@@ -160,6 +160,7 @@ content-adapter/
         ├── kanaele/                   ← Regeln je Kanal (LinkedIn, Instagram, Newsletter, Mail, Website)
         ├── verbotsliste.md            ← Muster, die nie in einen Text dürfen
         ├── voice-vorlage.md           ← Vorlage für deinen Stil-Korpus
+        ├── korpus.md                  ← wie Claude den Stil-Korpus aufbaut und pflegt
         └── scripts/pruefen.sh         ← automatische Prüfung jeder Fassung
 ```
 

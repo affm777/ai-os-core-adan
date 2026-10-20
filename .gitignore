@@ -55,3 +55,7 @@ __pycache__/
 
 # Playwright-CLI Arbeitsdateien
 .playwright-cli/
+
+# Lokale Blockliste des Leak-Scans (scripts/leak-scan.sh) mit echten Namen.
+# Selbst ein Leak-Risiko, daher NIEMALS pushen. Vorlage: .leak-blocklist.example
+.leak-blocklist

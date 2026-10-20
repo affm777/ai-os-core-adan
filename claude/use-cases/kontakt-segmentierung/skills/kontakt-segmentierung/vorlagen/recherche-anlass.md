@@ -1,6 +1,6 @@
 # Auftrag an den Recherche-Agenten: Anlass (Phase B)
 
-Claude setzt die Werte in spitzen Klammern ein und gibt den Text unverändert als Prompt an einen Agenten (Agent-Tool, `subagent_type: general-purpose`, `model: sonnet`, Beschreibung „Anlass öffentlich recherchieren"). Der Agent bekommt keine Kontaktdaten, keine Namen aus dem Export und keine Dateipfade.
+Claude setzt die Werte in spitzen Klammern ein und gibt den Text unverändert als Prompt an einen Agenten (Agent-Tool, `subagent_type: recherche`, `model: sonnet`, falls es diesen Agent-Typ nicht gibt `general-purpose` mit Hinweis an den Nutzer, Beschreibung „Anlass öffentlich recherchieren"). Der Agent bekommt keine Kontaktdaten, keine Namen aus dem Export und keine Dateipfade.
 
 ```
 Du recherchierst öffentlich verfügbare Informationen zu einer Veranstaltung. Ergebnis ist eine kurze Faktenliste auf Deutsch, die ein Projektleiter für die Ansprache von Firmen nutzt.

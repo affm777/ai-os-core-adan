@@ -3,7 +3,7 @@
 """
 akten.py: Firmenakten der Outreach-Pipeline anlegen, ergänzen, Status pflegen und den Stand zeigen.
 
-Vier Aufrufe (alle Pfade relativ zum Arbeitsordner, Standard ist ./kontakte):
+Sechs Aufrufe (alle Pfade relativ zum Arbeitsordner, Standard ist ./kontakte):
 
   1. Akten anlegen oder ergänzen (Phase C)
        python3 akten.py anlegen [--kontakte kontakte] [--arbeit <ordner>] [--segmente <segmente.md>]
@@ -19,15 +19,28 @@ Vier Aufrufe (alle Pfade relativ zum Arbeitsordner, Standard ist ./kontakte):
        python3 akten.py ansprache [--kontakte kontakte] [--cloud-ok]
      Baut aus allen Akten kontakte/anlass/ansprache.md (eine Zeile je Kontakt,
      A-Firmen zuerst). Bestehende Zeilen bleiben unverändert, neue kommen ans Ende.
+     Kanal ist immer LinkedIn, die Spalte "E-Mail möglich" zeigt nur, ob der
+     Export eine Adresse enthält.
 
   3. Status setzen (Phase D bis F)
        python3 akten.py status --firma <slug> --wert <status> [--kontakt "<Name>"] [--datum JJJJ-MM-TT]
      Ohne --kontakt: Status der Akte. Mit --kontakt: Status der Zeile in
      ansprache.md, die Akte rückt dabei höchstens vor, nie zurück.
 
-  4. Stand zeigen (Wiedereinstieg)
+  4. Kanal setzen (Phase E)
+       python3 akten.py kanal --firma <slug> --kontakt "<Name>" --wert LinkedIn|E-Mail [--bestaetigt]
+     E-Mail nur mit Adresse aus dem Export und mit --bestaetigt (Nutzer hat
+     Geschäftsbeziehung oder Einwilligung bestätigt). Vermerk im Verlauf der Akte.
+
+  5. Phase als beendet merken (auch nach "Stopp, das reicht")
+       python3 akten.py abschluss --phase <A-F> [--notiz "<text>"]
+     Schreibt kontakte/.stand.json mit Phase, Datum und Notiz.
+
+  6. Stand zeigen (Wiedereinstieg)
        python3 akten.py stand [--kontakte kontakte]
-     Gibt als JSON aus, welche Phasen erledigt sind und was als Nächstes dran ist.
+     Gibt als JSON aus, welche Phasen erledigt sind, was je Phase offen ist und
+     was als Nächstes dran ist. Eine in D bewusst beendete Recherche hält den
+     Wiedereinstieg nicht mehr in D fest.
 
 Nur Standardbibliothek. Sendet nichts ins Netz, löscht nichts.
 """
@@ -44,7 +57,7 @@ import unicodedata
 sys.dont_write_bytecode = True
 HIER = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HIER)
-from einlesen import cloud_hinweis, firma_schluessel  # noqa: E402
+from einlesen import cloud_hinweis, firma_schluessel, regeldatei  # noqa: E402
 import schreiben  # noqa: E402
 
 FIRMEN_STATUS = ["offen", "recherchiert", "Entwurf", "angeschrieben", "geantwortet", "gestrichen"]
@@ -57,7 +70,11 @@ LEER_ENTWURF = "Noch kein Entwurf."
 OFFEN = "offen"
 
 KOPF_KONTAKTE = "| Name | Position | Segment | Priorität | Profil-Link | E-Mail (aus Export) |"
-KOPF_ANSPRACHE = "| Nr | Kontakt | Firma | Priorität | Kanal | Kontext | Status |"
+KOPF_ANSPRACHE = "| Nr | Kontakt | Firma | Priorität | Kanal | E-Mail möglich | Kontext | Status |"
+TRENN_ANSPRACHE = "|---:|---|---|---|---|---|---|---|"
+KANAELE = ["LinkedIn", "E-Mail"]
+PHASEN = ["A", "B", "C", "D", "E", "F"]
+STAND_DATEI = ".stand.json"
 
 
 def fehler(text, code=2):
@@ -177,8 +194,13 @@ def kontakt_schluessel(k):
     return url if url else (k.get("name") or "").strip().lower()
 
 
+def voller_name(z):
+    """Name wie in Akte und ansprache.md, mit Titel (Dr., Prof.) davor, falls bekannt."""
+    return " ".join(t for t in (z.get("titel", ""), z.get("vorname", ""), z.get("nachname", "")) if t).strip()
+
+
 def kontakt_zeile(z):
-    name = ("%s %s" % (z["vorname"], z["nachname"])).strip()
+    name = voller_name(z)
     return "| %s | %s | %s | %s | %s | %s |" % (zelle(name), zelle(z["position"]) or "(leer)", zelle(z["segment"]),
                                                z["prioritaet"], zelle(z["url"]), zelle(z["email"]))
 
@@ -274,7 +296,7 @@ def anlegen(args):
     if not arbeit:
         fehler("Keine fertige Segmentierung gefunden (kontakte/arbeit/<datum>/ mit zuordnung-*.json). "
                "Zuerst Phase A ausführen.")
-    ns = argparse.Namespace(arbeit=arbeit, segmente=args.segmente)
+    ns = argparse.Namespace(arbeit=arbeit, segmente=regeldatei("segmente.md", basis, args.segmente))
     meta, zeilen, segmente, _anrede, _texte = schreiben.laden(ns)
 
     gruppen, ohne_firma = {}, 0
@@ -303,7 +325,7 @@ def anlegen(args):
         akte = akte_lesen(pfad)
         vorhanden = {kontakt_schluessel(k) for k in akte["kontakte"]}
         fehlend = [p for p in leute if kontakt_schluessel(
-            {"url": p["url"], "name": ("%s %s" % (p["vorname"], p["nachname"])).strip()}) not in vorhanden]
+            {"url": p["url"], "name": voller_name(p)}) not in vorhanden]
         if fehlend and akte_ergaenzen(pfad, fehlend, args.datum):
             ergaenzt.append({"akte": s, "neue_kontakte": len(fehlend)})
         else:
@@ -327,19 +349,36 @@ def anlegen(args):
 # 2. ansprache
 # ---------------------------------------------------------------------------
 
+SPALTEN_ANSPRACHE = {"Nr": "nr", "Kontakt": "kontakt", "Firma": "firma", "Priorität": "prioritaet", "Kanal": "kanal",
+                     "E-Mail möglich": "email_moeglich", "Kontext": "kontext", "Status": "status"}
+
+
 def ansprache_lesen(pfad):
+    """Gibt (zeilen, eintraege, spalten) zurück. Die Spalten kommen aus der Kopfzeile, so bleiben
+    auch ältere Tabellen ohne Spalte "E-Mail möglich" lesbar. Jeder Eintrag kennt seine Zeilennummer."""
     if not os.path.isfile(pfad):
-        return [], []
+        return [], [], list(SPALTEN_ANSPRACHE.values())
     zeilen = open(pfad, encoding="utf-8").read().split("\n")
-    eintraege = []
-    for z in zeilen:
-        if z.startswith("|") and not ist_trennzeile(z) and z.strip() != KOPF_ANSPRACHE:
-            c = zellen(z)
-            while len(c) < 7:
-                c.append("")
-            eintraege.append({"nr": c[0], "kontakt": c[1], "firma": c[2], "prioritaet": c[3], "kanal": c[4],
-                              "kontext": c[5], "status": c[6]})
-    return zeilen, eintraege
+    spalten, eintraege = None, []
+    for n, z in enumerate(zeilen):
+        if not z.startswith("|") or ist_trennzeile(z):
+            continue
+        c = zellen(z)
+        if spalten is None and c and c[0] == "Nr":
+            spalten = [SPALTEN_ANSPRACHE.get(t, t) for t in c]
+            continue
+        if spalten is None:
+            continue
+        while len(c) < len(spalten):
+            c.append("")
+        e = dict(zip(spalten, c))
+        e["_zeile"] = n
+        eintraege.append(e)
+    return zeilen, eintraege, spalten or list(SPALTEN_ANSPRACHE.values())
+
+
+def ansprache_zeile(e, spalten):
+    return "| " + " | ".join(e.get(s, "") for s in spalten) + " |"
 
 
 def ansprache(args):
@@ -349,9 +388,9 @@ def ansprache(args):
     if not akten:
         fehler("Noch keine Firmenakten in kontakte/firmen/. Zuerst Phase C (akten.py anlegen) ausführen.")
     pfad = os.path.join(basis, "anlass", "ansprache.md")
-    zeilen, eintraege = ansprache_lesen(pfad)
-    vorhanden = {(e["kontakt"].lower(), e["firma"].lower()) for e in eintraege}
-    nr = max([int(e["nr"]) for e in eintraege if e["nr"].isdigit()] or [0])
+    zeilen, eintraege, spalten = ansprache_lesen(pfad)
+    vorhanden = {(e.get("kontakt", "").lower(), e.get("firma", "").lower()) for e in eintraege}
+    nr = max([int(e["nr"]) for e in eintraege if e.get("nr", "").isdigit()] or [0])
 
     neue = []
     akten.sort(key=lambda a: (a["prioritaet"], a["firma"].lower()))
@@ -362,31 +401,49 @@ def ansprache(args):
             if (k["name"].lower(), zelle(a["firma"]).lower()) in vorhanden:
                 continue
             nr += 1
-            kanal = "E-Mail" if k["email"] else "LinkedIn"
-            neue.append("| %d | %s | %s | %s | %s | %s | %s |" % (nr, zelle(k["name"]), zelle(a["firma"]),
-                                                                 k["prioritaet"], kanal, OFFEN, OFFEN))
+            neue.append({"nr": str(nr), "kontakt": zelle(k["name"]), "firma": zelle(a["firma"]),
+                         "prioritaet": k["prioritaet"], "kanal": "LinkedIn",
+                         "email_moeglich": "ja" if k["email"] else "nein", "kontext": OFFEN, "status": OFFEN})
     if not zeilen:
         kopf = ["# Ansprache", "",
                 "Eine Zeile je Kontakt aus den Firmenakten, A-Firmen zuerst. Claude füllt die Spalte Kontext mit "
-                "Stichworten aus den Anknüpfungspunkten der Akte vor, du korrigierst sie. Kanal ist LinkedIn, außer "
-                "der Export enthält eine E-Mail-Adresse. Status ist offen, Entwurf, angeschrieben, geantwortet oder "
-                "gestrichen.", "",
-                KOPF_ANSPRACHE, "|---:|---|---|---|---|---|---|"]
+                "Stichworten aus den Anknüpfungspunkten der Akte vor, du korrigierst sie. Kanal ist immer LinkedIn. "
+                "E-Mail möglich heißt nur, dass der Export eine Adresse enthält. Auf E-Mail wechselt ein Kontakt erst, "
+                "wenn du bestätigst, dass ihr schon geschäftlich zu tun habt oder eine Einwilligung vorliegt. "
+                "Status ist offen, Entwurf, angeschrieben, geantwortet oder gestrichen.", "",
+                KOPF_ANSPRACHE, TRENN_ANSPRACHE]
         os.makedirs(os.path.dirname(pfad), exist_ok=True)
         with open(pfad, "w", encoding="utf-8") as f:
-            f.write("\n".join(kopf + neue) + "\n")
+            f.write("\n".join(kopf + [ansprache_zeile(e, spalten) for e in neue]) + "\n")
     elif neue:
         tabelle = [i for i, z in enumerate(zeilen) if z.startswith("|")]
+        neu_text = [ansprache_zeile(e, spalten) for e in neue]
         if tabelle:
-            zeilen[tabelle[-1] + 1:tabelle[-1] + 1] = neue
+            zeilen[tabelle[-1] + 1:tabelle[-1] + 1] = neu_text
         else:
             while zeilen and zeilen[-1] == "":
                 zeilen.pop()
-            zeilen += ["", KOPF_ANSPRACHE, "|---:|---|---|---|---|---|---|"] + neue + [""]
+            zeilen += ["", KOPF_ANSPRACHE, TRENN_ANSPRACHE] + neu_text + [""]
         with open(pfad, "w", encoding="utf-8") as f:
             f.write("\n".join(zeilen))
     print(json.dumps({"datei": pfad, "zeilen_neu": len(neue), "zeilen_gesamt": len(eintraege) + len(neue),
-                      "davon_email": sum(1 for z in neue if "| E-Mail |" in z)}, ensure_ascii=False, indent=1))
+                      "kanal": "LinkedIn für alle neuen Zeilen",
+                      "email_moeglich": sum(1 for e in neue if e["email_moeglich"] == "ja")},
+                     ensure_ascii=False, indent=1))
+
+
+def ansprache_treffer(basis, firma_slug, kontakt):
+    """Sucht die Zeile eines Kontakts in ansprache.md. Gibt (pfad, zeilen, eintrag, spalten, firma) zurück."""
+    pfad = os.path.join(basis, "firmen", firma_slug + ".md")
+    if not os.path.isfile(pfad):
+        fehler("Akte %s gibt es nicht." % firma_slug)
+    firma = akte_lesen(pfad)["firma"]
+    apfad = os.path.join(basis, "anlass", "ansprache.md")
+    azeilen, eintraege, spalten = ansprache_lesen(apfad)
+    for e in eintraege:
+        if e.get("kontakt", "").lower() == kontakt.strip().lower() and e.get("firma", "").lower() == zelle(firma).lower():
+            return apfad, azeilen, e, spalten, firma
+    fehler("Kontakt %s bei %s steht nicht in ansprache.md." % (kontakt, firma))
 
 
 # ---------------------------------------------------------------------------
@@ -407,21 +464,9 @@ def status(args):
     if args.kontakt:
         if args.wert not in KONTAKT_STATUS:
             fehler("Kontakt-Status muss einer von %s sein." % ", ".join(KONTAKT_STATUS))
-        firma = akte_lesen(pfad)["firma"]
-        apfad = os.path.join(basis, "anlass", "ansprache.md")
-        azeilen, _ = ansprache_lesen(apfad)
-        treffer = None
-        for n, z in enumerate(azeilen):
-            if z.startswith("|") and not ist_trennzeile(z) and z.strip() != KOPF_ANSPRACHE:
-                c = zellen(z)
-                if len(c) >= 7 and c[1].lower() == args.kontakt.strip().lower() and c[2].lower() == zelle(firma).lower():
-                    treffer = n
-                    break
-        if treffer is None:
-            fehler("Kontakt %s bei %s steht nicht in ansprache.md." % (args.kontakt, firma))
-        c = zellen(azeilen[treffer])
-        ergebnis["kontakt_alt"], c[6] = c[6], args.wert
-        azeilen[treffer] = "| " + " | ".join(c) + " |"
+        apfad, azeilen, e, spalten, _firma = ansprache_treffer(basis, args.firma, args.kontakt)
+        ergebnis["kontakt_alt"], e["status"] = e.get("status", ""), args.wert
+        azeilen[e["_zeile"]] = ansprache_zeile(e, spalten)
         with open(apfad, "w", encoding="utf-8") as f:
             f.write("\n".join(azeilen))
         ergebnis["kontakt"] = args.kontakt
@@ -443,8 +488,72 @@ def status(args):
 
 
 # ---------------------------------------------------------------------------
-# 4. stand
+# 3b. kanal
 # ---------------------------------------------------------------------------
+
+def kanal(args):
+    """Kanal eines Kontakts setzen. E-Mail nur mit Adresse aus dem Export und mit --bestaetigt
+    (der Nutzer hat gesagt, dass eine Geschäftsbeziehung oder Einwilligung besteht)."""
+    if args.wert not in KANAELE:
+        fehler("Kanal muss LinkedIn oder E-Mail sein.")
+    basis = args.kontakte
+    apfad, azeilen, e, spalten, firma = ansprache_treffer(basis, args.firma, args.kontakt)
+    pfad = os.path.join(basis, "firmen", args.firma + ".md")
+    if args.wert == "E-Mail":
+        adresse = ""
+        for k in akte_lesen(pfad)["kontakte"]:
+            if k["name"].lower() == args.kontakt.strip().lower():
+                adresse = k["email"]
+        if not adresse:
+            fehler("Für %s steht keine E-Mail-Adresse aus dem Export in der Akte. Ich rate keine Adressen, "
+                   "der Kanal bleibt LinkedIn." % args.kontakt)
+        if not args.bestaetigt:
+            fehler("E-Mail geht nur, wenn du bestätigst, dass du mit %s schon geschäftlich zu tun hast oder eine "
+                   "Einwilligung vorliegt. Eine LinkedIn-Verbindung allein reicht dafür nicht (§ 7 UWG). "
+                   "Dann erneut mit --bestaetigt." % args.kontakt)
+    alt = e.get("kanal", "")
+    e["kanal"] = args.wert
+    if "kanal" not in spalten:
+        fehler("ansprache.md hat keine Spalte Kanal.")
+    azeilen[e["_zeile"]] = ansprache_zeile(e, spalten)
+    with open(apfad, "w", encoding="utf-8") as f:
+        f.write("\n".join(azeilen))
+    vermerk = "- %s %s: Kanal %s" % (datum_de(args.datum), zelle(args.kontakt), args.wert)
+    if args.wert == "E-Mail":
+        vermerk += ", Geschäftsbeziehung oder Einwilligung vom Nutzer bestätigt"
+    zeilen = verlauf_anhaengen(open(pfad, encoding="utf-8").read().split("\n"), vermerk)
+    with open(pfad, "w", encoding="utf-8") as f:
+        f.write("\n".join(zeilen))
+    print(json.dumps({"akte": args.firma, "kontakt": args.kontakt, "kanal_alt": alt, "kanal_neu": args.wert},
+                     ensure_ascii=False, indent=1))
+
+
+# ---------------------------------------------------------------------------
+# 4. abschluss und stand
+# ---------------------------------------------------------------------------
+
+def stand_lesen(basis):
+    pfad = os.path.join(basis, STAND_DATEI)
+    try:
+        daten = json.load(open(pfad, encoding="utf-8"))
+        return daten if daten.get("phase") in PHASEN else {}
+    except (OSError, ValueError, AttributeError):
+        return {}
+
+
+def abschluss(args):
+    """Merkt sich die zuletzt beendete Phase (auch nach "Stopp, das reicht"), damit der Wiedereinstieg
+    nicht an einer bewusst beendeten Phase hängen bleibt."""
+    if args.phase not in PHASEN:
+        fehler("Phase muss einer von %s sein." % ", ".join(PHASEN))
+    basis = args.kontakte
+    if not os.path.isdir(basis):
+        fehler("Den Ordner %s gibt es noch nicht." % basis)
+    daten = {"phase": args.phase, "datum": args.datum, "notiz": args.notiz or ""}
+    with open(os.path.join(basis, STAND_DATEI), "w", encoding="utf-8") as f:
+        json.dump(daten, f, ensure_ascii=False, indent=1)
+    print(json.dumps(dict(daten, datei=os.path.join(basis, STAND_DATEI)), ensure_ascii=False, indent=1))
+
 
 def bestaetigt(pfad):
     if not os.path.isfile(pfad):
@@ -470,29 +579,36 @@ def stand(args):
     ohne_recherche = sorted([a for a in aktiv if not a["recherche"]], key=lambda a: (a["prioritaet"], a["slug"]))
     struktur = os.path.join(basis, "anlass", "STRUKTUR.md")
     apfad = os.path.join(basis, "anlass", "ansprache.md")
-    _, eintraege = ansprache_lesen(apfad)
+    _, eintraege, _spalten = ansprache_lesen(apfad)
     kstatus = {}
     for e in eintraege:
-        kstatus[e["status"] or OFFEN] = kstatus.get(e["status"] or OFFEN, 0) + 1
+        kstatus[e.get("status") or OFFEN] = kstatus.get(e.get("status") or OFFEN, 0) + 1
     entwuerfe = sorted(os.path.basename(p) for p in glob.glob(os.path.join(basis, "ausgabe", "entwuerfe-*.md")))
     astatus = {}
     for a in akten:
         astatus[a["status"]] = astatus.get(a["status"], 0) + 1
+    letzter = stand_lesen(basis)
+    gestoppt = PHASEN.index(letzter["phase"]) if letzter else -1
 
-    if not arbeit:
-        naechster = "A"
-    elif not bestaetigt(anlass):
-        naechster = "B"
-    elif not akten:
-        naechster = "C"
-    elif ohne_recherche:
-        naechster = "D"
-    elif not bestaetigt(struktur) or not eintraege:
-        naechster = "E"
-    elif kstatus.get(OFFEN, 0):
-        naechster = "F"
-    else:
-        naechster = "fertig"
+    # Phase D darf bewusst unvollständig bleiben ("Stopp, das reicht"). Alle anderen Phasen sind
+    # Voraussetzung für die nächste und zählen nur, wenn ihr Ergebnis wirklich da ist.
+    erledigt = {
+        "A": bool(arbeit),
+        "B": bestaetigt(anlass),
+        "C": bool(akten),
+        "D": not ohne_recherche or gestoppt >= PHASEN.index("D"),
+        "E": bestaetigt(struktur) and bool(eintraege),
+        "F": bool(eintraege) and not kstatus.get(OFFEN, 0),
+    }
+    naechster = next((p for p in PHASEN if not erledigt[p]), "fertig")
+    offen_je_phase = {}
+    if ohne_recherche:
+        offen_je_phase["D"] = "%d Akten ohne Recherche" % len(ohne_recherche)
+    kontext_offen = sum(1 for e in eintraege if e.get("kontext") in ("", OFFEN))
+    if kontext_offen:
+        offen_je_phase["E"] = "%d Kontakte ohne Kontext" % kontext_offen
+    if kstatus.get(OFFEN, 0):
+        offen_je_phase["F"] = "%d Kontakte ohne Entwurf" % kstatus[OFFEN]
 
     print(json.dumps({
         "ordner": basis,
@@ -504,9 +620,11 @@ def stand(args):
         "D_recherche": {"recherchiert": len(aktiv) - len(ohne_recherche), "offen": len(ohne_recherche),
                         "naechste": [a["slug"] for a in ohne_recherche[:10]]},
         "E_struktur": {"struktur": os.path.isfile(struktur), "bestaetigt": bestaetigt(struktur),
-                       "ansprache_zeilen": len(eintraege),
-                       "kontext_offen": sum(1 for e in eintraege if e["kontext"] in ("", OFFEN))},
+                       "ansprache_zeilen": len(eintraege), "kontext_offen": kontext_offen,
+                       "email_bestaetigt": sum(1 for e in eintraege if e.get("kanal") == "E-Mail")},
         "F_entwuerfe": {"dateien": entwuerfe, "kontakte_status": kstatus},
+        "letzter_stopp": letzter or None,
+        "offen_je_phase": offen_je_phase,
         "naechster_schritt": naechster,
     }, ensure_ascii=False, indent=1))
 
@@ -519,7 +637,7 @@ def main():
 
     p = unter.add_parser("anlegen", parents=[basis], help="Akten aus der Segmentierung anlegen oder ergänzen")
     p.add_argument("--arbeit", help="Arbeitsordner aus Phase A (Standard: der neueste)")
-    p.add_argument("--segmente", default=os.path.join(os.path.dirname(HIER), "segmente.md"))
+    p.add_argument("--segmente", help="Segmentregeln (Standard: kontakte/segmente.md, sonst die im Skill-Ordner)")
     p.add_argument("--datum", default=dt.date.today().isoformat())
     p.add_argument("--cloud-ok", action="store_true")
 
@@ -532,6 +650,19 @@ def main():
     p.add_argument("--kontakt", help="Name wie in ansprache.md")
     p.add_argument("--datum", default=dt.date.today().isoformat())
 
+    p = unter.add_parser("kanal", parents=[basis], help="Kanal eines Kontakts setzen (LinkedIn oder E-Mail)")
+    p.add_argument("--firma", required=True, help="Dateiname der Akte ohne .md")
+    p.add_argument("--kontakt", required=True, help="Name wie in ansprache.md")
+    p.add_argument("--wert", required=True, help="LinkedIn oder E-Mail")
+    p.add_argument("--bestaetigt", action="store_true",
+                   help="Nutzer hat Geschäftsbeziehung oder Einwilligung bestätigt (Pflicht für E-Mail)")
+    p.add_argument("--datum", default=dt.date.today().isoformat())
+
+    p = unter.add_parser("abschluss", parents=[basis], help="zuletzt beendete Phase merken (.stand.json)")
+    p.add_argument("--phase", required=True, help="A bis F")
+    p.add_argument("--notiz", help="kurze Notiz, etwa Stopp nach Batch 2")
+    p.add_argument("--datum", default=dt.date.today().isoformat())
+
     unter.add_parser("stand", parents=[basis], help="Stand der Pipeline als JSON")
 
     args = ap.parse_args()
@@ -541,6 +672,10 @@ def main():
         ansprache(args)
     elif args.befehl == "status":
         status(args)
+    elif args.befehl == "kanal":
+        kanal(args)
+    elif args.befehl == "abschluss":
+        abschluss(args)
     elif args.befehl == "stand":
         stand(args)
     else:

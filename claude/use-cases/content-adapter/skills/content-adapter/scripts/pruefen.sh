@@ -4,12 +4,15 @@
 # =============================================================================
 # Aufruf:
 #   bash pruefen.sh <laufordner> [--zusatz content/voice.md]
-# Prüft jede <kanal>-<de|en>.txt im Laufordner (nicht _alt/).
+# Prüft jede <kanal>-<de|en>.txt im Laufordner (nicht _alt/) und, falls schon
+# da, den Abschnitt „Design-Aufträge“ in uebersicht.md (Verbotsliste,
+# Gedankenstriche, Headline höchstens 6 Wörter, Bildtext höchstens 20 Wörter).
 #   VERSTOSS  muss behoben werden (Exit-Code 1, solange einer da ist)
 #   HINWEIS   ansehen und nur beheben, wenn er zutrifft
 #   INFO      Längen und offene [FEHLT]-Stellen
 # Muster kommen aus dem Block ```muster in verbotsliste.md und optional aus
-# demselben Block in voice.md (Abschnitt „Eigene Verbote“).
+# demselben Block in voice.md (Abschnitt „Eigene Verbote“). Erlaubte
+# Abkürzungen (keine Großschreib-Hinweise) aus den Blöcken ```abkuerzungen.
 # Kompatibel mit bash 3.2 (macOS) und Git Bash (Windows). Ändert nichts.
 # =============================================================================
 
@@ -22,7 +25,7 @@ ZUSATZ=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --zusatz) ZUSATZ="${2:-}"; shift 2 ;;
-    -h|--help) sed -n '2,15p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,18p' "$0"; exit 0 ;;
     *) LAUF="$1"; shift ;;
   esac
 done
@@ -39,14 +42,21 @@ export LC_ALL="$UTF"
 TMP="$(mktemp -d 2>/dev/null || mktemp -d -t pruefen)"
 trap 'rm -rf "$TMP"' EXIT
 PAT="$TMP/muster.txt"
+ABK="$TMP/abkuerzungen.txt"
 
-muster_aus() { # $1 Datei: Zeilen zwischen ```muster und ``` ausgeben
-  awk '/^```muster/{m=1;next} /^```/{if(m){m=0}} m && NF{print}' "$1" | tr -d '\r'
+block_aus() { # $1 Blockname, $2 Datei: Zeilen zwischen ```<name> und ``` ausgeben
+  awk -v b="$1" '$0 ~ "^```"b"[[:space:]]*$"{m=1;next} /^```/{if(m){m=0}} m && NF{print}' "$2" | tr -d '\r'
 }
-muster_aus "$SKILL_DIR/verbotsliste.md" > "$PAT"
+block_aus muster "$SKILL_DIR/verbotsliste.md" > "$PAT"
+block_aus abkuerzungen "$SKILL_DIR/verbotsliste.md" > "$ABK"
 if [ -n "$ZUSATZ" ]; then
-  if [ -f "$ZUSATZ" ]; then muster_aus "$ZUSATZ" >> "$PAT"; else echo "HINWEIS Zusatzdatei nicht gefunden: $ZUSATZ"; fi
+  if [ -f "$ZUSATZ" ]; then
+    block_aus muster "$ZUSATZ" >> "$PAT"
+    block_aus abkuerzungen "$ZUSATZ" >> "$ABK"
+  else echo "HINWEIS Zusatzdatei nicht gefunden: $ZUSATZ"; fi
 fi
+# Abkürzungen nur mit Buchstaben vergleichen (e.V. wird zu eV)
+tr -cd '[:alpha:]\n' < "$ABK" | grep -v '^$' > "$ABK.norm"
 
 VERSTOESSE=0
 HINWEISE=0
@@ -99,8 +109,8 @@ for f in "$LAUF"/*.txt; do
   c=$(printf '%s\n' "$inhalt" | grep -E '(^|[[:space:]])#[^[:space:]#]+' | sed -E 's/(^|[[:space:]])#[^[:space:]#]+//g' | grep -c '[^[:space:]]')
   VERSTOESSE=$((VERSTOESSE+c))
 
-  # 6. Großschreibung zur Betonung (Platzhalter ausgenommen)
-  caps="$(printf '%s\n' "$inhalt" | sed -E 's/\[[^]]*\]//g' | grep -o -E '(^|[^[:alpha:]])[[:upper:]]{4,}([^[:alpha:]]|$)' | tr -cd '[:alpha:]\n' | sort -u | tr '\n' ' ')"
+  # 6. Großschreibung zur Betonung (Platzhalter und erlaubte Abkürzungen ausgenommen)
+  caps="$(printf '%s\n' "$inhalt" | sed -E 's/\[[^]]*\]//g' | grep -o -E '(^|[^[:alpha:]])[[:upper:]]{4,}([^[:alpha:]]|$)' | tr -cd '[:alpha:]\n' | grep -v -x -F -f "$ABK.norm" | sort -u | tr '\n' ' ')"
   [ -n "$(printf '%s' "$caps" | tr -d ' ')" ] && h "$n Großgeschriebene Wörter: $caps(Abkürzung ok, Betonung nicht)"
 
   # 7. Frage als Einstieg (erste Zeile ohne Kennwort)
@@ -158,6 +168,26 @@ HIER
 done
 
 [ "$ANZ" -eq 0 ] && { echo "Keine Fassungen (*.txt) in $LAUF gefunden." >&2; exit 2; }
+
+# 11. Design-Aufträge in uebersicht.md (Inhalt der Codeblöcke im Abschnitt „## Design-Aufträge“)
+UE="$LAUF/uebersicht.md"
+if [ -f "$UE" ]; then
+  awk '/^## /{d=($0 ~ /^## Design-Auftr/); c=0; next} d && /^```/{c=!c; next} d && c && NF{print NR "\t" $0}' "$UE" | tr -d '\r' > "$TMP/design.txt"
+  DA=0
+  TAB="$(printf '\t')"
+  while IFS="$TAB" read -r nr text; do
+    printf '%s\n' "$text" | grep -q -i -E -f "$PAT" && v "uebersicht.md:$nr:$text (Verbotsliste, Design-Auftrag)"
+    case "$text" in *–*|*—*|*" - "*) v "uebersicht.md:$nr:$text (Gedankenstrich, Design-Auftrag)" ;; esac
+    rest="$(printf '%s' "${text#*:}" | sed -E 's/\[FEHLT[^]]*\]//g')"
+    case "$text" in
+      Headline:*) DA=$((DA+1)); w=$(woerter "$rest"); [ "$w" -gt 6 ] && v "uebersicht.md:$nr Headline $w Wörter, höchstens 6" ;;
+      Bildtext:*|"Image text:"*) w=$(woerter "$rest"); [ "$w" -gt 20 ] && v "uebersicht.md:$nr Bildtext $w Wörter, höchstens 20" ;;
+    esac
+  done < "$TMP/design.txt"
+  if [ "$DA" -gt 0 ]; then i "uebersicht.md $DA Design-Aufträge geprüft"; else h "uebersicht.md ohne Design-Aufträge (Abschnitt „## Design-Aufträge“ mit Codeblöcken)"; fi
+else
+  i "uebersicht.md noch nicht da, Design-Aufträge nach dem Schreiben erneut prüfen"
+fi
 echo ""
 echo "Geprüft: $ANZ Fassungen. Verstöße: $VERSTOESSE. Hinweise: $HINWEISE. Offene [FEHLT]-Stellen: $FEHLT_GESAMT."
 [ "$VERSTOESSE" -eq 0 ] || exit 1

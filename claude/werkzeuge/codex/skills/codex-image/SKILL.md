@@ -3,7 +3,7 @@ name: codex-image
 description: Generiert ein Bild über Codex' internen $imagegen-Skill (Bildmodell von OpenAI, läuft über das ChatGPT-Abo, kein API-Key), legt die PNG im Arbeitsordner ab und öffnet sie. Triggert bei "/codex-image", "codex bild", "bild mit codex generieren", "codex imagegen".
 when_to_use: |
   Argument = Bildbeschreibung, optional Zieldateiname/Format. Default 16:9, Ablage im aktuellen Arbeitsverzeichnis. Trigger-Phrasen: "/codex-image", "codex bild", "bild mit codex generieren", "codex imagegen". NICHT für Print/PDF/Slide/Social-Visuals (das ist der designer-Skill) und NICHT für Web-UI.
-allowed-tools: Bash(codex:*), Bash(open:*), Bash(start:*), Bash(ls:*), Bash(od:*), Bash(uname:*), Read
+allowed-tools: Bash(codex:*), Bash(open:*), Bash(cmd:*), Bash(cygpath:*), Bash(ls:*), Bash(od:*), Bash(uname:*), Read
 ---
 
 # Codex Image
@@ -30,7 +30,7 @@ Du erzeugst genau EIN Bild über den in Codex eingebauten `$imagegen`-Skill. Der
    ```
    Zeigt `od` nicht `89 50 4e 47`, dem Nutzer den Fehler zeigen und stoppen.
 
-5. **Öffnen und anzeigen.** Auf dem Mac `open "<datei>"`, unter Windows (Git Bash, `uname -s` beginnt mit `MINGW` oder `MSYS`) `start "" "<datei>"`. Danach die Datei via Read dem Nutzer anzeigen.
+5. **Öffnen und anzeigen.** Auf dem Mac `open "<datei>"`, unter Windows (Git Bash, `uname -s` beginnt mit `MINGW` oder `MSYS`) `cmd //c start "" "$(cygpath -w "<datei>")"` (`start` allein gibt es in Git Bash nicht, das leere "" ist der Fenstertitel). Danach die Datei via Read dem Nutzer anzeigen.
 
 6. **Kurzbestätigung** mit dem vollständigen Pfad der abgelegten PNG.
 

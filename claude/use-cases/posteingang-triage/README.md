@@ -35,18 +35,13 @@ Sag Claude:
 ```
 Hol zuerst mit git pull den neuesten Stand meines Setup-Repos ~/ai-os-core.
 
-Lade dann das Use-Case-Bundle "posteingang-triage" von dort:
-~/ai-os-core/claude/use-cases/posteingang-triage
+Führe dann das Installationsskript des Use-Case-Bundles "posteingang-triage" aus:
+bash ~/ai-os-core/claude/use-cases/posteingang-triage/install.sh
 
-Installiere es global, damit es in jedem Projekt zur Verfügung steht:
-- skills/posteingang-triage/  → ~/.claude/skills/posteingang-triage/
-
-Liegt dort schon eine ältere Fassung, ersetze nur die SKILL.md.
-Die Dateien TONE.md, POSTFAECHER.md und .last-run* bleiben erhalten, falls vorhanden.
-Bestätige mir, welche Dateien angekommen sind.
+Zeig mir danach in einfachen Worten, ob alles geklappt hat.
 ```
 
-Starte danach einfach eine neue Session, damit Claude den neuen Skill kennt.
+Liegt schon eine ältere Fassung vor, sichert das Skript sie unter `~/.claude/backups/` und holt deinen gelernten Schreibstil (`TONE.md`) und die Merkzettel, wann welches Postfach zuletzt gesichtet wurde (`.last-run*`), zurück. Starte danach eine neue Session, damit Claude den neuen Skill kennt.
 
 ## Schritt 2: Erster Lauf, deine Labels festlegen
 
@@ -60,7 +55,7 @@ Liegen in diesem Ordner noch keine Einstellungen, weiß Claude, dass der Skill h
 
 | Startset | Labels |
 |---|---|
-| Verein | Förderung, Partner, Teilnehmende, Verwaltung, Team, Sonstiges |
+| Verein | Förderung, Partner, Teilnehmende, Veranstaltungen, Verwaltung, Team, Sonstiges |
 | Pflegedienst | Patienten und Angehörige, Kostenträger und Kassen, Mitarbeiter und Bewerbungen, Lieferanten und Rechnungen, Behörden und Prüfungen, Sonstiges |
 | Vertrieb und Projekte | Chance, Kunden, Partner, Verwaltung, Team, Sonstiges |
 | Eigene Labels | du beschreibst, wie du denkst, Claude macht einen Vorschlag |
@@ -78,15 +73,17 @@ Claude: Für einen Verein schlage ich dieses Startset vor:
         Förderung (lila): Stiftungen, Ausschreibungen, Anträge, Nachweise
         Partner (blau): Unternehmen, Schulen, Kommunen, Netzwerke
         Teilnehmende (grün): Mentees, Mentoren, Bewerbungen, Terminfragen
+        Veranstaltungen (beere): Career Day, Messen, Infoabende, Aussteller
         Verwaltung (orange): Rechnungen, Verträge, Bank, Versicherung
         Team (türkis): Vorstand, Geschäftsstelle, Ehrenamtliche
         Sonstiges (grau): Newsletter, Werbung, Systemmails
         Was fehlt, was soll anders heißen, was kann weg?
 
-Du:     Ich brauche noch ein Label Veranstaltungen für den Career Day, in Pink.
+Du:     Ich brauche noch ein Label Presse, in Pink.
 
-Claude: Pink gibt es in Outlook nicht, ich nehme Beere. Veranstaltungen sind
-        dann Messen, Career Day, Infoabende und Anfragen von Ausstellern. Passt das?
+Claude: Pink gibt es in Outlook nicht und Beere hat schon Veranstaltungen,
+        ich nehme Braun. Presse sind dann Anfragen von Journalistinnen und
+        Journalisten, Interviews und Pressemitteilungen. Passt das?
 
 Du:     Passt.
 
@@ -154,7 +151,7 @@ Ein erfundenes Beispiel aus Sicht eines Vereins mit dem Verein-Startset ohne Än
 | 2 | Realschule am Stadtpark | ● Infoabend Mentoring für unsere 9. Klassen | Partner | hoch | | Terminvorschlag für den Infoabend an die Schule schicken, bis 20.10. |
 | 3 | Druckhaus Weber | ● Rechnung RE-2026-114 | Verwaltung, Beleg | hoch | | Rechnung RE-2026-114 zur Zahlung freigeben, bis 24.10. |
 | 4 | Landesprogramm Jugend stärken | ● Ausschreibung 2027 geöffnet | Förderung | mittel | Ausschreibung passt zum Mentoring-Programm | Prüfen, ob wir uns auf die Ausschreibung 2027 bewerben, bis 30.11. |
-| 5 | Hansewerk Personal GmbH | ● Stand beim Career Day? | Partner | mittel | Firma will als Ausstellerin zum Career Day | Konditionen für einen Ausstellerstand schicken, ohne Frist |
+| 5 | Hansewerk Personal GmbH | ● Stand beim Career Day? | Veranstaltungen | mittel | Firma will als Ausstellerin zum Career Day | Konditionen für einen Ausstellerstand schicken, ohne Frist |
 | 6 | Nordlicht Logistik GmbH | Mentoring durch unsere Mitarbeitenden? | Partner | mittel | Unternehmen bietet eine Kooperation an | Rückruf bei Nordlicht Logistik vereinbaren, ohne Frist |
 | 7 | Leyla K. | Absage Termin am Samstag | Teilnehmende | mittel | | Neuen Termin für das Mentoring-Gespräch mit Leyla vorschlagen, ohne Frist |
 | 8 | Vereinsversicherung Süd | Bestätigung Ihrer Vertragsänderung | Verwaltung | niedrig | | keins |
@@ -247,6 +244,8 @@ Frag mich vorher, was angepasst werden soll.
 - Gesundheitsangaben und andere sensible Daten aus Mails tauchen weder in der Tabelle noch in der TODO.md auf, dort steht nur das Anliegen allgemein.
 - Rechnungen werden mit „Beleg" markiert, aber noch nicht abgelegt.
 - To-dos landen nur in der `TODO.md`, nicht in Outlook-Aufgaben oder Microsoft To Do.
+- Farb-Kategorien und Antwortentwürfe gibt es nur in dem Postfach, mit dem Claude verbunden ist. In einem weiteren Postfach (etwa Info) bekommst du die Übersicht und die To-dos, Kategorien und Entwürfe setzt du dort selbst.
+- Im Rückblick fragt Claude bei mehr als rund 300 Verläufen nach, ob der Zeitraum gekürzt oder in zwei Teilen gesichtet werden soll. Bremst Microsoft wegen zu vieler Anfragen, wartet Claude kurz und sagt dir das.
 - Fehlt die Verbindung zu Microsoft 365, sagt dir Claude das in einem Satz. Prüf dann in Claude unter Einstellungen bei den Connectoren, ob Microsoft 365 verbunden ist, und starte eine neue Session.
 
 ## Nächste Ausbaustufe
@@ -263,9 +262,11 @@ Frag mich vorher, was angepasst werden soll.
 ```
 posteingang-triage/
 ├── README.md                          ← diese Anleitung
+├── install.sh                         ← Installationsskript (Schritt 1)
 └── skills/
     └── posteingang-triage/
         ├── SKILL.md                   ← die Arbeitsanleitung für Claude
+        ├── einrichtung.md             ← das Gespräch beim ersten Lauf und beim Ändern der Labels
         ├── .last-run-<adresse>        ← entsteht je Postfach, merkt sich den letzten Lauf
         └── TONE.md                    ← entsteht beim ersten Entwurf, dein gelernter Schreibstil
 ```

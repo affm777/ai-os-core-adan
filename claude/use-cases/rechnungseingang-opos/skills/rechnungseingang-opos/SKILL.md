@@ -1,6 +1,6 @@
 ---
 name: rechnungseingang-opos
-description: Überträgt Rechnungen aus dem Postfach in die OPOS-Liste (Excel). Sucht unverarbeitete Mails mit Anhang oder Rechnungs-Stichwörtern, liest Anhänge, schlägt Buchungszeilen vor und trägt sie nach Bestätigung ein. Triggert bei "Rechnungen erfassen", "OPOS aktualisieren", "Postfach für OPOS prüfen", "/rechnungseingang-opos".
+description: Trägt eingehende Rechnungen aus dem Postfach als Zeilen in die OPOS-Liste offener Posten (Excel) ein, speichert, benennt oder sortiert keine Beleg-Dateien (das macht beleg-ablage). Sucht unverarbeitete Mails mit Anhang oder Rechnungs-Stichwörtern, liest Anhänge, schlägt Buchungszeilen vor und trägt sie nach Bestätigung ein. Triggert bei "Rechnungen erfassen", "OPOS aktualisieren", "Postfach für OPOS prüfen", "/rechnungseingang-opos".
 when_to_use: |
   Trigger-Phrasen: "Rechnungen aus dem Postfach erfassen", "OPOS-Liste aktualisieren", "Rechnungen erfassen", "prüf das Postfach auf neue Rechnungen", "/rechnungseingang-opos". Ohne Argument = kompletter Lauf gegen den Posteingang. Erster Lauf fragt einmalig nach Kürzel und Excel-Pfad, danach nicht mehr.
 allowed-tools: Bash(python3:*), Bash(python:*), Bash(py:*), Read, Write, Edit, AskUserQuestion
@@ -16,13 +16,15 @@ Du schlägst vor. Der Mensch bestätigt. ERST DANACH schreibst du Excel-Zeilen. 
 
 ## 0. Tools laden (PFLICHT, ein Aufruf)
 
-Die M365-Connector-Tools sind deferred. Bevor du irgendetwas tust, lade sie in EINEM ToolSearch-Aufruf:
+Die Microsoft-365-Tools sind deferred und ihr Server-Präfix ist je Installation verschieden (mal ein lesbarer Name, mal eine lange Kennung). Lade sie deshalb per Suchbegriff, nicht mit festem Präfix, in EINEM ToolSearch-Aufruf, bevor du irgendetwas tust:
 
 ```
-ToolSearch: select:mcp__claude_ai_Microsoft_365__outlook_email_search,mcp__claude_ai_Microsoft_365__read_resource
+ToolSearch: query "outlook_email_search read_resource", max_results 5
 ```
 
-Erst danach sind die Tools aufrufbar.
+Aus dem Ergebnis die zwei Tools nehmen, deren Name auf `outlook_email_search` und `read_resource` endet. Beide müssen vom selben Server stammen (gleiches Präfix vor dem Tool-Namen). Gibt es `read_resource` mehrfach, das mit dem Präfix von `outlook_email_search` nehmen. Erst danach sind die Tools aufrufbar.
+
+Fehlt eines der zwei Tools, nicht weiterarbeiten und in Alltagssprache sagen: „Ich finde die Verbindung zu deinem Microsoft-Postfach gerade nicht. Bitte prüf in Claude unter Einstellungen bei den Connectoren, ob Microsoft 365 verbunden ist, und starte danach eine neue Session." Keine Tool-Namen oder Fehlermeldungen zeigen.
 
 ## 1. Erstlauf-Setup (nur wenn noch keine Config existiert)
 

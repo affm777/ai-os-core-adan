@@ -1,6 +1,6 @@
 # Auftrag an die Recherche-Agenten: Firmen (Phase D)
 
-Claude setzt die Werte in spitzen Klammern ein und gibt den Text als Prompt an einen Agenten (Agent-Tool, `subagent_type: general-purpose`, `model: sonnet`, Beschreibung etwa „Firmen 1 bis 10 öffentlich recherchieren"). Je Agent 5 bis 10 Firmen. Der Agent bekommt nur Firmennamen, bekannte Stammdaten und bei Tiefe „tief" die Positionen der Kontakte, nie Namen, Profil-Links oder E-Mail-Adressen. Er liest und schreibt keine Dateien, die Akten pflegt Claude selbst.
+Claude setzt die Werte in spitzen Klammern ein und gibt den Text als Prompt an einen Agenten (Agent-Tool, `subagent_type: recherche`, `model: sonnet`, falls es diesen Agent-Typ nicht gibt `general-purpose` mit Hinweis an den Nutzer, Beschreibung etwa „Firmen 1 bis 10 öffentlich recherchieren"). Je Agent 5 bis 10 Firmen. Der Agent bekommt nur Firmennamen, bekannte Stammdaten und bei Tiefe „tief" die Positionen der Kontakte, nie Namen, Profil-Links oder E-Mail-Adressen. Er liest und schreibt keine Dateien, die Akten pflegt Claude selbst.
 
 ## Tiefen
 

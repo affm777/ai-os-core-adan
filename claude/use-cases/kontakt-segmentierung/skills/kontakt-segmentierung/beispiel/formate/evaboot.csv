@@ -1,0 +1,4 @@
+First Name,Last Name,Job Title,Company Name,LinkedIn URL,Email,Email Status,Company Website,Industry,Location
+Mia,Beispielfrau,Employer Branding Lead,Musterversicherung AG,https://www.example.org/in/eb-01,mia.beispielfrau@example.org,valid,https://www.example.org/musterversicherung,Versicherungen,Frankfurt am Main
+Elias,Fiktivmann,HR Business Partner,Fiktiva Logistik SE,https://www.example.org/in/eb-02,,not found,https://www.example.org/fiktiva-logistik,Logistik,Hamburg
+Prof. Dr. Hanna,Musterfrau,Diversity Manager,Beispiel Hochschule,https://www.example.org/in/eb-03,h.musterfrau@example.org,catch-all,https://www.example.org/beispiel-hochschule,Bildung,Mainz
