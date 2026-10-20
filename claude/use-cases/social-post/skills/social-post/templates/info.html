@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="data:,">
+  <title>social-post Info</title>
+  <!-- Rubik (SIL Open Font License 1.1) über Google Fonts, ohne Netz greift system-ui -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=block">
+  <link rel="stylesheet" href="basis.css">
+  <link rel="stylesheet" href="marke.css">
+</head>
+<body>
+<main>
+  <!-- Info-Post: Headline, drei Stichpunkte, Call-to-Action auf hellem Grund -->
+  <section class="sp-frame sp-info">
+    <div class="sp-innen">
+      <div class="sp-kicker" data-slot="kicker"></div>
+      <div class="sp-mitte">
+        <h1 data-slot="headline"></h1>
+        <ol class="sp-punkte" data-slot="punkte"></ol>
+        <div class="sp-cta" data-slot="cta"></div>
+      </div>
+      <div class="sp-fuss">
+        <img class="sp-logo" src="logo-auf-hell.png" alt="Logo" onerror="this.remove()">
+        <div class="sp-absender" data-slot="absender"></div>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="basis.js"></script>
+</body>
+</html>

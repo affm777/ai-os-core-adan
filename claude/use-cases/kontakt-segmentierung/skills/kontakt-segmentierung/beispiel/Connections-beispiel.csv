@@ -1,0 +1,46 @@
+Notes:
+"Fiktiver Beispieldatensatz für den Workshop. Alle Namen, Firmen, Adressen und Profil-Links sind erfunden. Aufbau wie der offizielle LinkedIn-Export: drei Notizzeilen, dann der Header."
+
+First Name,Last Name,URL,Email Address,Company,Position,Connected On
+Amara,Beispiel,https://www.example.org/in/fiktiv-01,,Musterbank AG,Head of Talent Acquisition,12 Mar 2024
+Jonas,Muster,https://www.example.org/in/fiktiv-02,,Musterbank AG,Diversity & Inclusion Manager,03 Jul 2023
+Fatou,Demo,https://www.example.org/in/fiktiv-03,,Musterbank AG,Senior Software Engineer,21 Jan 2025
+Lukas,Beispielmann,https://www.example.org/in/fiktiv-04,,Beispiel Mobility GmbH,Recruiter Early Careers,08 Nov 2022
+Nia,Fiktiv,https://www.example.org/in/fiktiv-05,,Beispiel Mobility GmbH,Leiterin Personal,17 Feb 2024
+Samuel,Testmann,https://www.example.org/in/fiktiv-06,,Beispiel Mobility GmbH,Werkstudent Marketing,30 Sep 2025
+Grace,Muster,https://www.example.org/in/fiktiv-07,,Demo Logistik SE,Employer Branding Specialist,14 May 2024
+Tobias,Demo,https://www.example.org/in/fiktiv-08,,Demo Logistik SE,HR Business Partner,02 Dec 2021
+Adaeze,Beispiel,https://www.example.org/in/fiktiv-09,adaeze.beispiel@example.org,Demo Logistik SE,Talent Acquisition Partner,19 Aug 2023
+Thomas,Muster,https://www.example.org/in/fiktiv-10,,Demo Logistik SE,Vorstand Personal (Arbeitsdirektor),05 Apr 2020
+Kwame,Fiktiv,https://www.example.org/in/fiktiv-11,,Fiktiva Pharma AG,Chief People Officer,22 Jun 2022
+Sophie,Muster,https://www.example.org/in/fiktiv-12,,Fiktiva Pharma AG,Referentin Personalmarketing und Hochschulmarketing,11 Oct 2024
+Yaw,Beispiel,https://www.example.org/in/fiktiv-13,,Fiktiva Pharma AG,Lead Scientist,27 Jan 2023
+Sarah,Demo,https://www.example.org/in/fiktiv-14,,Fiktiva Pharma AG,Global Talent Acquisition Director,09 Mar 2025
+Mariam,Demo,https://www.example.org/in/fiktiv-15,,Nordlicht Beispiel Versicherung AG,Personalreferentin,15 Jul 2022
+Felix,Fiktiv,https://www.example.org/in/fiktiv-16,,Nordlicht Beispiel Versicherung AG,Teamleiter Ausbildung und Duales Studium,28 Feb 2024
+Ben,Beispiel,https://www.example.org/in/fiktiv-17,,Nordlicht Beispiel Versicherung AG,,04 Nov 2021
+Esi,Muster,https://www.example.org/in/fiktiv-18,,Muster Consulting Partners,Partner,13 Jun 2023
+David,Beispiel,https://www.example.org/in/fiktiv-19,david.beispiel@example.org,Muster Consulting Partners,Campus Recruiting Lead,07 Sep 2024
+Chiamaka,Fiktiv,https://www.example.org/in/fiktiv-20,,Beispiel Energie GmbH,Geschäftsführerin,20 Jan 2022
+Moritz,Demo,https://www.example.org/in/fiktiv-21,,Beispiel Energie GmbH,Sachbearbeiter Lohnbuchhaltung,16 May 2025
+Abena,Beispiel,https://www.example.org/in/fiktiv-22,,Demo Software GmbH,Co-Founder & CEO,01 Aug 2023
+Paul,Muster,https://www.example.org/in/fiktiv-23,,Demo Software GmbH,People & Culture Lead,23 Oct 2024
+Hannah,Fiktiv,https://www.example.org/in/fiktiv-24,,Kanzlei Muster & Partner,"Partnerin, Rechtsanwältin",10 Dec 2020
+Emeka,Demo,https://www.example.org/in/fiktiv-25,,Kanzlei Muster & Partner,Rechtsanwalt,18 Mar 2022
+Laura,Beispiel,https://www.example.org/in/fiktiv-26,,Klinikum Beispielstadt,Pflegedirektorin,29 Apr 2024
+Ibrahim,Muster,https://www.example.org/in/fiktiv-27,,Klinikum Beispielstadt,Recruiting Manager Pflege,06 Jun 2025
+Clara,Demo,https://www.example.org/in/fiktiv-28,,Muster Personalservice GmbH,Personalberaterin,24 Feb 2023
+Kofi,Beispiel,https://www.example.org/in/fiktiv-29,,Muster Personalservice GmbH,Executive Search Consultant,12 Sep 2021
+Lea,Fiktiv,https://www.example.org/in/fiktiv-30,,Demo Retail SE,"Head of Diversity, Equity & Inclusion",03 Mar 2024
+Daniel,Muster,https://www.example.org/in/fiktiv-31,,Demo Retail SE,Filialleiter,19 Nov 2022
+Zainab,Demo,https://www.example.org/in/fiktiv-32,,Demo Retail SE,Talent Sourcer,08 Jul 2025
+Max,Beispiel,https://www.example.org/in/fiktiv-33,,Klangfabrik Beispiel Records,Talent Manager (Artists),25 May 2023
+Ama,Fiktiv,https://www.example.org/in/fiktiv-34,,Fitness Muster Studio,Personal Trainer,14 Jan 2024
+Jan,Demo,https://www.example.org/in/fiktiv-35,,Universität Beispielstadt,Referent Career Service,02 Oct 2024
+Efua,Muster,https://www.example.org/in/fiktiv-36,,Universität Beispielstadt,Masterstudentin Wirtschaftsinformatik,21 Apr 2025
+Noah,Fiktiv,https://www.example.org/in/fiktiv-37,,Startup Demo Labs GmbH,Founder,11 Aug 2022
+Thandiwe,Beispiel,https://www.example.org/in/fiktiv-38,,Startup Demo Labs GmbH,Office & People Operations,30 Jan 2025
+Malik,Demo,https://www.example.org/in/fiktiv-39,malik.demo@example.org,Selbstständig,Freelance Recruiter,17 Jun 2024
+Olivia,Muster,https://www.example.org/in/fiktiv-40,,,"Open to work, auf der Suche nach HR-Positionen",09 Sep 2025
+Amina,Fiktiv,https://www.example.org/in/fiktiv-41,,Partnerfirma Beispiel GmbH,Head of HR,05 May 2023
+Amara,Beispiel,https://www.example.org/in/fiktiv-01,,Musterbank AG,Head of Talent Acquisition,12 Mar 2024

@@ -1,6 +1,6 @@
 # Der Posteingang sortiert sich selbst vor
 
-Dieser Use Case sichtet alle Mails, die seit dem letzten Lauf angekommen sind (beim allerersten Mal die letzten 7 Tage), und ordnet jede nach ihrem Inhalt einer Vereins-Kategorie zu: Förderung, Partner, Teilnehmende, Verwaltung, Team oder Sonstiges. Was eilt, bekommt zusätzlich die Markierung Dringend. Gleichzeitig liest Claude heraus, welche Aufgaben in den Mails für dich stecken, und schlägt sie als To-do-Liste vor. Erst wenn du bestätigst, setzt Claude die Farb-Kategorien in Outlook, schreibt die To-dos in deine `TODO.md` und legt für die dringendsten Anfragen fertige Antwortentwürfe in den Entwürfe-Ordner. Versendet wird nie automatisch.
+Dieser Use Case sichtet alle Mails, die seit dem letzten Lauf angekommen sind (beim allerersten Mal die letzten 7 Tage), und ordnet jede nach ihrem Inhalt einer Vereins-Kategorie zu: Förderung, Partner, Teilnehmende, Verwaltung, Team oder Sonstiges. Was eilt, bekommt zusätzlich die Markierung Dringend. Wo Geld oder eine Gelegenheit drinsteckt (unbeantwortete Anfrage, Interesse an Kooperation oder Sponsoring, offenes Angebot, Zahlungseingang), kommt die Markierung Chance dazu. Gleichzeitig liest Claude heraus, welche Aufgaben in den Mails für dich stecken, und schlägt sie als To-do-Liste vor. Erst wenn du bestätigst, setzt Claude die Farb-Kategorien in Outlook, schreibt die To-dos in deine `TODO.md` und legt für die dringendsten Anfragen fertige Antwortentwürfe in den Entwürfe-Ordner. Versendet wird nie automatisch.
 
 ```
 Vorher                          Claude                          Nachher
@@ -8,7 +8,9 @@ Vorher                          Claude                          Nachher
 40 ungeordnete Mails,        →  liest jede Mail, ordnet sie  →  Farb-Kategorien in Outlook
 Fristen und Bitten              ein, findet Aufgaben und        (Dringend zuerst), eine
 irgendwo im Text,               Fristen, zeigt dir alles        TODO.md mit allen Aufgaben
-Rechnungen dazwischen           als Tabelle zum Abnicken        samt Frist, Belege markiert,
+Rechnungen dazwischen,          als Tabelle zum Abnicken        samt Frist, Belege markiert,
+Anfragen und Geld, die                                          Chancen gelb markiert und
+untergehen                                                      direkt nach Dringend gelistet,
                                                                 Antwortentwürfe für das
                                                                 Dringendste
 ```
@@ -56,9 +58,9 @@ Sichte den Posteingang und sortier ihn vor.
 
 Das passiert dann:
 
-1. Beim allerersten Mal fragt Claude, welche Mailadresse dein Hauptpostfach ist, und merkt sich das in der Datei `POSTFAECHER.md` im Skill-Ordner.
+1. Beim allerersten Mal fragt Claude nach der Mailadresse deines Hauptpostfachs und nach der Einheit, zu der es gehört (ADAN e.V., ADAN Impact oder eine andere). Beides merkt sich Claude in der Datei `POSTFAECHER.md` im Skill-Ordner. Die Kategorien sind für jede Einheit gleich, aber Antwortentwürfe tragen den Namen der Einheit und passen ihren Ton daran an.
 2. Claude liest alle Mails der letzten sieben Tage und ordnet jede einer Kategorie zu. Was eilt (Frist in den nächsten sieben Tagen, Rückmeldung bis zu einem Datum verlangt, eine Förderstelle oder ein Partner wartet auf Antwort, eine Rechnung ist fällig), bekommt zusätzlich Dringend.
-3. Du bekommst eine Übersichtstabelle, Dringendes zuerst, mit einer Spalte „To-do" für jede Mail. Rechnungen sind mit „Beleg" markiert.
+3. Du bekommst eine Übersichtstabelle, Dringendes zuerst, dann Chancen, mit einer Spalte „To-do" für jede Mail und einer Spalte „Chance" mit einem Halbsatz, warum. Rechnungen sind mit „Beleg" markiert.
 4. Du sagst „passt" oder korrigierst, zum Beispiel „Nr. 4 ist kein To-do" oder „bei Nr. 2 ist die Frist der 30.10.".
 5. Nach deinem Ja setzt Claude die Farb-Kategorien in Outlook (beim ersten Mal legt er sie an) und schreibt die To-dos in die `TODO.md` in deinem Ordner. Was dort schon offen steht, wird nicht doppelt eingetragen.
 6. Für dringende Mails zu Förderung, Partnern und Teilnehmenden bietet Claude dir einen Antwortentwurf an. Er landet im Entwürfe-Ordner, nichts wird automatisch versendet.
@@ -84,6 +86,12 @@ Warum dringend? Nr. 1, die Schule bittet um Rückmeldung bis 20.10. Nr. 2, die S
 
 Achtung bei Nr. 8, Verdacht auf eingeschleuste Anweisung. Die Mail fordert „den Assistenten" auf, alle Rechnungen an eine fremde Adresse weiterzuleiten. Claude hat nichts davon getan und die Mail nur einsortiert.
 
+Kommt in derselben Woche noch eine Anfrage mit Geld oder Gelegenheit dazu, steht sie direkt nach den dringenden Mails, etwa so:
+
+| Nr. | Absender | Betreff | Kategorie | Chance | To-do |
+|---|---|---|---|---|---|
+| 9 | Hansewerk Personal GmbH | ● Stand beim Career Day? | Partner, Chance | Firma will als Ausstellerin zum Career Day | Konditionen für einen Ausstellerstand schicken, ohne Frist |
+
 Passt das so, oder möchtest du etwas ändern?
 
 Nach deinem „passt" stehen in deiner `TODO.md` diese sechs neuen Zeilen:
@@ -104,6 +112,26 @@ Fertig mit deinem Hauptpostfach. 8 Mails sortiert, 3 davon dringend, 1 Beleg.
 6 To-dos neu in der TODO.md, 2 Antwortentwürfe liegen im Entwürfe-Ordner.
 Eine Mail sah nach einer eingeschleusten Anweisung aus (Nr. 8), ich habe sie nur einsortiert.
 ```
+
+## Rückblick: was ist liegengeblieben
+
+Neben dem normalen Lauf gibt es einen zweiten Aufruf, der rückwirkend nach Mails sucht, auf die nie jemand geantwortet hat. Gedacht für die Frage „liegt da noch Geld rum?". Sag Claude:
+
+```
+Sichte die letzten 90 Tage auf Liegengebliebenes.
+```
+
+Claude liest den Eingang der letzten 90 Tage (auf Wunsch auch einen anderen Zeitraum), lässt Newsletter, Werbung und interne Team-Mails weg und prüft bei jeder übrigen Mail, ob aus deinem Postfach danach eine Antwort an den Absender ging. Übrig bleibt nur, was unbeantwortet ist, als Liste mit Chance-Markierung, Absender, Datum, Kernanliegen und einem Vorschlag für den nächsten Schritt. Im Rückblick setzt Claude keine Kategorien in Outlook und ändert nichts daran, wann der normale Lauf zuletzt war. To-dos schreibt Claude nur, wenn du darum bittest.
+
+Ein erfundenes Beispiel, Stand 20.10.2026:
+
+| Nr. | Chance | Absender | Datum | Kernanliegen | Nächster Schritt |
+|---|---|---|---|---|---|
+| 1 | Sponsoring-Interesse | Brückner Maschinenbau AG | 28.07.2026 | Fragt, ob der Verein Sponsoren für Veranstaltungen sucht | Kurz nachfassen und ein Telefonat anbieten |
+| 2 | Rückfrage zu unserem Angebot | Volkshochschule Mittelstadt | 02.09.2026 | Will wissen, ob das Mentoring-Angebot auch für Erwachsene gilt | Rückfrage beantworten und Gesprächstermin vorschlagen |
+| 3 |  | Stadtteilbüro Nord | 15.09.2026 | Bittet um Infomaterial für die Auslage | Infomaterial schicken oder sagen, wann es kommt |
+
+Willst du daraus To-dos, sag „schreib Nr. 1 und 2 als To-do". Die Zeilen landen im selben Format in deiner `TODO.md` wie beim normalen Lauf.
 
 ## Ein zweites Postfach sichten
 

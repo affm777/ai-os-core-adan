@@ -338,15 +338,17 @@ ai-os-core/
 
 ### Use-Case-Bundles (`claude/use-cases/`)
 
-Ein Use-Case-Bundle ist ein fertiges, in der Praxis erprobtes Paket aus README und einem oder mehreren Skills für eine konkrete wiederkehrende Aufgabe, gedacht zum Installieren statt zum Selberbauen. Für ADAN sind drei Bundles vorbereitet:
+Ein Use-Case-Bundle ist ein fertiges, in der Praxis erprobtes Paket aus README und einem oder mehreren Skills für eine konkrete wiederkehrende Aufgabe, gedacht zum Installieren statt zum Selberbauen. Für ADAN sind fünf Bundles vorbereitet:
 
-- `content-adapter`: macht aus einer Idee oder einem Text die Fassungen für LinkedIn, Instagram, Newsletter, Mail und Website, auf Deutsch und Englisch, im eigenen Ton.
-- `motion-graphic`: baut aus einer Beschreibung ein kurzes animiertes Video für Social Media oder die Website (16:9 und 9:16).
-- `posteingang-triage`: sichtet neue Mails, ordnet sie Vereins-Kategorien zu und schlägt To-dos und Antwortentwürfe vor.
+- `content-adapter`: macht aus einer Idee oder einem Text die Fassungen für LinkedIn, Instagram, Newsletter, Mail und Website, auf Deutsch und Englisch, im eigenen Ton je Marke. Installation per `install.sh`.
+- `motion-graphic`: baut aus einer Beschreibung ein kurzes animiertes Video für Social Media oder die Website (16:9 und 9:16). Installation per `install.sh`.
+- `posteingang-triage`: sichtet neue Mails je Postfach und Einheit, ordnet sie Vereins-Kategorien zu, markiert Chancen und schlägt To-dos und Antwortentwürfe vor, dazu ein Rückblick auf Liegengebliebenes. Installation durch Kopieren des Skill-Ordners laut Bundle-README.
+- `social-post`: macht aus einem Kerntext fertige Social-Visuals (Instagram, Story, LinkedIn, Karussell) im Look von ADAN e.V., ADAN Impact oder ADAN Careers. Installation per `install.sh`.
+- `kontakt-segmentierung`: sortiert einen LinkedIn-Kontaktexport nach Recruiting-Segmenten und Prioritäten und erstellt daraus die Ansprechliste für den Career Day als Excel-Datei. Installation per `install.sh`.
 
 Dazu liegen drei weitere Bundles als Beispiele aus anderen Projekten bei: `cost-tracker` (Kostenüberblick mit Belegen), `rechnungseingang-opos` (Rechnungs-Mails in die offene-Posten-Liste) und `requirements-board` (Notion-Board für Anforderungen).
 
-Die Bundles kommen mit dem Download des Repos mit, werden vom Bootstrap aber **nicht automatisch installiert**. Installiert wird ein Bundle gezielt, wenn es gebraucht wird, bei `content-adapter` und `motion-graphic` per `bash claude/use-cases/<bundle>/install.sh`. Am einfachsten sagst du Claude „installier mir den Use Case content-adapter".
+Die Bundles kommen mit dem Download des Repos mit, werden vom Bootstrap aber **nicht automatisch installiert**. Installiert wird ein Bundle gezielt, wenn es gebraucht wird, bei `content-adapter`, `motion-graphic`, `social-post` und `kontakt-segmentierung` per `bash claude/use-cases/<bundle>/install.sh`, bei `posteingang-triage` durch Kopieren des Skill-Ordners. Am einfachsten sagst du Claude „installier mir den Use Case content-adapter".
 
 Jedes Bundle-Verzeichnis enthält eine eigene `README.md` mit Voraussetzungen, Installations-Anleitung und (wo zutreffend) belegten Testergebnissen. Ein Bundle wird genutzt, indem sein `skills/`-Unterordner global nach `~/.claude/skills/` kopiert wird, damit es in jedem Projekt zur Verfügung steht, siehe die Anleitung in der jeweiligen Bundle-README.
 

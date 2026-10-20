@@ -1,0 +1,30 @@
+/* ADAN Careers: PLATZHALTER, nicht bestätigt. Farben aus der Event-Grafik Career Day 2026 geschätzt
+   (Teal und Orange), Schrift vorläufig Rubik. Assets und Werte vom Design-Team nachziehen.
+   Liegt im Arbeitsordner brand/adan-careers/marke.css, gilt jene Datei statt dieser. */
+body {
+  --sp-schrift: "Rubik", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sp-gewicht-headline: 600;
+
+  --sp-farbe-flaeche: #00AD97;              /* Teal aus der Event-Grafik */
+  --sp-farbe-auf-flaeche: #FFFFFF;
+  --sp-farbe-kicker-auf-flaeche: #FFFFFF;
+  --sp-farbe-hervorhebung-auf-flaeche: #FFE2CF;
+  --sp-farbe-cta-grund-auf-flaeche: #F88A4B; /* Orange aus der Event-Grafik */
+  --sp-farbe-cta-text-auf-flaeche: #111111;
+
+  --sp-farbe-grund: #FFFFFF;
+  --sp-farbe-text: #111111;
+  --sp-farbe-headline: #111111;
+  --sp-farbe-text-leise: #555555;
+  --sp-farbe-kicker: #00AD97;
+  --sp-farbe-hervorhebung: #E8692A;
+  --sp-farbe-cta-grund: #F88A4B;
+  --sp-farbe-cta-text: #111111;
+
+  --sp-radius: 0;
+  --sp-radius-punkt: 50%;
+  --sp-logo-hoehe: 150;
+  --sp-headline-statement: 100;
+}
+/* Logo mit dunkler Schrift: auf Farbfläche auf einem weißen Kreis */
+.sp-statement .sp-logo { background: #FFFFFF; border-radius: 50%; }

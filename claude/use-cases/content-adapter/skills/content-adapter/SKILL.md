@@ -1,8 +1,8 @@
 ---
 name: content-adapter
-description: Formt eine Idee oder einen fertigen Kerntext in Fassungen für LinkedIn, Instagram, Newsletter, Mail und Website um, auf Deutsch und Englisch, in der eigenen Tonalität aus einem Stil-Korpus (content/voice.md) und ohne AI-Slop. Erfindet nichts, markiert Fehlendes als [FEHLT: ...], prüft jede Fassung gegen eine Verbotsliste und legt alles im Arbeitsordner unter content/ausgabe/ ab. Baut auf Wunsch den Stil-Korpus aus eigenen Texten auf. Nutze diesen Skill IMMER, wenn ein vorhandener Text oder eine Idee für einen oder mehrere Kanäle aufbereitet werden soll, auch ohne das Wort „Content“.
+description: Formt eine Idee oder einen fertigen Kerntext in Fassungen für LinkedIn, Instagram, Newsletter, Mail und Website um, auf Deutsch und Englisch, in der eigenen Tonalität aus einem Stil-Korpus (content/voice.md, bei mehreren Marken je Marke content/stil/<marke>/voice.md) und ohne AI-Slop. Erfindet nichts, markiert Fehlendes als [FEHLT: ...], prüft jede Fassung gegen eine Verbotsliste und liefert zu jeder Fassung einen kurzen Design-Auftrag fürs Bild und legt alles im Arbeitsordner unter content/ausgabe/ ab. Baut auf Wunsch den Stil-Korpus aus eigenen Texten auf. Nutze diesen Skill IMMER, wenn ein vorhandener Text oder eine Idee für einen oder mehrere Kanäle aufbereitet werden soll, auch ohne das Wort „Content“.
 when_to_use: |
-  Trigger-Phrasen: "mach daraus einen LinkedIn-Post", "bereite das für Instagram auf", "schreib das für den Newsletter um", "mach daraus Posts für alle Kanäle", "Fassungen für LinkedIn und Website", "auf Englisch und Deutsch für Social Media", "Content adaptieren", "Stil-Korpus anlegen", "lern meinen Schreibstil", "hier sind Beispieltexte für meine Voice", "/content-adapter". Auch zum Nachbessern einer Fassung aus einem früheren Lauf ("mach die LinkedIn-Fassung kürzer").
+  Trigger-Phrasen: "mach daraus einen LinkedIn-Post", "bereite das für Instagram auf", "schreib das für den Newsletter um", "mach daraus Posts für alle Kanäle", "Fassungen für LinkedIn und Website", "auf Englisch und Deutsch für Social Media", "Content adaptieren", "Stil-Korpus anlegen", "lern meinen Schreibstil", "hier sind Beispieltexte für meine Voice", "Stil-Profil für Marke X anlegen", "turn this into a LinkedIn post", "adapt this for all channels", "here are sample texts for my voice", "/content-adapter". Auch zum Nachbessern einer Fassung aus einem früheren Lauf ("mach die LinkedIn-Fassung kürzer").
   NICHT für Bilder, Flyer oder Slides (designer-Skill), Videos (motion-graphic), Antworten auf echte Mails im Postfach (mail- oder posteingang-Skills) und nicht zum direkten Posten in Kanäle.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 ---
@@ -22,7 +22,7 @@ Der Skill ist kein Textgenerator, er formt um. **Der Rohtext ist Wahrheit.**
 - **Kanaltexte sind Klartext.** Keine Sternchen, Rauten als Überschrift, Markdown-Listen oder Fettschrift in den `.txt`-Dateien. Zwischenüberschriften bei Website und Newsletter als eigene Zeile ohne Zeichen davor.
 - **Deutsch und Englisch sind eigene Fassungen.** Erst die DE-Fassung, dann die EN-Fassung aus dem Rohtext neu gebaut, nicht Satz für Satz übersetzt. Englisch folgt den EN-Besonderheiten der Kanalkarte.
 - **Nichts löschen.** Kein `rm`. Gibt es den Ausgabeordner eines Tages schon, wird ein neuer mit `-2`, `-3` angelegt. Überarbeitete Fassungen ersetzen die Datei im selben Lauf, die alte Fassung wandert vorher nach `_alt/<kanal>-<sprache>-vN.txt` im Laufordner.
-- **Sichtbare Texte im Chat** auf Deutsch mit echten Umlauten.
+- **Dialog in der Sprache des Nutzers.** Fragen, Hinweise und Zusammenfassungen (auch in AskUserQuestion und die festen Sätze unten) laufen in der Sprache, in der der Nutzer schreibt, etwa Englisch, die Fassungen bleiben DE und EN wie gewählt und deutsche Chat-Texte stehen mit echten Umlauten.
 
 ## Pfade
 
@@ -32,6 +32,7 @@ Der Skill ist kein Textgenerator, er formt um. **Der Rohtext ist Wahrheit.**
   - `content/_alt/` Sicherungen von voice.md vor jeder Verdichtung oder Neuableitung
   - `content/beispiele/` eigene Texte als Quelle für den Korpus
   - `content/ausgabe/YYYY-MM-DD-<slug>/` je Lauf `rohtext.md`, `<kanal>-<de|en>.txt`, `uebersicht.md`
+- **Mehrere Marken.** Schreibt der Nutzer für mehr als eine Marke, hat jede Marke einen eigenen Korpus unter `content/stil/<marke>/` mit `voice.md`, `_alt/` und `beispiele/` (Marken-Slug in Kleinbuchstaben mit Bindestrichen, z. B. `adan-ev`, `adan-impact`, `adan-careers`). Alles, was diese Anleitung zu `content/voice.md`, `content/_alt/` und `content/beispiele/` sagt, gilt dann für die Ordner der gewählten Marke (aktiver Korpus). Ausgaben bleiben gemeinsam unter `content/ausgabe/`.
 - Kanalnamen in Dateinamen: `linkedin`, `instagram`, `newsletter`, `mail`, `website`.
 - Plattform macOS oder Windows mit Git Bash. Keine weiteren Programme nötig.
 
@@ -39,7 +40,7 @@ Der Skill ist kein Textgenerator, er formt um. **Der Rohtext ist Wahrheit.**
 
 ### 1. Korpus prüfen
 
-`content/voice.md` im Arbeitsordner suchen (Glob, auch `**/content/voice.md` eine Ebene tiefer). Gefunden: lesen, Statuszeile merken, still weiter zu Schritt 2. Fehlt sie, nicht fragen, ob ein Korpus angelegt werden soll, sondern direkt mit dem Interview (1a) starten. Ankündigung in einem Satz:
+`content/voice.md` und `content/stil/*/voice.md` im Arbeitsordner suchen (Glob, auch eine Ebene tiefer). Bei genau einem gefundenen Korpus diesen lesen, Statuszeile merken, still weiter zu Schritt 2. Bei mehreren Marken-Korpora noch keinen lesen, die Marke wird im Briefing gewählt (Schritt 2). Fehlt sie, nicht fragen, ob ein Korpus angelegt werden soll, sondern direkt mit dem Interview (1a) starten. Ankündigung in einem Satz:
 
 > Bevor wir loslegen, sechs kurze Fragen zu deinem Ton (rund zwei Minuten), damit die Texte nach dir klingen.
 
@@ -71,7 +72,9 @@ Dann weiter zu Schritt 2. Bricht der Nutzer das Interview ab, ohne voice.md weit
 
 Auslöser: „hier sind Beispieltexte für meine Voice“, „lern meinen Stil aus diesen Texten“ oder Dateien, die erkennbar als Stilvorlage gemeint sind. Ein laufender Lauf wird dafür unterbrochen und danach an derselben Stelle fortgesetzt.
 
-Eingefügte Texte als `content/beispiele/NN-<kurzname>.md` speichern, genannte Dateien nur lesen (nicht kopieren, nicht verschieben). Dann ableiten:
+Nennt der Nutzer eine Marke („Beispieltexte für die Marke ADAN Careers“), gilt der Korpus dieser Marke, fehlt er, wird `content/stil/<marke>/` angelegt. Gibt es mehrere Marken und keine ist genannt, zuerst nach der Marke fragen. Kommt eine zweite Marke dazu und es gibt noch ein `content/voice.md` ohne Marke, fragen, zu welcher Marke es gehört, es nach `content/stil/<marke>/voice.md` kopieren und das Original nach `content/_alt/voice-<JJJJ-MM-TT>.md` verschieben (nie löschen).
+
+Eingefügte Texte als `content/beispiele/NN-<kurzname>.md` speichern, genannte Dateien nur lesen (nicht kopieren, nicht verschieben). Nennt der Nutzer einen fertigen Korpus-Entwurf im Aufbau von `voice-vorlage.md` (etwa `voice-entwurf.md`), ist er der Ausgangspunkt für den aktiven Korpus und wird mit den Belegen aus den Texten abgeglichen. Dann ableiten:
 
 Anrede (Du, Sie, ihr), Satzlänge, Rhythmus, typische Einstiege, typische Schlüsse, wie über die Zielgruppe gesprochen wird, Wörter die der Nutzer nutzt, Wörter die er nie nutzt, Emoji-Praxis, Hashtag-Praxis, Humor ja oder nein, EN-Tonalität falls EN-Beispiele da sind.
 
@@ -110,6 +113,8 @@ Rohtext oder Idee kommt frei im Chat oder als Datei. Wörter zählen.
 
 > Erzähl mir den Kern in zwei, drei Sätzen. Was ist passiert oder was wird angeboten, für wen und warum jetzt?
 
+**Marke (nur bei mehreren Marken-Korpora):** vor der Fragerunde eine eigene AskUserQuestion mit einer Frage „Für welche Marke ist der Text?“, Optionen sind die vorhandenen Ordner unter `content/stil/`. Nennt der Nutzer die Marke schon in seiner Nachricht eindeutig, entfällt die Frage. Danach nur den Korpus dieser Marke lesen.
+
 Danach eine Fragerunde (AskUserQuestion, genau eine Runde, höchstens vier Fragen):
 
 1. Kanäle (Mehrfachauswahl): LinkedIn, Instagram, Newsletter, Mail, Website. Weil AskUserQuestion höchstens vier Optionen zeigt, Mail und Website als eine Option „Mail und Website“ anbieten, alles andere kommt über „Sonstiges“ als Freitext.
@@ -117,7 +122,7 @@ Danach eine Fragerunde (AskUserQuestion, genau eine Runde, höchstens vier Frage
 3. Call-to-Action oder Link: „Link folgt / habe ich“ (dann Freitext), „Handlung ohne Link“ (z. B. Melden per Mail), „Kein Call-to-Action“.
 4. Bild, Termin oder Deadline: „Bild vorhanden“, „Termin oder Deadline“ (Freitext), „Beides“, „Nichts davon“.
 
-Antworten sind ab jetzt Teil der Wahrheit. Einen kurzen Slug festlegen (Kleinbuchstaben, Bindestriche, ohne Umlaute, höchstens fünf Wörter). Laufordner `content/ausgabe/<heute>-<slug>/` anlegen (existiert er, `-2` anhängen) und den Rohtext plus Briefing-Antworten wörtlich als `rohtext.md` speichern.
+Antworten sind ab jetzt Teil der Wahrheit. Einen kurzen Slug festlegen (Kleinbuchstaben, Bindestriche, ohne Umlaute, höchstens fünf Wörter). Laufordner `content/ausgabe/<heute>-<slug>/` anlegen (existiert er, `-2` anhängen) und den Rohtext plus Briefing-Antworten (samt Marke, falls gewählt) wörtlich als `rohtext.md` speichern.
 
 ### 3. Erzeugen
 
@@ -139,14 +144,22 @@ Vorher lesen: die Kanalkarten der gewählten Kanäle, `verbotsliste.md`, `conten
 2. Jeden VERSTOSS beheben und erneut prüfen, bis keiner mehr da ist. HINWEISE einzeln ansehen (z. B. ist „ADAN“ kein Großschreib-Verstoß) und nur beheben, wenn sie zutreffen.
 3. Selbst gegen die Faktenliste lesen, Satz für Satz. Jede Aussage, die nicht in der Liste steht, streichen oder in `[FEHLT]` umwandeln. Drei Adjektive in Reihe und rhetorische Fragen als Einstieg zusätzlich mit eigenem Blick prüfen, das Script findet nicht alle.
 
-**`uebersicht.md`** im Laufordner: Kopfzeile mit Datum, Slug, Kanälen, Sprachen und Korpus-Status („Stil-Korpus belegt, N Texte“, „Stil-Korpus vorläufig aus Interview“ oder „ohne Stil-Korpus“). Dann alle Fassungen in Codeblöcken (dort darf Markdown stehen, die Kanaltexte selbst bleiben Klartext). Am Ende ein Prüfprotokoll: Ergebnis von `pruefen.sh`, Liste aller `[FEHLT]`-Stellen, Faktenliste mit dem Vermerk, welche Fakten in welchen Fassungen vorkommen.
+**Design-Auftrag je Fassung.** Zu jeder Fassung (Kanal und Sprache) einen kurzen Auftrag fürs Bild schreiben, den der Nutzer in Claude Design, Figma oder den Skill `social-post` übergeben kann. Klartext mit festen Kennzeilen in dieser Reihenfolge, in der Sprache der Fassung:
+- `Headline:` höchstens sechs Wörter, nur aus der Faktenliste.
+- `Bildtext:` höchstens 20 Wörter, nur aus der Faktenliste, sonst `[FEHLT: ...]`.
+- `Format:` LinkedIn 1:1 (1200 x 1200), Instagram 4:5 (1080 x 1350), Newsletter und Mail Kopfbild 2:1 (1200 x 600), Website 16:9 (1920 x 1080). Nennt das Briefing ein anderes Format (etwa Story 9:16, Karussell), gilt das.
+- `Kanal:` und `Marke:` (ohne Marken-Korpus der Name aus dem Rohtext oder `[FEHLT: Marke]`).
+- `Stimmung:` ein Satz aus Rohtext und Korpus, ohne neue Fakten.
+Verbotsliste und Gedankenstrich-Regel gelten auch hier, das Script prüft die Aufträge nicht, also selbst lesen. Farben, Schriften und Logos nennt der Auftrag nicht, die kommen aus dem Design-System der Marke.
 
-**Ausgabe im Chat:** je Kanal und Sprache ein Block mit Überschrift (`LinkedIn, Deutsch, 1.104 Zeichen`) und dem Text in einem Codeblock zum Kopieren. Darunter in einer Zeile der Ablageort der Dateien und die offenen `[FEHLT]`-Stellen als kurze Liste. Am Ende die Zeile „Sag mir, was ich an welcher Fassung ändern soll, oder welche Fassung in die Zwischenablage soll.“ Steht die Statuszeile auf „vorläufig“, hängt an diese Zeile genau ein Halbsatz als Erinnerung („und schick mir gern ein paar eigene Texte, dann trifft es deinen Ton besser“). Nicht öfter, nicht als eigener Absatz.
+**`uebersicht.md`** im Laufordner: Kopfzeile mit Datum, Slug, Marke (falls gewählt), Kanälen, Sprachen und Korpus-Status („Stil-Korpus belegt, N Texte“, „Stil-Korpus vorläufig aus Interview“ oder „ohne Stil-Korpus“). Dann alle Fassungen in Codeblöcken (dort darf Markdown stehen, die Kanaltexte selbst bleiben Klartext). Danach der Abschnitt `## Design-Aufträge` mit je einem Codeblock pro Fassung, überschrieben mit Kanal und Sprache. Am Ende ein Prüfprotokoll mit dem Ergebnis von `pruefen.sh`, der Liste aller `[FEHLT]`-Stellen und der Faktenliste mit dem Vermerk, welche Fakten in welchen Fassungen vorkommen.
+
+**Ausgabe im Chat:** je Kanal und Sprache ein Block mit Überschrift (`LinkedIn, Deutsch, 1.104 Zeichen`) und dem Text in einem Codeblock zum Kopieren, direkt darunter der Design-Auftrag als eigener kurzer Codeblock. Darunter in einer Zeile der Ablageort der Dateien und die offenen `[FEHLT]`-Stellen als kurze Liste. Am Ende die Zeile „Sag mir, was ich an welcher Fassung ändern soll, oder welche Fassung in die Zwischenablage soll.“ Steht die Statuszeile auf „vorläufig“, hängt an diese Zeile genau ein Halbsatz als Erinnerung („und schick mir gern ein paar eigene Texte, dann trifft es deinen Ton besser“). Nicht öfter, nicht als eigener Absatz.
 
 ### 4. Feedback
 
 - Nur die genannte Fassung ändern. Die anderen bleiben unangetastet, auch wenn die Korrektur dort ebenfalls passen würde. Ist das so, einmal fragen, ob die anderen nachziehen sollen.
-- Vor dem Überschreiben die bisherige Fassung nach `_alt/` kopieren (Grundregel), danach `pruefen.sh` erneut laufen lassen und `uebersicht.md` aktualisieren.
+- Vor dem Überschreiben die bisherige Fassung nach `_alt/` kopieren (Grundregel), danach `pruefen.sh` erneut laufen lassen und `uebersicht.md` aktualisieren. Ändert sich dabei ein Fakt oder die Headline-Grundlage, den Design-Auftrag dieser Fassung mitziehen.
 - Korrekturen im Gespräch nach Art merken (zu lang, zu förmlich, zu locker, zu werblich, Einstieg zu schwach, falsches Wort). Kommt dieselbe Art zum zweiten Mal, fragen:
 
 > Das ist das zweite Mal „<Art>“. Soll ich das als feste Regel in deinen Stil-Korpus schreiben, damit es künftig gleich passt?
@@ -155,11 +168,11 @@ Bei Ja in `content/voice.md` unter „Gelernte Regeln“ eintragen (Datum, Regel
 
 ### 5. Zwischenablage (nur auf Wunsch)
 
-Nur die genannte Fassung, nur aus der Datei, nie aus dem Chat-Text:
+Nur die genannte Fassung, nur aus der Datei, nie aus dem Chat-Text. Ein Design-Auftrag kommt aus seinem Block im Abschnitt „Design-Aufträge“ von `uebersicht.md` (ohne Codeblock-Zeichen), vorher als `_alt/design-<kanal>-<sprache>.tmp` im Laufordner ablegen und von dort kopieren:
 - macOS: `LANG=en_US.UTF-8 pbcopy < <datei>`, danach `LANG=en_US.UTF-8 pbpaste | head -3` und prüfen, dass Umlaute stimmen.
-- Windows (Git Bash): `powershell.exe -NoProfile -Command "Get-Content -Raw -Encoding UTF8 '<datei>' | Set-Clipboard"`. Nicht `clip`, weil `clip` UTF-8-Umlaute ohne BOM verstümmelt. Prüfen mit `powershell.exe -NoProfile -Command "Get-Clipboard" | head -3`.
+- Windows (Git Bash): `powershell.exe -NoProfile -Command "Get-Content -Raw -Encoding UTF8 '<datei>' | Set-Clipboard"`, `<datei>` als Pfad relativ zum Arbeitsordner (oder mit `cygpath -w` umgewandelt, PowerShell versteht `/c/...` nicht). Nicht `clip`, weil `clip` UTF-8-Umlaute ohne BOM verstümmelt. Prüfen mit `powershell.exe -NoProfile -Command "[Console]::OutputEncoding=[Text.Encoding]::UTF8; Get-Clipboard" | head -3`. Dem Nutzer dazu sagen, dass Strg+V in Git Bash nicht einfügt (Rechtsklick und Einfügen oder Umschalt+Einfg), in anderen Programmen geht Strg+V normal.
 - Bei Kanälen mit Kennzeilen (Betreff, Überschrift) fragen, ob der ganze Block oder nur der Text kopiert werden soll.
 
 ## Was der Skill nicht tut
 
-Nicht posten oder planen, keine Bilder erzeugen, keine weiteren Sprachen als DE und EN, keine Fakten recherchieren. Fragt der Nutzer danach, das kurz sagen und auf passende Skills verweisen (Bilder: designer, Video: motion-graphic).
+Nicht posten oder planen, keine Bilder erzeugen (nur den Design-Auftrag dafür), keine weiteren Sprachen als DE und EN, keine Fakten recherchieren. Fragt der Nutzer danach, das kurz sagen und auf passende Skills verweisen (Bilder über social-post oder designer, Video über motion-graphic).

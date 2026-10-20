@@ -1,0 +1,28 @@
+/* ADAN e.V.: Werte für die Social-Vorlagen, abgeleitet aus STYLE-GUIDE.md (vorläufig, nicht vom Verein bestätigt).
+   Liegt im Arbeitsordner brand/adan-ev/marke.css, gilt jene Datei statt dieser. */
+body {
+  --sp-schrift: "Rubik", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sp-gewicht-headline: 500;
+
+  --sp-farbe-flaeche: #ED6326;              /* Primärfarbe, Logo-Orange */
+  --sp-farbe-auf-flaeche: #FFFFFF;
+  --sp-farbe-kicker-auf-flaeche: #FFFFFF;
+  --sp-farbe-hervorhebung-auf-flaeche: #FFE0CF; /* helle Tönung des Orange, abgeleitet */
+  --sp-farbe-cta-grund-auf-flaeche: #FFFFFF;
+  --sp-farbe-cta-text-auf-flaeche: #BF2806; /* Sekundärfarbe, dunkles Rot */
+
+  --sp-farbe-grund: #FFFFFF;
+  --sp-farbe-text: #494949;
+  --sp-farbe-headline: #494949;
+  --sp-farbe-text-leise: #666666;
+  --sp-farbe-kicker: #ED6326;
+  --sp-farbe-hervorhebung: #ED6326;
+  --sp-farbe-cta-grund: #ED6326;
+  --sp-farbe-cta-text: #FFFFFF;
+
+  --sp-radius: 0;          /* Flächen und Bilder eckig */
+  --sp-radius-punkt: 50%;
+  --sp-logo-hoehe: 118;
+  --sp-headline-statement: 104;
+  --sp-wasserzeichen-deckkraft: 0.11;
+}

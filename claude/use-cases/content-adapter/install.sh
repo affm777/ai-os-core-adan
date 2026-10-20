@@ -5,7 +5,8 @@
 # Was das Skript tut:
 #   1. kopiert skills/content-adapter/ nach ~/.claude/skills/content-adapter/
 #      (ältere Fassung wird nach ~/.claude/backups/ verschoben, nie gelöscht)
-#   2. prüft, ob die Zwischenablage nutzbar ist (macOS pbcopy, Windows PowerShell)
+#   2. prüft, ob die Zwischenablage nutzbar ist (macOS pbcopy, Windows PowerShell
+#      Set-Clipboard mit UTF-8, nicht clip)
 #
 # Was das Skript nie tut: Ordner im Arbeitsordner anlegen (content/ entsteht
 # erst beim ersten Lauf des Skills), Programme installieren, Shell-Config oder
@@ -93,7 +94,14 @@ echo ""
 if [ "$OS" = mac ]; then
   if command -v pbcopy >/dev/null 2>&1; then info "Zwischenablage nutzbar (pbcopy)"; else warn "pbcopy nicht gefunden, Texte dann aus den Dateien kopieren."; fi
 elif [ "$OS" = win ]; then
-  if command -v powershell.exe >/dev/null 2>&1; then info "Zwischenablage nutzbar (PowerShell)"; else warn "PowerShell nicht gefunden, Texte dann aus den Dateien kopieren."; fi
+  # Kopiert wird über PowerShell Set-Clipboard mit UTF-8, nicht über clip (clip verstümmelt Umlaute).
+  if command -v powershell.exe >/dev/null 2>&1 \
+     && powershell.exe -NoProfile -Command "if (Get-Command Set-Clipboard -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }" >/dev/null 2>&1; then
+    info "Zwischenablage nutzbar (PowerShell Set-Clipboard, Umlaute bleiben erhalten)"
+    warn "Einfügen im Git-Bash-Fenster geht nicht mit Strg+V, dort Rechtsklick und Einfügen oder Umschalt+Einfg. In allen anderen Programmen geht Strg+V."
+  else
+    warn "PowerShell Set-Clipboard nicht gefunden, Texte dann aus den Dateien kopieren."
+  fi
 fi
 
 echo ""

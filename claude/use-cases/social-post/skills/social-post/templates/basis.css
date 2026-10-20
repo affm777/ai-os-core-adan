@@ -1,0 +1,129 @@
+/* =============================================================================
+   social-post: gemeinsame Geometrie für alle Vorlagen.
+   Farben und Schrift kommen aus marke.css (liegt im selben Build-Ordner).
+   Maßeinheit --u: 1 Einheit = Breite/1080, damit jedes Format gleich proportioniert ist.
+   ============================================================================= */
+
+body.fmt-ig-1x1     { --w: 1080px; --h: 1080px; }
+body.fmt-ig-4x5     { --w: 1080px; --h: 1350px; }
+body.fmt-story-9x16 { --w: 1080px; --h: 1920px; }
+body.fmt-li-1x1     { --w: 1200px; --h: 1200px; }
+
+body {
+  --u: calc(var(--w) / 1080);
+  /* Abstand zum Rand, in Stories größer wegen der Instagram-Bedienleisten oben und unten */
+  --rand-x: calc(88 * var(--u));
+  --rand-oben: calc(92 * var(--u));
+  --rand-unten: calc(84 * var(--u));
+  margin: 0;
+  padding: 0;
+  background: #cfcfcf;
+}
+body.fmt-story-9x16 { --rand-oben: calc(250 * var(--u)); --rand-unten: calc(270 * var(--u)); }
+
+* { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+main { display: flex; flex-direction: column; align-items: flex-start; gap: 40px; }
+
+.sp-frame {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  overflow: hidden;
+  font-family: var(--sp-schrift);
+  color: var(--sp-farbe-text);
+  background: var(--sp-farbe-grund);
+  transform: translateZ(0);
+}
+
+.sp-innen {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: var(--rand-oben) var(--rand-x) var(--rand-unten);
+  display: flex;
+  flex-direction: column;
+}
+
+/* safe center: zu langer Inhalt läuft nach unten über (messbar) statt nach oben in den Kicker */
+.sp-mitte { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: safe center; min-height: 0; }
+
+h1, h2, p, ol { margin: 0; }
+/* Headlines trennen nur an weichen Trennstellen (&shy;), zu lange Wörter fängt die Einpassung in basis.js ab */
+h1, h2 { hyphens: manual; -webkit-hyphens: manual; overflow-wrap: break-word; text-wrap: balance; }
+p { text-wrap: pretty; }
+.akzent { color: var(--sp-farbe-hervorhebung); }
+
+/* ---------- Kicker (kleine Zeile in Versalien) ---------- */
+.sp-kicker {
+  display: flex; align-items: center; gap: calc(22 * var(--u));
+  font-size: calc(28 * var(--u)); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  margin-bottom: calc(36 * var(--u));
+}
+.sp-kicker::before { content: ""; flex: 0 0 auto; width: calc(56 * var(--u)); height: calc(6 * var(--u)); background: currentColor; }
+
+/* ---------- Fußzeile mit Logo ---------- */
+.sp-fuss { display: flex; align-items: flex-end; justify-content: space-between; gap: calc(32 * var(--u)); margin-top: calc(48 * var(--u)); }
+.sp-logo { height: calc(var(--sp-logo-hoehe, 112) * var(--u)); width: auto; display: block; }
+.sp-absender { font-size: calc(26 * var(--u)); font-weight: 500; letter-spacing: 0.04em; text-align: right; opacity: 0.9; }
+
+/* ---------- Wasserzeichen (großes Logo angeschnitten) ---------- */
+.sp-wasserzeichen {
+  position: absolute; z-index: 1; pointer-events: none;
+  width: calc(var(--w) * 0.66); right: calc(var(--w) * -0.24); bottom: calc(var(--w) * -0.2);
+  opacity: var(--sp-wasserzeichen-deckkraft, 0.13);
+}
+body.fmt-story-9x16 .sp-wasserzeichen { bottom: calc(var(--w) * 0.1); }
+
+/* ---------- Vorlage Statement ---------- */
+.sp-statement { background: var(--sp-farbe-flaeche); color: var(--sp-farbe-auf-flaeche); }
+.sp-statement .sp-kicker { color: var(--sp-farbe-kicker-auf-flaeche); }
+.sp-statement h1 { font-size: calc(var(--sp-headline-statement, 100) * var(--u)); font-weight: var(--sp-gewicht-headline); line-height: 1.06; letter-spacing: -0.015em; }
+body.fmt-story-9x16 .sp-statement h1 { font-size: calc(var(--sp-headline-statement, 100) * 1.12 * var(--u)); }
+.sp-statement .sp-subline { font-size: calc(40 * var(--u)); line-height: 1.32; font-weight: 400; margin-top: calc(44 * var(--u)); max-width: 30ch; opacity: 0.95; }
+.sp-statement .sp-cta { margin-top: calc(56 * var(--u)); }
+.sp-statement .akzent { color: var(--sp-farbe-hervorhebung-auf-flaeche); }
+
+/* ---------- Call-to-Action ---------- */
+.sp-cta {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: calc(18 * var(--u));
+  font-size: calc(32 * var(--u)); font-weight: 600; line-height: 1.2;
+  padding: calc(22 * var(--u)) calc(34 * var(--u));
+  background: var(--sp-farbe-cta-grund); color: var(--sp-farbe-cta-text);
+  border-radius: var(--sp-radius, 0);
+}
+.sp-cta::after { content: "\2192"; font-weight: 500; }
+.sp-statement .sp-cta { background: var(--sp-farbe-cta-grund-auf-flaeche); color: var(--sp-farbe-cta-text-auf-flaeche); }
+
+/* ---------- Vorlage Info ---------- */
+.sp-info { background: var(--sp-farbe-grund); }
+.sp-info::before { content: ""; position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: calc(24 * var(--u)); background: var(--sp-farbe-flaeche); }
+.sp-info .sp-kicker { color: var(--sp-farbe-kicker); }
+.sp-info h1, .sp-inhalt h2 { font-size: calc(72 * var(--u)); font-weight: var(--sp-gewicht-headline); line-height: 1.1; letter-spacing: -0.01em; color: var(--sp-farbe-headline); margin-top: calc(40 * var(--u)); }
+body.fmt-story-9x16 .sp-info h1 { font-size: calc(84 * var(--u)); }
+.sp-punkte { list-style: none; padding: 0; margin-top: calc(52 * var(--u)); display: flex; flex-direction: column; gap: calc(30 * var(--u)); counter-reset: punkt; }
+body.fmt-story-9x16 .sp-punkte { gap: calc(44 * var(--u)); }
+.sp-punkte li { display: flex; align-items: flex-start; gap: calc(28 * var(--u)); font-size: calc(36 * var(--u)); line-height: 1.32; counter-increment: punkt; }
+.sp-punkte li::before {
+  content: counter(punkt); flex: 0 0 auto;
+  width: calc(58 * var(--u)); height: calc(58 * var(--u)); margin-top: calc(-6 * var(--u));
+  display: flex; align-items: center; justify-content: center;
+  font-size: calc(28 * var(--u)); font-weight: 600;
+  background: var(--sp-farbe-flaeche); color: var(--sp-farbe-auf-flaeche);
+  border-radius: var(--sp-radius-punkt, 50%);
+}
+.sp-info .sp-cta, .sp-inhalt .sp-cta { margin-top: calc(56 * var(--u)); }
+.sp-info .sp-absender, .sp-inhalt .sp-absender { color: var(--sp-farbe-text-leise); }
+
+/* ---------- Karussell: Inhaltsseiten und Abschluss ---------- */
+.sp-inhalt { background: var(--sp-farbe-grund); }
+.sp-inhalt::before { content: ""; position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: calc(24 * var(--u)); background: var(--sp-farbe-flaeche); }
+.sp-inhalt .sp-kicker { color: var(--sp-farbe-kicker); }
+.sp-inhalt .sp-text { font-size: calc(38 * var(--u)); line-height: 1.38; margin-top: calc(40 * var(--u)); color: var(--sp-farbe-text); max-width: 34ch; }
+.sp-seitenzahl { font-size: calc(26 * var(--u)); font-weight: 600; letter-spacing: 0.08em; color: var(--sp-farbe-text-leise); }
+.sp-weiter { font-size: calc(26 * var(--u)); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.9; }
+.sp-abschluss .sp-cta { font-size: calc(40 * var(--u)); padding: calc(28 * var(--u)) calc(42 * var(--u)); }
+
+/* Leere Slots ausblenden (keine Subline, kein CTA, kein Absender) */
+[data-slot]:empty, .sp-leer { display: none !important; }
