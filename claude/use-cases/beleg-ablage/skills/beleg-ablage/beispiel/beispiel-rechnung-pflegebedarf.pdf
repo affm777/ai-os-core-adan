@@ -1,0 +1,56 @@
+%PDF-1.4
+%âãÏÓ
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 703 >>
+stream
+BT
+/F1 11 Tf
+14 TL
+60 790 Td
+(Pflegebedarf Musterstadt GmbH \(fiktiv\)) '
+(Musterstraße 1, 12345 Musterstadt) '
+() '
+(An: Beispiel Pflegedienst) '
+(Beispielweg 2, 12345 Musterstadt) '
+() '
+(RECHNUNG) '
+(Rechnungsnummer: RE-2026-0412) '
+(Rechnungsdatum: 02.10.2026) '
+() '
+(Pos. 1  Einmalhandschuhe Nitril, 10 Kartons      150,00 EUR) '
+(Pos. 2  Händedesinfektion 500 ml, 20 Stück         50,00 EUR) '
+() '
+(Nettobetrag                                     200,00 EUR) '
+(zzgl. 19 % USt                                   38,00 EUR) '
+(Gesamtbetrag                                    238,00 EUR) '
+() '
+(Zahlbar innerhalb von 14 Tagen ohne Abzug.) '
+(Dies ist ein fiktiver Beispielbeleg für die Demo.) '
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000247 00000 n 
+0000000344 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1098
+%%EOF

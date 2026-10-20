@@ -51,7 +51,8 @@ case "$(uname -s 2>/dev/null || echo unbekannt)" in
 esac
 
 for pflicht in SKILL.md segmente.md ausschluss.md scripts/einlesen.py scripts/schreiben.py \
-               beispiel/Connections-beispiel.csv; do
+               scripts/akten.py vorlagen/anlass.md vorlagen/struktur.md vorlagen/recherche-anlass.md \
+               vorlagen/recherche-firmen.md beispiel/Connections-beispiel.csv beispiel/firmenakte-beispiel.md; do
   [ -f "$SRC/$pflicht" ] || { err "Bundle unvollständig: $SRC/$pflicht fehlt."; exit 1; }
 done
 
