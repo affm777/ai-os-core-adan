@@ -304,6 +304,7 @@ ai-os-core/
 │   ├── skills/               # 9 Skills (skill-creator, wrap-up, new-project, designer, landing-page-builder, research-prompt, aios-dashboard, briefing, system-check), auto-invokable
 │   ├── templates/            # Projekt-Templates (new-project: CLAUDE.md + STATE.md + TODO.md)
 │   ├── use-cases/            # Fertige Use-Case-Bundles zum Ableiten in eigene Projekte (siehe unten)
+│   ├── werkzeuge/            # Programme und Anbindungen für Claude (codex, google-workspace-cli, ffmpeg), Installation per „Sag Claude:" (siehe unten)
 │   └── hooks/                # 8 Hook-Scripts (inkl. aios-statusline.js)
 ├── dashboard/                # Lokales Cockpit, wird via bootstrap nach ~/.claude/dashboard installiert
 │   ├── INSTALL.md            # Betrieb + (manuelle) Installation
@@ -351,6 +352,14 @@ Dazu liegen drei weitere Bundles als Beispiele aus anderen Projekten bei: `cost-
 Die Bundles kommen mit dem Download des Repos mit, werden vom Bootstrap aber **nicht automatisch installiert**. Installiert wird ein Bundle gezielt, wenn es gebraucht wird, bei `content-adapter`, `motion-graphic`, `social-post` und `kontakt-segmentierung` per `bash claude/use-cases/<bundle>/install.sh`, bei `posteingang-triage` durch Kopieren des Skill-Ordners. Am einfachsten sagst du Claude „installier mir den Use Case content-adapter".
 
 Jedes Bundle-Verzeichnis enthält eine eigene `README.md` mit Voraussetzungen, Installations-Anleitung und (wo zutreffend) belegten Testergebnissen. Ein Bundle wird genutzt, indem sein `skills/`-Unterordner global nach `~/.claude/skills/` kopiert wird, damit es in jedem Projekt zur Verfügung steht, siehe die Anleitung in der jeweiligen Bundle-README.
+
+### Werkzeuge (`claude/werkzeuge/`)
+
+Ein Werkzeug ist ein Programm oder eine Anbindung, die Claude neue Fähigkeiten gibt oder die mehrere Use Cases brauchen. Installiert wird jedes Werkzeug gezielt über den Kasten „Sag Claude:" in seiner README, Claude holt dabei die aktuellste Version und prüft das Ergebnis (der Bootstrap installiert Werkzeuge nicht automatisch).
+
+- `codex`: OpenAI Codex als zweiter Coding-Agent für Zweitmeinungen, Aufträge und Bilder, angemeldet über das ChatGPT-Konto.
+- `google-workspace-cli`: Claude arbeitet direkt in Gmail, Kalender, Drive, Docs und Sheets.
+- `ffmpeg`: verarbeitet Videos und Ton, Voraussetzung für den Use Case motion-graphic.
 
 ## Lizenz
 
