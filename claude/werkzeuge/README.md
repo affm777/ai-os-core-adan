@@ -10,13 +10,13 @@ Ein Werkzeug ist ein Programm oder eine Anbindung, die Claude neue Fähigkeiten 
 
 ## So installierst du ein Werkzeug
 
-Jeder Werkzeug-Ordner hat eine eigene `README.md` mit Voraussetzungen, Grenzen und einem Kasten „Sag Claude:". Den Kasten kopierst du in den Chat von Claude und schickst ihn ab. Claude installiert das Werkzeug dann selbst in der aktuellsten Version, prüft es und sagt dir in einfachen Worten, ob es geklappt hat.
+Jeder Werkzeug-Ordner hat eine eigene `README.md` mit Voraussetzungen, Grenzen und einem Kasten „Sag Claude:", dazu eine `details.md` mit den Installationsschritten für Claude. Den Kasten kopierst du in den Chat von Claude und schickst ihn ab. Claude installiert das Werkzeug dann selbst in der aktuellsten Version, prüft es und sagt dir in einfachen Worten, ob es geklappt hat.
 
 Der allgemeine Satz dafür lautet so, `<name>` ersetzt du durch den Ordnernamen:
 
 ```
 Installiere mir das Werkzeug <name> aus meinem Setup-Repo ~/ai-os-core, in der aktuellsten Version.
-Lies dafür zuerst ~/ai-os-core/claude/werkzeuge/<name>/README.md und halte dich an die Schritte dort.
+Lies dafür zuerst ~/ai-os-core/claude/werkzeuge/<name>/details.md und halte dich an die Schritte dort.
 ```
 
 Die Werkzeuge kommen mit dem Setup-Repo mit, der Bootstrap installiert sie aber **nicht automatisch**. Du holst dir nur, was du wirklich brauchst. Bringt ein Werkzeug eigene Skills mit (`skills/`), kopiert die Installation sie nach `~/.claude/skills/`. Starte danach eine neue Claude-Session, damit Claude die neuen Skills kennt.

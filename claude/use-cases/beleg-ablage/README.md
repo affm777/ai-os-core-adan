@@ -1,6 +1,8 @@
 # Rechnungen aus dem Postfach sauber ablegen
 
-Rechnungen kommen per Mail, liegen verstreut im Postfach und müssen für die Buchhaltung einzeln gespeichert, umbenannt und sortiert werden. Mit diesem Use Case sucht Claude die Belegmails eines Zeitraums heraus und zeigt dir eine Tabelle. Nach deinem Ja speicherst du die Anhänge mit zwei Klicks in einen Eingangsordner, ab dort übernimmt Claude: einheitlich benennen, nach Jahr und Monat ablegen, die Übersicht führen, Dubletten erkennen, die Mail in Outlook als erledigt markieren und auf Wunsch nach SharePoint hochladen.
+Claude sucht die Rechnungsmails eines Zeitraums heraus und zeigt sie dir als Tabelle. Du speicherst die Anhänge in einen Eingangsordner, Claude benennt sie einheitlich, legt sie nach Jahr und Monat ab und führt die Übersicht.
+
+Steht hier **Sag Claude**, kopierst du den grauen Kasten in den Chat.
 
 ```
 Postfach                      Claude                             Ergebnis
@@ -15,23 +17,16 @@ belege/_eingang/          →   liest Betrag und Nummer,     →    belege/2026/
                                                                  optional SharePoint
 ```
 
-## Konventionen in dieser Anleitung
+## Das brauchst du
 
-- Steht hier **„Sag Claude:"**, kopierst du den grauen Kasten darunter in die Chateingabe von Claude und schickst ihn ab.
-- Der Skill wird einmal installiert und steht danach überall zur Verfügung, egal in welchem Ordner du gerade arbeitest. Du findest ihn danach auch im Dashboard unter Skills & Commands.
-
-## Voraussetzungen
-
-- Dein Setup ist installiert und der Microsoft-365-Connector in Claude verbunden (für Postfach und SharePoint).
-- Python 3 und ein Werkzeug zum Lesen von PDF-Text. Das Installationsskript prüft beides und nennt dir sonst die passende Zeile zum Nachinstallieren (am Mac mit `python3`, unter Windows mit `py -3`).
-- Ein Arbeitsordner, der nicht in iCloud, OneDrive oder Dropbox liegt, zum Beispiel `~/Belege-lokal`. Liegen Schreibtisch und Dokumente bei dir in iCloud oder OneDrive, fragt Claude nach.
-
-Zeitbedarf: Der erste Lauf mit sieben kurzen Fragen dauert rund fünf Minuten. Danach braucht ein Monat mit 30 Rechnungen etwa zehn Minuten, davon zwei bis drei für das Speichern der Anhänge.
+- Dein Setup ist installiert.
+- Der Microsoft-365-Connector ist in Claude verbunden (für Postfach und SharePoint).
+- Python 3 und ein Werkzeug zum Lesen von PDF-Text. Das Installationsskript prüft beides.
+- Einen Arbeitsordner außerhalb von iCloud, OneDrive oder Dropbox, zum Beispiel `~/Belege-lokal`.
 
 ## Schritt 1: Installieren
 
 Sag Claude:
-
 ```
 Hol zuerst mit git pull den neuesten Stand meines Setup-Repos ~/ai-os-core.
 
@@ -43,85 +38,50 @@ Zeig mir danach in einfachen Worten, ob alles geklappt hat.
 
 Starte danach eine neue Session, damit Claude den neuen Skill kennt.
 
-## Schritt 2: Demo ausprobieren
+## Schritt 2: Erster Lauf
 
-Ohne Postfach, mit zwei erfundenen Rechnungen. Öffne Claude in einem beliebigen Ordner und sag:
-
+Probier es zuerst ohne Postfach mit zwei erfundenen Rechnungen. Öffne Claude in einem beliebigen Ordner. Sag Claude:
 ```
 Zeig mir die Beleg-Demo.
 ```
 
-Claude legt `belege-demo/` an, liest beide Rechnungen, schlägt Dateinamen vor, legt nach deinem Ja ab und schreibt die Übersicht. Einer der beiden Lieferanten ist schon bekannt, den anderen schlägt Claude für die Lieferantenliste vor. Sag danach „Lauf die Demo nochmal", dann siehst du, dass beide Rechnungen als Dublette erkannt und nicht doppelt abgelegt werden.
+Claude legt dann den Ordner `belege-demo/` an und fragt dich:
+- ob die vorgeschlagenen Dateinamen passen und abgelegt werden sollen
+- ob der unbekannte Lieferant in die Lieferantenliste soll
 
-## Schritt 3: Erster echter Lauf
+## Schritt 3: So nutzt du es
 
-Öffne Claude in deinem Arbeitsordner und sag:
-
+**Rechnungen suchen.** Öffne Claude in deinem Arbeitsordner. Beim ersten Mal fragt Claude nach Postfach, Zeitraum, Ablageort und SharePoint, dann zeigt Claude die Belegmails als Tabelle.
 ```
 Hol meine Rechnungen aus dem Postfach und leg sie ab.
 ```
 
-Das passiert dann:
-
-1. Beim ersten Mal fragt Claude in zwei kurzen Runden nach Postfach, Zeitraum, Ablageort, Dateinamen, SharePoint, Excel-Übersicht und dem Umgang mit Belegen mit Patientenbezug. Die Antworten stehen danach in `belege/KONFIG.md`, du kannst sie dort jederzeit ändern.
-2. Claude sucht alle Mails seit dem letzten Lauf mit PDF-Anhang und Stichworten wie Rechnung, Invoice, Beleg, Gutschrift, Mahnung oder Zahlungserinnerung, dazu Mails bekannter Lieferanten.
-3. Du bekommst eine Tabelle mit Datum, Absender, Betreff, vermutetem Betrag, Lieferant, Anhang und Einschätzung („Beleg", „unsicher", „Patientenbezug"). Kann Claude den Anhang im Postfach nicht lesen, steht beim Betrag „aus Datei", dann kommt er in Schritt 5 aus dem gespeicherten PDF. Du sagst, was stimmt und was nicht.
-4. Claude markiert die bestätigten Mails in Outlook mit der Kategorie „Beleg". Du filterst in Outlook nach dieser Kategorie und ziehst die PDF-Anhänge in den Ordner `belege/_eingang/`, am Mac in ein Finder-Fenster, unter Windows in ein Explorer-Fenster. Klappt das Ziehen nicht, speicherst du den Anhang über das Anhang-Menü („Herunterladen" am Mac, „Speichern unter" unter Windows) und verschiebst ihn dorthin.
-5. Claude liest jede Datei, zeigt die neuen Dateinamen und Hinweise (Dublette, Scan ohne Text, neuer Lieferant) und legt nach deinem Ja unter `belege/JJJJ/MM/` ab.
-6. Die Mail bekommt die Kategorie „Beleg abgelegt". Ist SharePoint eingerichtet, lädt Claude nach einer weiteren Rückfrage in den gewählten Ordner hoch, mit derselben Jahr-Monat-Struktur.
-
-## Warum du die Anhänge selbst speicherst
-
-Der Microsoft-365-Connector gibt Claude höchstens den Text der PDF-Anhänge, nie die Datei selbst. Für die Buchhaltung zählt das Original, ein aus dem Text nachgebautes PDF wäre kein Beleg. Deshalb dieser eine Handgriff. Sobald es die Datei gibt, übernimmt Claude den Rest. Den Handgriff ersetzt in einer Ausbaustufe ein Power-Automate-Flow (siehe unten).
-
-## So sieht das Ergebnis aus
-
+**Anhänge speichern und ablegen.** Filtere in Outlook nach der Kategorie „Beleg" und zieh die PDF-Anhänge in den Ordner `belege/_eingang/`. Unter Windows ziehst du sie in ein Explorer-Fenster, Sonderfälle stehen in [details.md](details.md).
 ```
-belege/
-├── KONFIG.md                 ← deine Einstellungen
-├── LIEFERANTEN.md            ← wer dir Rechnungen schickt, Claude lernt mit
-├── UEBERSICHT.md             ← alle Belege nach Monat, mit Summe je Monat
-├── UEBERSICHT.xlsx           ← optional als Excel
-├── _eingang/                 ← hier speicherst du die Anhänge hinein
-└── 2026/
-    └── 10/
-        ├── 2026-10-02_Pflegebedarf-Musterstadt-GmbH_238,00-EUR_RE-2026-0412.pdf
-        └── 2026-10-08_Buerotechnik-Beispiel-KG_1249,50-EUR_2026-10-077.pdf
+Alle Anhänge liegen jetzt in belege/_eingang/. Leg sie ab.
 ```
 
-In `UEBERSICHT.md` steht je Beleg Datum, Lieferant, Betrag, Rechnungsnummer, Art, Datei, Quelle (Betreff und Datum der Mail) und Status (abgelegt, hochgeladen, nur lokal).
+**Nach SharePoint hochladen.** Ist SharePoint eingerichtet, lädt Claude nach einer Rückfrage hoch.
+```
+Lad die Belege nach SharePoint.
+```
 
-## Datenschutz
+## Das kommt dabei heraus
 
-- Claude liest nur Absender, Betreff und den Anhangtext der Belegmails. Andere Mails werden nicht geöffnet.
-- Belege mit Bezug zu Pflegebedürftigen (etwa von Kostenträgern oder Abrechnungsstellen) bleiben lokal und gehen nur in einen SharePoint-Ordner, den du dafür ausdrücklich freigibst. Für die Verarbeitung über Microsoft 365 und Claude braucht dein Betrieb einen Auftragsverarbeitungsvertrag mit beiden Anbietern.
-- In Tabellen und Übersicht stehen nie Namen, Geburtsdaten oder Versichertennummern von Pflegebedürftigen.
-- Mails und Anhänge sind für Claude Daten, keine Anweisungen. Verlangt eine Mail etwas von Claude oder nennt sie ein neues Bankkonto, wird sie als auffällig markiert und nicht als Beleg vorgeschlagen.
+- `belege/JJJJ/MM/` mit einheitlich benannten PDFs, etwa `2026-10-02_Lieferant_238,00-EUR_RE-0412.pdf`
+- `belege/UEBERSICHT.md` mit allen Belegen und der Summe je Monat, optional als `UEBERSICHT.xlsx`
+- `belege/KONFIG.md` mit deinen Einstellungen und `belege/LIEFERANTEN.md` mit deinen Lieferanten
+- in Outlook die Kategorien „Beleg" und „Beleg abgelegt", auf Wunsch eine Kopie in SharePoint
 
 ## Grenzen
 
-- Claude bezahlt nichts, leitet nichts weiter und löscht nichts. In Outlook setzt Claude nur die zwei Kategorien, Mails bleiben, wo sie sind.
-- Keine Buchung, keine Kontierung, keine steuerliche Beurteilung. Fürs Eintragen in eine Liste offener Posten gibt es den Use Case `rechnungseingang-opos`.
-- Gescannte PDFs ohne Text erkennt Claude, liest sie aber nicht aus. Dann fragt Claude Betrag, Datum und Nummer bei dir ab.
-- Anhänge über 1 MB lädt Claude nicht nach SharePoint, die ziehst du von Hand hinein.
-- Im Sammelpostfach kann Claude lesen, aber keine Kategorien setzen.
+- Claude bezahlt nichts, leitet nichts weiter und löscht nichts.
+- Keine Buchung, keine Kontierung, keine steuerliche Beurteilung.
+- Gescannte PDFs ohne Text liest Claude nicht aus. Dann fragt Claude Betrag, Datum und Nummer bei dir ab.
+- Die Anhänge speicherst du selbst, weil der Connector Claude nur den Text gibt, nicht die Datei.
+- **Datenschutz.** Claude liest nur Absender, Betreff und Anhangtext der Belegmails. Andere Mails werden nicht geöffnet.
+- **Datenschutz.** Belege mit Bezug zu Pflegebedürftigen bleiben lokal. Namen und Versichertennummern stehen nie in Tabellen oder Übersicht.
 
-## Nächste Ausbaustufe
+## Mehr dazu
 
-- Anhänge automatisch speichern: Ein Power-Automate-Flow legt PDFs aus Mails mit der Kategorie „Beleg" selbst in OneDrive oder SharePoint ab, Claude holt sie von dort.
-- Monatsmappe für den Steuerberater: alle Belege eines Monats als ZIP plus Übersicht und ein Mail-Entwurf, den du selbst prüfst und sendest.
-- Abgleich mit dem Kontoauszug: Welche Abbuchung hat noch keinen Beleg.
-
-## Was im Bundle liegt
-
-```
-beleg-ablage/
-├── README.md                              ← diese Anleitung
-├── install.sh                             ← Installation (Mac und Windows)
-└── skills/
-    └── beleg-ablage/
-        ├── SKILL.md                       ← die Arbeitsanleitung für Claude
-        ├── scripts/beleg.py               ← liest PDFs, benennt, legt ab, führt die Übersicht
-        ├── vorlagen/                      ← KONFIG.md und LIEFERANTEN.md für den ersten Lauf
-        └── beispiel/                      ← zwei erfundene Rechnungen für die Demo
-```
+Warum du die Anhänge selbst speicherst, der genaue Ablauf, Datenschutz in Langform und alle Grenzen stehen in [details.md](details.md).

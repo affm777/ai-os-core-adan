@@ -1,68 +1,60 @@
 # Codex: ein zweiter Coding-Agent
 
-Codex ist der Coding-Agent von OpenAI. Mit diesem Werkzeug holt Claude ihn bei Bedarf dazu, ungefähr so, wie du einen Kollegen um eine zweite Meinung bittest. Claude bleibt dein Ansprechpartner, Codex arbeitet im Hintergrund zu. Angemeldet wird Codex über dein ChatGPT-Konto, einen API-Schlüssel brauchst du nicht.
+Codex ist der Coding-Agent von OpenAI. Claude holt ihn bei Bedarf für eine zweite Meinung, einen Auftrag oder ein Bild dazu, angemeldet über dein ChatGPT-Konto.
 
-Drei Skills kommen mit:
+Steht hier **Sag Claude**, kopierst du den grauen Kasten in den Chat.
 
-- `/codex-ask`: holt eine unabhängige Zweitmeinung zu Code oder Dateien im aktuellen Ordner. Codex liest nur und ändert nichts.
-- `/codex`: gibt Codex einen Auftrag im aktuellen Projekt. Standard ist nur lesen, mit `write:` vor dem Auftrag darf Codex im aktuellen Ordner schreiben, danach zeigt Claude dir die Änderungen.
-- `/codex-image`: erzeugt ein Bild über den Bildgenerator von Codex und legt es als PNG im aktuellen Ordner ab.
-
-## Voraussetzungen
+## Das brauchst du
 
 - Dein Setup ist installiert. Node.js und npm sind damit schon da.
-- Ein ChatGPT-Konto mit Plus oder höher (Plus, Pro, Business, Enterprise oder Edu). Mit dem kostenlosen Konto klappt die Anmeldung, die Nutzung ist aber stark begrenzt.
+- Ein ChatGPT-Konto mit Plus oder höher. Einen API-Schlüssel brauchst du nicht.
 
-## Installieren
+## Schritt 1: Installieren
 
 Sag Claude:
-
 ```
 Installiere mir das Werkzeug codex aus meinem Setup-Repo ~/ai-os-core, in der aktuellsten Version.
-Lies dafür zuerst ~/ai-os-core/claude/werkzeuge/codex/README.md und halte dich an die Schritte dort.
+Lies dafür zuerst ~/ai-os-core/claude/werkzeuge/codex/details.md und halte dich an die Schritte dort.
 Sag mir am Ende in einfachen Worten, ob alles geklappt hat.
 ```
 
-Das tut Claude dann:
+Starte danach eine neue Session, damit Claude die drei Skills kennt.
 
-1. Holt mit `git -C ~/ai-os-core pull` den neuesten Stand deines Setup-Repos.
-2. Installiert Codex in der aktuellsten Version mit `npm install -g @openai/codex@latest`. Ist Codex schon da, wird es damit auf den neuesten Stand gebracht.
-3. Prüft mit `codex --version`, ob Codex gefunden wird.
-4. Kopiert die drei Skills mit `bash ~/ai-os-core/claude/werkzeuge/codex/install.sh` nach `~/.claude/skills/`. Ältere Fassungen landen vorher in `~/.claude/backups/`, gelöscht wird nichts.
-5. Prüft mit `codex login status`, ob du schon angemeldet bist. Wenn nicht, erklärt Claude dir die Anmeldung (nächster Abschnitt). Die Anmeldung machst du selbst, Claude gibt nie ein Passwort ein.
+## Schritt 2: Erster Lauf
 
-Starte danach eine neue Claude-Session, damit Claude die drei Skills kennt.
-
-### Mac und Windows
-
-Auf dem Mac läuft alles im Terminal. Unter Windows läuft es genauso in Git Bash, dort ist npm durch das Setup ebenfalls vorhanden. Meldet Windows nach der Installation `codex: command not found`, Git Bash einmal schließen und neu öffnen, damit der neue Befehl gefunden wird.
-
-## Anmelden (einmalig)
-
-Die Anmeldung braucht ein eigenes Terminalfenster, weil sich dabei der Browser öffnet. Öffne ein Terminal (Windows: Git Bash) und tippe:
-
+Melde dich einmalig selbst an. Tippe dafür in einem eigenen Terminal (unter Windows in Git Bash), nicht im Chat:
 ```
 codex login
 ```
 
-Der Browser öffnet die Anmeldeseite von ChatGPT. Melde dich mit deinem ChatGPT-Konto an und bestätige den Zugriff. Danach steht im Terminal eine Erfolgsmeldung und du kannst das Fenster schließen. Öffnet sich kein Browser (zum Beispiel auf einem Rechner ohne Oberfläche), geht es mit `codex login --device-auth`. Dann zeigt das Terminal einen Code, den du auf der angezeigten Seite eingibst.
-
-Ob es geklappt hat, prüft `codex login status`. Erwartet ist „Logged in using ChatGPT".
-
-## Erster Lauf
-
-Öffne Claude in einem beliebigen Projektordner und sag:
-
+Öffne danach Claude in einem beliebigen Projektordner. Sag Claude:
 ```
 /codex-ask Was fällt dir an der Struktur dieses Ordners auf?
 ```
 
-Claude fragt Codex, fasst die Antwort zusammen und sagt dir, wo Codex etwas anders sieht. Für ein Bild sag zum Beispiel `/codex-image ein ruhiges Büro mit Blick auf einen Park, Morgenlicht`.
+## Schritt 3: So nutzt du es
+
+**Auftrag.** Codex liest nur. Mit `write:` vor dem Auftrag darf Codex im aktuellen Ordner schreiben.
+```
+/codex Erklär mir, was die Skripte in diesem Ordner tun.
+```
+
+**Bild.** Codex erzeugt ein Bild und legt es als PNG im aktuellen Ordner ab.
+```
+/codex-image ein ruhiges Büro mit Blick auf einen Park, Morgenlicht
+```
+
+## Das kommt dabei heraus
+
+- Antworten von Codex fasst Claude im Chat zusammen und sagt dir, wo Codex etwas anders sieht.
+- Nach einem Auftrag mit `write:` zeigt Claude dir die Änderungen, Bilder liegen als PNG im aktuellen Ordner.
 
 ## Grenzen
 
-- Codex verbraucht das Kontingent deines ChatGPT-Abos. Ist es aufgebraucht, meldet Codex ein Limit und es geht erst nach der Wartezeit weiter.
-- Codex arbeitet nur im aktuellen Ordner. Schreibrecht bekommt es nur mit `write:` vor dem Auftrag, Pushes und Installationen sind in den Skills ausgeschlossen.
-- Die Skills schalten die Schutzschranken von Codex (Sandbox) nie ab.
-- Unter Windows läuft Codex direkt in Git Bash. OpenAI entwickelt die Windows-Fassung noch aktiv weiter, in Einzelfällen hängt ein Aufruf. Dann hilft meist, Codex mit dem Installationsbefehl oben zu aktualisieren.
-- Bilder entstehen über das ChatGPT-Abo, je Aufruf genau eines. Für Druck, Slides oder Social-Visuals ist der Skill designer da.
+- Codex verbraucht das Kontingent deines ChatGPT-Abos.
+- Codex arbeitet nur im aktuellen Ordner, die Schutzschranken (Sandbox) bleiben immer an.
+- Unter Windows läuft Codex in Git Bash, Sonderfälle stehen in [details.md](details.md).
+
+## Mehr dazu
+
+Die Installationsschritte für Claude, die Anmeldung im Detail und alle Grenzen stehen in [details.md](details.md).
