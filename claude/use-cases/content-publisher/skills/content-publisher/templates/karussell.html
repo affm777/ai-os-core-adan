@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="data:,">
+  <title>content-publisher Karussell</title>
+  <!-- Rubik (SIL Open Font License 1.1) kommt lokal über basis.css aus fonts/, ohne Internet -->
+  <link rel="stylesheet" href="basis.css">
+  <link rel="stylesheet" href="marke.css">
+</head>
+<body>
+<main>
+  <!-- Seite 1: Titelseite auf Markenfarbe -->
+  <section class="sp-frame sp-statement">
+    <img class="sp-wasserzeichen" src="logo-wasserzeichen.png" alt="" onerror="this.remove()">
+    <div class="sp-innen">
+      <div class="sp-kicker" data-slot="kicker"></div>
+      <div class="sp-mitte">
+        <h1 data-slot="headline"></h1>
+        <p class="sp-subline" data-slot="subline"></p>
+      </div>
+      <div class="sp-fuss">
+        <img class="sp-logo" src="logo-auf-flaeche.png" alt="Logo" onerror="this.remove()">
+        <div class="sp-weiter" data-slot="weiter"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Inhaltsseiten entstehen aus inhalt.json "seiten" an dieser Stelle -->
+  <div id="sp-seiten-anker"></div>
+
+  <!-- Letzte Seite: Abschluss mit Call-to-Action -->
+  <section class="sp-frame sp-statement sp-abschluss">
+    <img class="sp-wasserzeichen" src="logo-wasserzeichen.png" alt="" onerror="this.remove()">
+    <div class="sp-innen">
+      <div class="sp-kicker sp-seitenzahl-kicker" data-seitenzahl></div>
+      <div class="sp-mitte">
+        <h1 data-slot="abschluss"></h1>
+        <div class="sp-cta" data-slot="cta"></div>
+      </div>
+      <div class="sp-fuss">
+        <img class="sp-logo" src="logo-auf-flaeche.png" alt="Logo" onerror="this.remove()">
+        <div class="sp-absender" data-slot="absender"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<template id="sp-seite">
+  <section class="sp-frame sp-inhalt" data-eigene-daten>
+    <div class="sp-innen">
+      <div class="sp-seitenzahl" data-seitenzahl></div>
+      <div class="sp-mitte">
+        <div class="sp-kicker" data-slot="kicker"></div>
+        <h2 data-slot="headline"></h2>
+        <p class="sp-text" data-slot="text"></p>
+        <ol class="sp-punkte" data-slot="punkte"></ol>
+      </div>
+      <div class="sp-fuss">
+        <img class="sp-logo" src="logo-auf-hell.png" alt="Logo" onerror="this.remove()">
+        <div class="sp-absender" data-slot="absender"></div>
+      </div>
+    </div>
+  </section>
+</template>
+<script src="basis.js"></script>
+</body>
+</html>

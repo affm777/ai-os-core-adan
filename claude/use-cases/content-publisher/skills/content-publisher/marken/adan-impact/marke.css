@@ -1,0 +1,30 @@
+/* ADAN Impact: Werte für die Social-Vorlagen, abgeleitet aus STYLE-GUIDE.md (vorläufig, nicht bestätigt).
+   Liegt im Projektordner content-und-social/brand/adan-impact/marke.css, gilt jene Datei statt dieser. */
+body {
+  --sp-schrift: "Rubik", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sp-gewicht-headline: 700;
+
+  --sp-farbe-flaeche: #00AB97;              /* Primärfarbe Teal */
+  --sp-farbe-auf-flaeche: #FFFFFF;
+  --sp-farbe-kicker-auf-flaeche: #FFFFFF;
+  --sp-farbe-hervorhebung-auf-flaeche: #D2EAEA; /* Hellfläche Mint */
+  --sp-farbe-cta-grund-auf-flaeche: #ED6326;    /* Sekundärfarbe Orange */
+  --sp-farbe-cta-text-auf-flaeche: #FFFFFF;
+
+  --sp-farbe-grund: #FFFFFF;
+  --sp-farbe-text: #000000;
+  --sp-farbe-headline: #000000;
+  --sp-farbe-text-leise: #54595F;
+  --sp-farbe-kicker: #00AB97;
+  --sp-farbe-hervorhebung: #00AB97;
+  --sp-farbe-cta-grund: #00AB97;
+  --sp-farbe-cta-text: #FFFFFF;
+
+  --sp-radius: 0;
+  --sp-radius-punkt: 50%;
+  --sp-logo-hoehe: 150;
+  --sp-headline-statement: 96;
+}
+/* Keine weiße Logo-Fassung vorhanden: auf Farbfläche steht das runde Logo auf einem weißen Kreis */
+.sp-statement .sp-logo { background: #FFFFFF; border-radius: 50%; }
+.sp-info .sp-logo, .sp-inhalt .sp-logo { height: calc(96 * var(--u)); }

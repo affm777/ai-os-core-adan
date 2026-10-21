@@ -90,7 +90,7 @@ In `UEBERSICHT.md` steht je Beleg Datum, Lieferant, Betrag, Rechnungsnummer, Art
 ## Grenzen
 
 - Claude bezahlt nichts, leitet nichts weiter und löscht nichts. In Outlook setzt Claude nur die zwei Kategorien, Mails bleiben, wo sie sind.
-- Keine Buchung, keine Kontierung, keine steuerliche Beurteilung. Fürs Eintragen in eine Liste offener Posten gibt es den Use Case `rechnungseingang-opos`.
+- Keine Buchung, keine Kontierung, keine steuerliche Beurteilung.
 - Gescannte PDFs ohne Text erkennt Claude, liest sie aber nicht aus. Dann fragt Claude Betrag, Datum und Nummer bei dir ab.
 - Anhänge über 1 MB lädt Claude nicht nach SharePoint, die ziehst du von Hand hinein.
 - Im Sammelpostfach kann Claude lesen, aber keine Kategorien setzen.
