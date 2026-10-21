@@ -19,7 +19,7 @@ Ergebnis eines Laufs: je gewähltem Kanal und gewählter Sprache eine fertige Fa
 - **Kanaltexte sind Klartext.** Kein Markdown in den `.txt`-Dateien.
 - **Deutsch und Englisch sind eigene Fassungen**, die EN-Fassung wird aus dem Rohtext neu gebaut, nicht Satz für Satz übersetzt.
 - **Nichts löschen, nichts posten.** Kein `rm`. Ältere Fassungen wandern nach `_alt/`, belegte Namen bekommen `-2` oder `-v2`. Umzüge nur mit `mv`. Kein Upload, kein Posting, keine Planung.
-- **Kein Code im Chat.** Keine HTML-, CSS-, JSON- oder Shell-Ausschnitte zeigen. Der Nutzer sieht Fragen, Texte, Bildpfade und kurze Rückmeldungen.
+- **Kein Code im Chat.** Keine HTML-, CSS-, JSON- oder Shell-Ausschnitte und keine Befehle zeigen, auch nicht zum Öffnen, Kopieren oder Installieren. Was ein Befehl tun soll, bietet Claude in einem Satz an und führt es nach einem Ja selbst aus. Der Nutzer sieht Fragen, Texte, Bildpfade und kurze Rückmeldungen.
 - **Dialog in der Sprache des Nutzers.** Schreibt er Englisch, laufen Fragen (auch in AskUserQuestion), Hinweise und Zusammenfassungen auf Englisch. Die Sprachen der Fassungen wählt er getrennt. Deutsche Texte immer mit echten Umlauten und ß.
 - **Marken-Guides sind vorläufig.** Die Profile im Skill sind aus den Websites gemessen, ADAN Careers ist ein Platzhalter. Beim ersten Visual einer Marke in der Session einmal kurz darauf hinweisen.
 
@@ -91,7 +91,7 @@ Vorher lesen: Kanalkarten der gewählten Kanäle, `verbotsliste.md`, den Korpus 
 - `Bildtext:` höchstens 20 Wörter, nur aus der Faktenliste, sonst `[FEHLT: ...]`.
 - `Kicker:` optional, höchstens vier Wörter (Programm, Anlass, Datum aus dem Rohtext). Fehlt der Stoff, Zeile weglassen.
 - `CTA:` optional, die Handlung aus dem Briefing in höchstens fünf Wörtern, sonst Zeile weglassen.
-- `Format:` das gewählte Visual-Format, sonst LinkedIn 1:1 (1200 x 1200), Instagram 4:5 (1080 x 1350), Newsletter und Mail Kopfbild 2:1 (1200 x 600), Website 16:9 (1920 x 1080). 2:1 und 16:9 baut dieser Skill nicht, die gehen in Claude Design oder Figma.
+- `Format:` das gewählte Visual-Format (Karussell für LinkedIn als „Karussell LinkedIn (PDF, 1080 x 1080 je Seite)“, für Instagram als „Karussell Instagram (PNG je Seite)“), sonst LinkedIn 1:1 (1200 x 1200), Instagram 4:5 (1080 x 1350), Newsletter und Mail Kopfbild 2:1 (1200 x 600), Website 16:9 (1920 x 1080). 2:1 und 16:9 baut dieser Skill nicht, die gehen in Claude Design oder Figma.
 - `Kanal:`, `Marke:`, `Stimmung:` (ein Satz aus Rohtext und Korpus, ohne neue Fakten).
 Farben, Schriften und Logos nennt der Auftrag nicht.
 
@@ -104,11 +104,11 @@ Farben, Schriften und Logos nennt der Auftrag nicht.
 
 ### 4. Visuals (nur wenn gewählt)
 
-`$S/visuals.md` lesen und danach arbeiten. Kurz: Vorlage selbst wählen und in einem Satz sagen (Statement für eine Kernaussage, Info für drei klare Punkte mit Aufruf, Karussell nur wenn gewählt, mit Referenz deren Bildmuster), auf Wunsch eine andere. Je Format und Sprache `vorbereiten.sh` nach `bilder/_build/<format>-<sprache>/`, `inhalt.json` aus dem Design-Auftrag, `render.sh` in die Vorschau, jede Vorschau mit Read ansehen und selbst nachbessern. Fertige PNGs erst nach Freigabe nach `bilder/`.
+`$S/visuals.md` lesen und danach arbeiten. Kurz: Vorlage selbst wählen und in einem Satz sagen (Statement für eine Kernaussage, Info für drei klare Punkte mit Aufruf, Karussell nur wenn gewählt, mit Referenz deren Bildmuster), auf Wunsch eine andere. Je Format und Sprache `vorbereiten.sh` nach `bilder/_build/<format>-<sprache>/`, `inhalt.json` aus dem Design-Auftrag, `render.sh` in die Vorschau, jede Vorschau mit Read ansehen und selbst nachbessern. Fertige PNGs erst nach Freigabe nach `bilder/`. Ein Karussell für LinkedIn bekommt zusätzlich eine PDF mit allen Seiten (`scripts/pdf.sh`), denn LinkedIn nimmt Karussells nur als PDF-Dokument.
 
 ### 5. Ausgabe im Chat
 
-Je Kanal und Sprache ein Block mit Überschrift (`LinkedIn, Deutsch, 1.104 Zeichen`) und dem Text in einem Codeblock zum Kopieren, darunter der Design-Auftrag als eigener kurzer Codeblock. Bei Visuals danach je Bild eine Zeile mit Format, Sprache und Pfad der Vorschau, Angebot zum Öffnen (macOS `open <pfad>`, Windows `explorer.exe "<pfad mit Backslashes>"`). Darunter in einer Zeile der Laufordner und die offenen `[FEHLT]`-Stellen als kurze Liste. Am Ende: „Sag mir, was ich an welcher Fassung oder welchem Bild ändern soll, oder was in die Zwischenablage soll.“ Ist der Korpus vorläufig, hängt genau ein Halbsatz an („und schick mir gern ein paar eigene Texte, dann trifft es deinen Ton besser“).
+Je Kanal und Sprache ein Block mit Überschrift (`LinkedIn, Deutsch, 1.104 Zeichen`) und dem Text in einem Codeblock zum Kopieren, darunter der Design-Auftrag als eigener kurzer Codeblock. Bei Visuals danach je Bild (und je Karussell-PDF) eine Zeile mit Format, Sprache und Pfad. Öffnen nur als Angebot in einem Satz („Soll ich dir den Bildordner öffnen?“) und nach einem Ja selbst ausführen (macOS `open "<pfad>"`, Windows `explorer.exe "$(cygpath -w "<pfad>")"`), den Befehl nie zeigen. Darunter in einer Zeile der Laufordner und die offenen `[FEHLT]`-Stellen als kurze Liste. Am Ende: „Sag mir, was ich an welcher Fassung oder welchem Bild ändern soll, oder was in die Zwischenablage soll.“ Ist der Korpus vorläufig, hängt genau ein Halbsatz an („und schick mir gern ein paar eigene Texte, dann trifft es deinen Ton besser“).
 
 Ohne Visuals endet der Lauf nach Schritt 6 und 7. Der Design-Auftrag lässt sich in Claude Design oder Figma nutzen, oder der Nutzer sagt später „mach mir das Bild dazu“, dann Schritt 4 für diesen Lauf.
 
@@ -129,7 +129,7 @@ Sagt der Nutzer, dass der Lauf passt (Text oder Visual freigegeben), **genau ein
 Nur die genannte Fassung, nur aus der Datei, nie aus dem Chat-Text. Ein Design-Auftrag kommt aus seinem Block in `uebersicht.md` (ohne Codeblock-Zeichen), vorher als `_alt/design-<kanal>-<sprache>.tmp` im Laufordner ablegen. Bei Kanälen mit Kennzeilen fragen, ob der ganze Block oder nur der Text kopiert werden soll.
 - macOS: `LANG=en_US.UTF-8 pbcopy < <datei>`, danach `LANG=en_US.UTF-8 pbpaste | head -3` und Umlaute prüfen.
 - Windows (Git Bash): `powershell.exe -NoProfile -Command "Get-Content -Raw -Encoding UTF8 '<datei>' | Set-Clipboard"`, Pfad relativ zum Projektordner oder per `cygpath -w`. Nie `clip` (verstümmelt Umlaute). Prüfen mit `powershell.exe -NoProfile -Command "[Console]::OutputEncoding=[Text.Encoding]::UTF8; Get-Clipboard" | head -3`. Dem Nutzer sagen: Strg+V fügt im Git-Bash-Fenster nicht ein (Rechtsklick und Einfügen oder Umschalt+Einfg), überall sonst schon.
-- PNGs kommen nicht in die Zwischenablage, dafür den Pfad nennen oder den Ordner öffnen.
+- PNGs und PDFs kommen nicht in die Zwischenablage, dafür den Pfad nennen und anbieten, den Ordner zu öffnen (wie in Schritt 5, nach einem Ja selbst ausführen).
 
 ## Was der Skill nicht tut
 

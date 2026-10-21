@@ -44,3 +44,4 @@ Diese Sätze solltest du kennen:
 
 - Claude verwendet nur, was in deinem Text steht. Fehlt etwas (ein Link, ein Datum), erfindet Claude nichts, sondern schreibt an die Stelle `[FEHLT: Link]`, damit du es ergänzt.
 - Die Marken-Profile sind vorläufig, ADAN Careers ist ein Platzhalter. Prüf Farben und Logo vor dem Veröffentlichen.
+- Karussells für LinkedIn kommen als PDF (so nimmt LinkedIn sie an), für Instagram als einzelne Bilder.

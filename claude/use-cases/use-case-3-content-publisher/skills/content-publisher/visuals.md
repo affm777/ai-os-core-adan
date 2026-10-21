@@ -14,7 +14,7 @@ Teil des Skills content-publisher. Claude liest diese Datei, sobald im Lauf Visu
 Gibt es eine gewählte Referenz, gilt ihr Bildmuster (`referenzen.md`), sonst selbst entscheiden und in einem Satz sagen, etwa „Ich nehme die Vorlage Statement, weil der Text eine Kernaussage hat. Sag Bescheid, wenn du lieber Info willst.“
 - **Statement**: große Headline auf Markenfarbe, Kicker darüber, Logo unten. Für eine Kernaussage, ein Ergebnis, ein Zitat.
 - **Info**: Headline, genau drei nummerierte Stichpunkte, Call-to-Action auf Weiß. Für Termin, Ort, Anmeldung oder drei klar getrennte Fakten aus der Faktenliste.
-- **Karussell**: nur wenn im Briefing gewählt. Titelseite, ein bis drei Inhaltsseiten, Abschlussseite mit Call-to-Action.
+- **Karussell**: nur wenn im Briefing gewählt. Titelseite, ein bis drei Inhaltsseiten, Abschlussseite mit Call-to-Action. Immer `ig-1x1` (1080 x 1080 je Seite). Für Instagram als PNG je Seite, für LinkedIn (Kanal LinkedIn gewählt oder Karussell ausdrücklich für LinkedIn) zusätzlich als PDF mit allen Seiten, weil LinkedIn Karussells nur als PDF-Dokument annimmt. Build-Ordner dann `bilder/_build/karussell-li-<sprache>/` bzw. `karussell-ig-<sprache>/`. Sind beide Kanäle gewählt, reicht ein Build: PNGs für Instagram, PDF für LinkedIn aus denselben Seiten.
 
 ## 1. Vorbereiten
 
@@ -78,10 +78,19 @@ Wenn der Nutzer zufrieden ist (oder ausdrücklich gesagt hat, dass die erste Fas
 bash "$S/scripts/render.sh" content-und-social/ausgabe/<lauf>/bilder/_build/<format>-<sprache> content-und-social/ausgabe/<lauf>/bilder/<marke>-<format>-<sprache>
 ```
 
-Gibt es Dateien mit dem Präfix schon, `-v2`, `-v3` an das Präfix hängen, nie überschreiben. Pfade im Abschnitt `## Visuals` der `uebersicht.md` eintragen. Danach folgt die Frage nach der Referenz (SKILL.md, Schritt 7). Zum Schluss Pfade, Pixelgröße (ig-1x1 1080 x 1080, ig-4x5 1080 x 1350, story-9x16 1080 x 1920, li-1x1 1200 x 1200) und ein Satz zu den Grenzen (Marken-Guide vorläufig, Feinschliff in Figma oder Claude Design möglich).
+**Karussell für LinkedIn:** danach die PDF erzeugen:
+
+```bash
+bash "$S/scripts/pdf.sh" content-und-social/ausgabe/<lauf>/bilder/_build/karussell-li-<sprache> content-und-social/ausgabe/<lauf>/bilder/<marke>-karussell-li-<sprache>.pdf
+```
+
+Eine Seite je Slide in Reihenfolge, Seitengröße gleich der PNG-Größe, ohne Rand. Das Skript überschreibt keine PDF, bei vorhandener Datei `-v2` anhängen. Die PDF mit Read ansehen (Seitenzahl, nichts abgeschnitten), bevor sie der Nutzer bekommt.
+
+Gibt es Dateien mit dem Präfix schon, `-v2`, `-v3` an das Präfix hängen, nie überschreiben. Pfade im Abschnitt `## Visuals` der `uebersicht.md` eintragen. Danach folgt die Frage nach der Referenz (SKILL.md, Schritt 7). Zum Schluss Pfade (Öffnen nur anbieten und nach einem Ja selbst ausführen, nie den Befehl zeigen), Pixelgröße (ig-1x1 1080 x 1080, ig-4x5 1080 x 1350, story-9x16 1080 x 1920, li-1x1 1200 x 1200, Karussell-PDF 1080 x 1080 je Seite) und ein Satz zu den Grenzen (Marken-Guide vorläufig, Feinschliff in Figma oder Claude Design möglich).
 
 ## Windows (Git Bash)
 
 - Die Skripte suchen selbst `python3`, `python` oder `py -3` (`python3` ist unter Windows oft nur ein Store-Platzhalter).
-- Zum Öffnen im Explorer Pfade mit Backslashes, die Skripte selbst arbeiten mit normalen Schrägstrichen.
-- Meldet `render.sh`, dass der Browser fehlt: playwright-cli rendert mit Google Chrome. Nach Okay des Nutzers `playwright-cli install-browser chrome` (vorher sagen, dass gut 100 MB geladen werden).
+- Öffnen im Explorer führt Claude nach einem Ja selbst aus, mit `explorer.exe "$(cygpath -w "<pfad>")"` (Backslashes), und zeigt den Befehl nicht. Die Skripte selbst arbeiten mit normalen Schrägstrichen.
+- `pdf.sh` braucht nichts Zusätzliches: Es druckt über playwright-cli und Chrome wie `render.sh`, Python nur für den lokalen Server.
+- Meldet `render.sh` oder `pdf.sh`, dass der Browser fehlt: playwright-cli rendert mit Google Chrome. Nach Okay des Nutzers `playwright-cli install-browser chrome` (vorher sagen, dass gut 100 MB geladen werden).

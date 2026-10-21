@@ -54,7 +54,7 @@ esac
 
 for pflicht in SKILL.md visuals.md referenzen.md korpus.md verbotsliste.md voice-vorlage.md \
                kanaele/linkedin.md kanaele/instagram.md kanaele/newsletter.md kanaele/mail.md kanaele/website.md \
-               scripts/pruefen.sh scripts/vorbereiten.sh scripts/render.sh \
+               scripts/pruefen.sh scripts/vorbereiten.sh scripts/render.sh scripts/pdf.sh \
                templates/statement.html templates/info.html templates/karussell.html templates/basis.css templates/basis.js \
                marken/adan-ev/marke.css marken/adan-ev/logos.conf marken/adan-ev/STYLE-GUIDE.md \
                marken/adan-impact/marke.css marken/adan-impact/logos.conf marken/adan-impact/STYLE-GUIDE.md \
