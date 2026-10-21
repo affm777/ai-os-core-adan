@@ -50,7 +50,7 @@ Das passiert dann:
 4. Du bekommst den Ablaufplan als Tabelle (Sekunde, Text, was passiert, Bewegung, Klang) und sagst „passt“ oder was anders sein soll.
 5. Claude baut das Video allein, auf Wunsch auch in echtem 3D (eine kleine Figur in eurer Markenfarbe baut euer Ergebnis), prüft Bilder, Markenfarbe und Lautstärke selbst und öffnet dir die Vorschau.
 6. Du sagst, was geändert werden soll, oder „passt“. Jede Änderung wird eine neue Fassung, die alte bleibt liegen.
-7. Claude erstellt die Endfassung, öffnet sie und nennt dir, wo sie liegt.
+7. Claude erstellt die Endfassung als MP4 in 9:16 (Reel), auf Wunsch zusätzlich in 16:9, öffnet sie und nennt dir, wo sie liegt.
 
 Alles zu einem Video liegt im Ordner `videos/<name-des-videos>/`, die fertige Datei unter `final/`. Eure Markenangaben merkt sich Claude unter `brand/<marke>/`, beim nächsten Video musst du sie nicht noch einmal nennen.
 
