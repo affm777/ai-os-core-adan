@@ -1,9 +1,9 @@
 ---
 name: beleg-ablage
-description: Speichert Rechnungen und Belege aus dem Outlook-Postfach als Dateien, benennt sie einheitlich (JJJJ-MM-TT_Lieferant_Betrag-EUR_Rechnungsnummer.pdf), legt sie lokal unter belege/JJJJ/MM/ ab, führt die Übersicht belege/UEBERSICHT.md, erkennt Dubletten und lädt auf Wunsch in einen freigegebenen SharePoint-Ordner hoch. Markiert erledigte Mails nur mit einer Outlook-Kategorie. Zahlt nie, leitet nie weiter, löscht nie. Nutze diesen Skill IMMER, wenn Rechnungen oder Belege aus Mails als Dateien gesammelt, abgelegt oder für die Buchhaltung sortiert werden sollen, auch ohne das Wort „Beleg". Trägt nichts in eine OPOS-Liste ein, das macht rechnungseingang-opos.
+description: Speichert Rechnungen und Belege aus dem Outlook-Postfach als Dateien, benennt sie einheitlich (JJJJ-MM-TT_Lieferant_Betrag-EUR_Rechnungsnummer.pdf), legt sie lokal unter belege/JJJJ/MM/ ab, führt die Übersicht belege/UEBERSICHT.md, erkennt Dubletten und lädt auf Wunsch in einen freigegebenen SharePoint-Ordner hoch. Markiert erledigte Mails nur mit einer Outlook-Kategorie. Zahlt nie, leitet nie weiter, löscht nie. Nutze diesen Skill IMMER, wenn Rechnungen oder Belege aus Mails als Dateien gesammelt, abgelegt oder für die Buchhaltung sortiert werden sollen, auch ohne das Wort „Beleg". Trägt nichts in eine Liste offener Posten ein.
 when_to_use: |
   Trigger-Phrasen: "hol meine Rechnungen aus dem Postfach", "Belege ablegen", "Belege für Oktober sammeln", "welche Rechnungen sind diesen Monat gekommen", "leg die Rechnungen in _eingang ab", "lad die Belege nach SharePoint", "zeig mir die Beleg-Demo", "/beleg-ablage". Auch für einzelne Dateien ("leg diese Rechnung ab").
-  NICHT für Buchen, Bezahlen oder Überweisen, nicht für die steuerliche Beurteilung eines Belegs, nicht für Ausgangsrechnungen an Kunden oder Kostenträger, nicht für das Eintragen in eine OPOS-Liste (dafür gibt es rechnungseingang-opos).
+  NICHT für Buchen, Bezahlen oder Überweisen, nicht für die steuerliche Beurteilung eines Belegs, nicht für Ausgangsrechnungen an Kunden oder Kostenträger, nicht für das Eintragen in eine Liste offener Posten.
 allowed-tools: Read, Write, Edit, Glob, Bash, AskUserQuestion
 ---
 
