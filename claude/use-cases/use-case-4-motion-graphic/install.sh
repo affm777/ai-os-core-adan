@@ -143,10 +143,12 @@ done
 if [ -z "$SKILLS_FEHLEN" ]; then
   info "HyperFrames-Skills vorhanden"
 elif [ "$DRY" -eq 1 ]; then
-  drylog "würde die HyperFrames-Skills installieren (fehlen:$SKILLS_FEHLEN): npx --yes hyperframes@$HF_VERSION skills update"
+  drylog "würde die HyperFrames-Skills installieren (fehlen:$SKILLS_FEHLEN): npx --yes hyperframes@$HF_VERSION skills update hyperframes-animation hyperframes-core"
 else
+  # hyperframes-animation und hyperframes-core gehören nicht zum Kernsatz von
+  # "skills update", sie werden nur installiert, wenn man sie beim Namen nennt.
   echo "Installiere die HyperFrames-Skills (fehlen:$SKILLS_FEHLEN) ..."
-  hf skills update && info "HyperFrames-Skills installiert" || warn "HyperFrames-Skills nicht installiert. Später: npx --yes hyperframes@$HF_VERSION skills update"
+  hf skills update hyperframes-animation hyperframes-core && info "HyperFrames-Skills installiert" || warn "HyperFrames-Skills nicht installiert. Später: npx --yes hyperframes@$HF_VERSION skills update hyperframes-animation hyperframes-core"
 fi
 echo "       HyperFrames bringt zehn Skills mit (hyperframes, hyperframes-*, media-use). motion-graphic nutzt vier davon, die übrigen bleiben bewusst installiert und stören nicht."
 
@@ -171,7 +173,10 @@ if [ "$TON" -eq 1 ]; then
     else
       echo "Lege die Python-Umgebung für Stimme und Mastering an (rund 100 MB) ..."
       # shellcheck disable=SC2086
-      $PYBIN -m venv "$DEST/.venv" \
+      # Unter Git Bash bekommt das Windows-Python den Pfad in Windows-Schreibweise,
+      # sonst legt es die Umgebung unter C:\c\Users\... an (MSYS_NO_PATHCONV ist gesetzt).
+      if [ "$OS" = win ]; then VENV_PFAD="$(cygpath -w "$DEST/.venv")"; else VENV_PFAD="$DEST/.venv"; fi
+      $PYBIN -m venv "$VENV_PFAD" \
         && "$VPY" -m pip install --quiet --disable-pip-version-check numpy soundfile scipy \
         && info "Python-Umgebung angelegt" \
         || warn "Python-Umgebung nicht vollständig. Videos ohne Stimme funktionieren trotzdem."

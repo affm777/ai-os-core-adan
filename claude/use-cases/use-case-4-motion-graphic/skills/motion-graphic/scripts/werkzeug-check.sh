@@ -66,7 +66,7 @@ for s in hyperframes hyperframes-animation hyperframes-core hyperframes-cli; do
   if [ -f "$HOME/.claude/skills/$s/SKILL.md" ]; then
     ok "Skill /$s"
   else
-    fehlt "Skill /$s" "npx --yes hyperframes@${HF_VERSION:-latest} skills update  (danach neue Claude-Session)"
+    fehlt "Skill /$s" "npx --yes hyperframes@${HF_VERSION:-latest} skills update hyperframes-animation hyperframes-core  (danach neue Claude-Session)"
   fi
 done
 
