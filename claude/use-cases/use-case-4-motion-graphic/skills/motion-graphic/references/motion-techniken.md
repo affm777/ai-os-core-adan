@@ -1,6 +1,6 @@
 # Grundstock flüssiger Motion-Techniken
 
-Techniken für ein „wie Wasser“-Gefühl. Jede mit Wirkung und Umsetzung in HyperFrames (HTML, SVG, GSAP, seek-safe). Vor dem Bau `/hyperframes-animation` laden, dort stehen Eases, Blueprints und Runtime-Adapter.
+Techniken für ein „wie Wasser“-Gefühl. Jede mit Wirkung und Umsetzung in HyperFrames (HTML, SVG, GSAP, seek-safe). Vor dem Bau `/hyperframes-animation` laden, falls installiert (dort stehen Eases, Blueprints und Runtime-Adapter), sonst reichen die Referenzen von `/hyperframes`.
 
 ## Grundprinzipien
 

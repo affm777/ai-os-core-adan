@@ -114,7 +114,7 @@ Den Bereich auf die beleuchtete Vorderseite des Objekts legen (aus dem Snapshot 
 - Weit beginnen (ganze Bühne), dann dem Helden auf Augenhöhe folgen, mit Verzögerung: Zielposition je Frame aus der Heldenposition von `t - 0,15` berechnen, nie aus dem Vorframe (nicht seek-safe).
 - Tiefe: `scene.fog` in der Bühnenfarbe für Abstand, Tiefenunschärfe über eine unscharfe DOM-Kopie des Vordergrunds statt Postprocessing.
 - Am Ende allein auf dem Ergebnis landen, das letzte Bild muss als Plakat taugen.
-- Kameraschnitte als Konstanten, nie als Literal an zwei Stellen (siehe `/hyperframes-animation`, Adapter `three.md`).
+- Kameraschnitte als Konstanten, nie als Literal an zwei Stellen (siehe Adapter `three.md` in `/hyperframes-animation`, falls installiert).
 
 ## Abgang
 

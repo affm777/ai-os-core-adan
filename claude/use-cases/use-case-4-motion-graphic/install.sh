@@ -153,7 +153,7 @@ fi
 for s in hyperframes-animation hyperframes-core; do
   [ -f "$HOME/.claude/skills/$s/SKILL.md" ] && info "Zusatz-Skill /$s vorhanden" || info "Zusatz-Skill /$s nicht vorhanden (optional)"
 done
-echo "       HyperFrames bringt zehn Skills mit (hyperframes, hyperframes-*, media-use). motion-graphic nutzt vier davon, die übrigen bleiben bewusst installiert und stören nicht."
+echo "       HyperFrames bringt vier Skills mit (hyperframes, hyperframes-cli, hyperframes-registry, media-use), motion-graphic nutzt hyperframes und hyperframes-cli."
 
 # -----------------------------------------------------------------------------
 # 4. Python-Umgebung für Stimme und Mastering (optional)
