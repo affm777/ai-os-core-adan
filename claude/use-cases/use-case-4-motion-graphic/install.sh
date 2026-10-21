@@ -108,7 +108,7 @@ if ! command -v node >/dev/null 2>&1; then
 fi
 if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
   FEHLT_BASIS=1
-  if [ "$OS" = win ]; then err "ffmpeg fehlt. Installieren: winget install --id Gyan.FFmpeg -e (danach Git Bash und Claude in einem neuen Fenster öffnen, fehlt ffmpeg dann noch, \$LOCALAPPDATA/Microsoft/WinGet/Links in den PATH)"; else err "ffmpeg fehlt. Installieren: brew install ffmpeg"; fi
+  if [ "$OS" = win ]; then err "ffmpeg fehlt. Installieren: winget install --id Gyan.FFmpeg -e (danach Git Bash und Claude in einem neuen Fenster öffnen, fehlt ffmpeg dann noch, den bin-Ordner unter \$LOCALAPPDATA/Microsoft/WinGet/Packages/Gyan.FFmpeg*/ffmpeg-*/bin in den PATH, der Links-Ordner reicht in Git Bash nicht)"; else err "ffmpeg fehlt. Installieren: brew install ffmpeg"; fi
 fi
 if [ "$FEHLT_BASIS" -eq 1 ]; then
   err "Bitte das Fehlende installieren und install.sh danach erneut starten."
