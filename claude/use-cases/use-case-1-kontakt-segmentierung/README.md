@@ -6,7 +6,7 @@ Claude sortiert deinen LinkedIn-Export nach Rollen, legt je Firma eine Akte an, 
 
 Sag Claude:
 ```
-Installier mir den Use Case kontakt-segmentierung einmal global: hol in ~/ai-os-core mit git pull den neuesten Stand, führ bash ~/ai-os-core/claude/use-cases/kontakt-segmentierung/install.sh aus, installier alles Fehlende selbst mit den Befehlen, die das Skript nennt, und sag mir in einfachen Worten, ob alles geklappt hat.
+Installier mir den Use Case kontakt-segmentierung einmal global: hol in ~/ai-os-core mit git pull den neuesten Stand, führ bash ~/ai-os-core/claude/use-cases/use-case-1-kontakt-segmentierung/install.sh aus, installier alles Fehlende selbst mit den Befehlen, die das Skript nennt, und sag mir in einfachen Worten, ob alles geklappt hat.
 ```
 
 Danach eine neue Session starten, damit Claude den Skill kennt.
@@ -23,7 +23,7 @@ Segmentier meine LinkedIn-Kontakte für den Career Day.
 Segmentier meine LinkedIn-Kontakte für den Career Day. Nimm zum Üben die Demo.
 ```
 
-Zwei Sätze bietet Claude nicht von selbst an:
+Diese Sätze solltest du kennen:
 
 - „Nr. 3 und 5 habe ich abgeschickt.“ meldest du, sobald du Nachrichten selbst versendet hast, damit die Akten den richtigen Stand zeigen.
 - „Mach mit dem Outreach weiter.“ sagst du in einer neuen Session, dann nennt Claude den Stand und den nächsten Schritt.
@@ -32,4 +32,4 @@ Zwei Sätze bietet Claude nicht von selbst an:
 
 - Claude ordnet nach der Positionsbezeichnung, lies die A-Kontakte einmal gegen.
 - Mail-Entwürfe in Outlook gibt es nur mit verbundenem Microsoft-365-Connector, sonst bekommst du die Texte zum Kopieren.
-- Datenschutz: nur der offizielle Export, Recherche nur zu Firmen in öffentlichen Quellen, nie zu einzelnen Menschen. Arbeite in einem Ordner auf deinem Rechner, nicht in iCloud oder OneDrive.
+- Datenschutz: nur der offizielle Export, Recherche nur zu Firmen in öffentlichen Quellen, nie zu einzelnen Menschen.

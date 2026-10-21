@@ -6,10 +6,8 @@ Claude sichtet deine neuen Mails, ordnet jeden Verlauf einem deiner Labels zu un
 
 Sag Claude:
 ```
-Installier mir den Use Case posteingang-triage einmal global: hol in ~/ai-os-core mit git pull den neuesten Stand, führ bash ~/ai-os-core/claude/use-cases/posteingang-triage/install.sh aus, installier alles Fehlende selbst mit den Befehlen, die das Skript nennt, und sag mir in einfachen Worten, ob alles geklappt hat.
+Installier mir den Use Case posteingang-triage einmal global: hol in ~/ai-os-core mit git pull den neuesten Stand, führ bash ~/ai-os-core/claude/use-cases/use-case-2-posteingang-triage/install.sh aus, installier alles Fehlende selbst mit den Befehlen, die das Skript nennt, und sag mir in einfachen Worten, ob alles geklappt hat.
 ```
-
-Dein Postfach verbindest du selbst in Claude unter Einstellungen, Connectoren (Microsoft 365 oder Gmail). Bei Microsoft 365 muss euer Administrator Claude vorher einmal freigeben, die Anleitung dafür (`admin-anleitung-claude-m365.pdf`) habt ihr aus dem Workshop.
 
 Danach eine neue Session starten, damit Claude den Skill kennt.
 

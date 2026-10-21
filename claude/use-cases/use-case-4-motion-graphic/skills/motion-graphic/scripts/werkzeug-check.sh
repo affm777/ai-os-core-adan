@@ -76,7 +76,7 @@ if [ "$TON" -eq 1 ]; then
   if [ -x "$PY" ] && "$PY" -I -c "import numpy, soundfile, scipy" >/dev/null 2>&1; then
     ok "Python-Umgebung für Ton"
   else
-    fehlt "Python-Umgebung für Stimme und Mastering" "bash ~/ai-os-core/claude/use-cases/motion-graphic/install.sh  (legt die Python-Umgebung an)"
+    fehlt "Python-Umgebung für Stimme und Mastering" "bash ~/ai-os-core/claude/use-cases/use-case-4-motion-graphic/install.sh  (legt die Python-Umgebung an)"
   fi
 fi
 
