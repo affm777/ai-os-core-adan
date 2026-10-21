@@ -18,7 +18,7 @@ es gehen soll                Marke und Vorbilder ab,         in 9:16 (Reel) und 
 - Dein Setup ist installiert (Node ist damit schon da).
 - Das Werkzeug ffmpeg (`claude/werkzeuge/ffmpeg/`). Unter Windows öffnest du danach Git Bash und Claude neu, mehr in [details.md](details.md).
 - Internet beim ersten Lauf. Die Installation lädt einmalig rund 250 MB.
-- Optional eine ElevenLabs-Anbindung für Stimme oder Musik.
+- Optional eine ElevenLabs-Anbindung für Stimme oder Musik. Soundeffekte und Beat gehen auch ohne, kostenlos.
 
 ## Schritt 1: Installieren
 
@@ -43,7 +43,7 @@ Ich möchte ein kurzes Video für Instagram machen.
 
 Claude fragt dich dann:
 - worum es geht, für wen und ob du schon eine Idee für die Abfolge hast
-- nach Kanal und Format, Länge, Stimme und Musik
+- nach Kanal und Format, Länge, Stimme, Musik und Effekten
 - für welche Marke das Video ist und ob es Vorbilder gibt, die dir gefallen
 - ob Storyboard und Vorschau passen
 

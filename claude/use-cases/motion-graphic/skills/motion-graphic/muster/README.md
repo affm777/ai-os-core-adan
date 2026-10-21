@@ -9,5 +9,6 @@ Je Zeile eine Stilkarte. Ohne eigene Vorbilder des Nutzers zwei Karten nach „P
 | `bright-saas.md` | Helle Flächen und kräftige Verläufe, Tipp-Zoom, Riesen-Button, Fortschritts-Checkliste, 3D-UI-Paneele | Software-Tools mit Ablauf „eingeben, erzeugen, fertig“, 20 bis 40 s |
 | `constellation-glow.md` | Punkte und glühende Verlaufskurven, Wörter auf Wellen, Farbwolken, Rahmen-Morph, Neon-Kanten | KI- und Software-Erklärvideos mit Leichtigkeit, 45 bis 90 s, am flüssigsten |
 | `helle-konstellation-kamerafahrt.md` | Helle Punktwelt im 3D-Raum, eine Kamera fliegt durch alle Szenen, pulsierender Kern mit Tool-Netz, warme Farbwolken | Workshop-, Dienstleistungs- und Software-Promos mit Sprecher, 45 bis 75 s |
+| `held-baut.md` | Echtes 3D: eine Figur in Markenfarbe springt über eine nachgebaute Oberfläche und baut mit jedem Knopfdruck das Ergebnis, Klang framegenau aus derselben Timeline | Ankündigungen und Einladungen, bei denen etwas entsteht, 10 bis 20 s, Social mit Sound |
 
-Standard ohne Vorbilder: Vereine, soziale Themen und Dienstleistungen `helle-konstellation-kamerafahrt.md`, Software-Launches `dark-launch.md` oder `bright-saas.md`.
+Standard ohne Vorbilder: Vereine, soziale Themen und Dienstleistungen `helle-konstellation-kamerafahrt.md`, Ankündigungen und Einladungen ohne Sprecher `held-baut.md`, Software-Launches `dark-launch.md` oder `bright-saas.md`. Für Social-Reels, die eine Veränderung zeigen (vorher, nachher, etwas wird verbessert), `bright-saas.md` mit bedienter Oberfläche: im ADAN-Impact-Reel vom 21.10. erprobt und angenommen.

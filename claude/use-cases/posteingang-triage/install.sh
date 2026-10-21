@@ -49,7 +49,7 @@ case "$(uname -s 2>/dev/null || echo unbekannt)" in
   *) warn "Unbekanntes Betriebssystem, getestet sind macOS und Windows (Git Bash)." ;;
 esac
 
-BUNDLE_FILES="SKILL.md einrichtung.md"
+BUNDLE_FILES="SKILL.md einrichtung.md gmail.md"
 for pflicht in $BUNDLE_FILES; do
   [ -f "$SRC/$pflicht" ] || { err "Bundle unvollständig: $SRC/$pflicht fehlt."; exit 1; }
 done
@@ -117,5 +117,5 @@ if [ "$DRY" -eq 1 ]; then
   echo "Probelauf beendet. Ohne --dry-run starten, um zu installieren."
 else
   echo "Fertig. Starte eine neue Claude-Session, damit der Skill posteingang-triage geladen wird."
-  echo "Voraussetzung für den ersten Lauf: Microsoft 365 ist in Claude unter Einstellungen, Connectoren verbunden."
+  echo "Voraussetzung für den ersten Lauf: Microsoft 365 oder Gmail ist in Claude unter Einstellungen, Connectoren verbunden."
 fi

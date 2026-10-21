@@ -1,6 +1,6 @@
 ---
 name: motion-graphic
-description: Baut mit HyperFrames ein Motion-Graphics-Video für Social Media (Reel, TikTok, LinkedIn, Website) aus einer freien Beschreibung. Ein Pfad mit zwei Toren, Storyboard und Vorschau, der Nutzer sieht nur Fragen, Tabellen und die fertige MP4. Fragt Format, Länge, Stimme, Musik, Marke und Vorbilder ab, liefert eine Endfassung in 60 fps in 9:16 und auf Wunsch 16:9. Nutze diesen Skill IMMER, wenn ein Video, Clip, Reel, Motion Graphic oder Erklärvideo entstehen soll, auch ohne das Wort „Motion Graphic“.
+description: Baut mit HyperFrames ein Motion-Graphics-Video für Social Media (Reel, TikTok, LinkedIn, Website) aus einer freien Beschreibung. Ein Pfad mit zwei Toren, Storyboard und Vorschau, der Nutzer sieht nur Fragen, Tabellen und die fertige MP4. Fragt Format, Länge, Stimme, Musik, Marke und Vorbilder ab, liefert eine Endfassung in 60 fps in 9:16 und auf Wunsch 16:9. Kann echtes 3D (Three.js), Ton kommt von ElevenLabs und sitzt framegenau auf derselben Timeline. Nutze diesen Skill IMMER und VOR /hyperframes oder product-launch-video, wenn ein Video, Clip, Reel, Motion Graphic oder Erklärvideo entstehen soll, auch ohne das Wort „Motion Graphic“.
 when_to_use: |
   Trigger-Phrasen: "mach mir ein Video", "bau ein Reel", "Clip für Instagram", "TikTok-Video", "Video für LinkedIn", "Motion Graphic", "animiertes Video", "Erklärvideo", "kurzes Video über", "/motion-graphic". Auch zum Weitermachen an einem offenen Video ("mach mit dem Video weiter").
   NICHT für Standbilder, Flyer oder Slides (designer-Skill) und nicht für Webseiten (landing-page-builder).
@@ -11,7 +11,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Skill
 
 Ergebnis: ein fertiges Motion-Graphics-Video als MP4 (60 fps, 9:16 und auf Wunsch 16:9) im Arbeitsordner unter `videos/<slug>/final/`. Der Nutzer ist kein Techniker. Er redet frei, beantwortet wenige Fragen, bestätigt ein Storyboard, sieht eine Vorschau und bekommt die Endfassung.
 
-Die Technik kommt aus den HyperFrames-Skills (`/hyperframes`, `/hyperframes-animation`), dieser Skill legt Ablauf und Qualität fest. Wo `/hyperframes` einen eigenen Ablauf vorschlägt (Intent-Interview, Studio-Vorschau, Workflow-Routing), gilt dieser Skill.
+Die Technik kommt aus den HyperFrames-Skills (`/hyperframes`, `/hyperframes-animation`), dieser Skill legt Ablauf und Qualität fest. Wo `/hyperframes` einen eigenen Ablauf vorschlägt (Intent-Interview, Konzept-Pitches, Studio-Vorschau, Workflow-Routing wie product-launch-video, Frame-Worker), gilt dieser Skill. Grund: Ohne Stilkarte entsteht der Mittelwert, im ADAN-Testlauf vom 21.10. war die Fassung über den HyperFrames-Weg „richtig langweilig“, erst die Stilkarte brachte das gute Ergebnis.
 
 ## Grundregeln
 
@@ -21,6 +21,7 @@ Die Technik kommt aus den HyperFrames-Skills (`/hyperframes`, `/hyperframes-anim
 - **Referenzen liefern Technik und Stimmung, nie Inhalt.** Keine fremden Logos, Screens, Claims oder Namen übernehmen.
 - **Nichts löschen** (kein `rm`). Neue Fassungen sind Kopien, alte bleiben liegen.
 - **Sichtbare Texte** auf Deutsch mit echten Umlauten, ohne Gedankenstriche.
+- **Ton nur über ElevenLabs oder eine eigene Datei des Nutzers.** Nie einen HeyGen- oder HyperFrames-Login anbieten, nie `/media-use` zum Beschaffen von Musik oder Geräuschen, keine lokalen Engines (MusicGen, Kokoro). Nur wenn keine ElevenLabs-Anbindung da ist, darf Claude synthetische Geräusche aus der Timeline anbieten.
 
 ## Pfade und Befehle
 
@@ -52,9 +53,9 @@ Dann in genau drei Sätzen zusammenfassen, was verstanden wurde (Thema, Zielgrup
 1. Kanal und Format: Instagram oder TikTok (9:16), LinkedIn oder Website (16:9), beides.
 2. Länge: etwa 15, 30 oder 60 Sekunden.
 3. Stimme: keine, eigene Audiodatei, generiert über ElevenLabs.
-4. Musik: keine, eigene Datei, generiert über ElevenLabs.
+4. Ton: Geräusche von ElevenLabs (rund 17 Credits je Geräusch), Geräusche plus Musik von ElevenLabs (zusätzlich rund 900 Credits je Musikvariante), eigene Musikdatei plus Geräusche, kein Ton.
 
-Bei „generiert“ prüfen, ob eine ElevenLabs-Anbindung da ist (ToolSearch nach `elevenlabs` oder `creative_generate_speech`, sonst Umgebungsvariable `ELEVENLABS_API_KEY`). Fehlt sie, das sagen und „keine“ oder „eigene Datei“ anbieten. Bei Stimme oder Musik `werkzeug-check.sh --mit-ton` laufen lassen und `references/audio-kette.md` lesen. Mit Stimme gilt: Stimme zuerst, Bild folgt den Wortzeiten. Effekte nur, wo sie Bedeutung tragen. Antworten in den Brief.
+Bei Stimme, Geräuschen oder Musik von ElevenLabs prüfen, ob die Anbindung da ist (ToolSearch nach `creative_generate_in_flow` oder `creative_generate_speech`, sonst Umgebungsvariable `ELEVENLABS_API_KEY`). Fehlt sie, das sagen und „eigene Datei“, „kein Ton“ oder synthetische Geräusche aus dem Film (kostenlos, einfacher Klang) anbieten. Bei Stimme, Musik oder Effekten `werkzeug-check.sh --mit-ton` laufen lassen und `references/audio-kette.md` lesen (Geräusche, Musik und das Anlegen auf der Timeline mit `klang.py` dort). Mit Stimme gilt: Stimme zuerst, Bild folgt den Wortzeiten. Effekte nur, wo sie Bedeutung tragen. Antworten in den Brief.
 
 ### 4. Look und Design (eigene Runde)
 
@@ -75,34 +76,37 @@ Geliefertes nach `videos/<slug>/referenzen/` kopieren (nie verschieben) und ausw
 
 Je Referenz drei Sätze in den Brief (Look, Bewegung, was übernommen wird) und die Karte aus `muster/`, der sie am nächsten kommt.
 
-**c) Stilkarte (Pflicht).** Jedes Video bekommt genau eine Karte aus `muster/`. Mit Vorbildern die Karte, die deren Bewegung am nächsten kommt. Ohne Vorbilder zwei Karten mit je einem Satz Begründung vorschlagen, der Nutzer wählt. Standard für Vereine, soziale Themen und Dienstleistungen ist `helle-konstellation-kamerafahrt.md`, für Software-Launches `dark-launch.md` oder `bright-saas.md`. Die Farben kommen immer aus der Marke, die Karte liefert Bewegung, Bühnenaufbau und Rhythmus.
+**c) Stilkarte (Pflicht).** Jedes Video bekommt genau eine Karte aus `muster/`. Mit Vorbildern die Karte, die deren Bewegung am nächsten kommt. Ohne Vorbilder zwei Karten mit je einem Satz Begründung vorschlagen, der Nutzer wählt. Standard für Vereine, soziale Themen und Dienstleistungen ist `helle-konstellation-kamerafahrt.md`, für Ankündigungen und Einladungen ohne Sprecher (etwas entsteht, Social mit Sound) `held-baut.md`, für Software-Launches `dark-launch.md` oder `bright-saas.md`. Die Farben kommen immer aus der Marke, die Karte liefert Bewegung, Bühnenaufbau und Rhythmus.
 
-### 5. Tor 1, Storyboard
+### 5. Tor 1, Beat-Plan
 
-Im Brief und im Chat als Tabelle mit den Spalten Szene, Text (was im Bild steht oder gesprochen wird), Bildidee, Bewegung, Sekunden. Darüber die Kernaussage in einem Satz und die gewählte Stilkarte. Die Spalte Bewegung nennt je Szene die Technik aus dem Rezept der Karte (etwa Kamerafahrt, Punktwelt, Wörter auf Wellen, Rahmen-Morph, Tipp-Zoom). Texte nur aus dem Rohtext ableiten, jede Szene mit eigener Bildidee, die ohne Ton verständlich ist. Vor dem Zeigen gegen `references/best-practices.md` (Abschnitte Bild und Sprache) prüfen. Fragen, ob es so passt oder was geändert werden soll. Erst nach dem Go weiter, Abnahme mit Datum in den Brief. Ohne eingetragene Stilkarte im Brief wird nicht gebaut.
+Im Brief (Block BEATS) und im Chat als Tabelle mit den Spalten Sekunde, Text (was im Bild steht oder gesprochen wird), Was passiert, Bewegung, Klang. Darüber die Kernaussage in einem Satz und die gewählte Stilkarte, darunter je ein Satz KAMERA und LOOK. Jede Zeile verändert sichtbar etwas, Leerlauf über 1,5 s gibt es nicht. Bei kurzen Clips mit Beat liegen die Zeilen auf Taktgrenzen (bei 120 BPM alle 2 s, Aktionen auf halben Takten). Die Spalte Bewegung nennt je Szene die Technik aus dem Rezept der Karte (etwa Kamerafahrt, Punktwelt, Wörter auf Wellen, Rahmen-Morph, Tipp-Zoom). Texte nur aus dem Rohtext ableiten, jede Szene mit eigener Bildidee, die ohne Ton verständlich ist. Vor dem Zeigen gegen `references/best-practices.md` (Abschnitte Bild und Sprache) prüfen. Fragen, ob es so passt oder was geändert werden soll. Erst nach dem Go weiter, Abnahme mit Datum in den Brief. Ohne eingetragene Stilkarte im Brief wird nicht gebaut.
 
 Mit Stimme jetzt die Audio-Kette (`references/audio-kette.md`): Skript aus der Text-Spalte, Credits nennen, Probezeile mit drei Stimmen, Wahl, ein Take, Schnitt mit `split_take.py` in Beats, `timing.js`. Mit eigener Aufnahme dieselbe Kette ab dem Schnitt.
 
 ### 6. Bauen (ohne Nutzerbeteiligung)
 
 1. `/hyperframes` und `/hyperframes-animation` laden (Skill-Tool). Daraus Kompositionsvertrag und Animationsregeln nutzen, Ablaufvorgaben gelten aus diesem Skill.
+   Verlangt die Karte 3D (`held-baut.md`) oder braucht eine Szene echte Tiefe, zusätzlich `references/drei-d.md` lesen und den Adapter `three.md` aus `/hyperframes-animation`.
    Danach die gewählte Stilkarte lesen, vor allem ihren Abschnitt „Rezept“ (Ebenen, Kamera, Punkte, Text, Timing). Mindestens drei Techniken aus dem Rezept aus der Karte übernehmen und im Brief unter Technik nennen, je nach Karte etwa Kamerafahrt durch Stationen, Punktwelt mit Parallaxe, Wörter auf Wellen, Rahmen-Morph, Tipp-Zoom. Übernommen wird die Mechanik, nie Texte, Namen oder Bilder der Quelle.
 2. Im Videoordner anlegen: `HYPERFRAMES_NO_TELEMETRY=1 HYPERFRAMES_SKIP_SKILLS=1 npx --yes hyperframes@$V init film-v1 --example blank --resolution <portrait|landscape> --non-interactive`. Bei beiden Formaten ein zweites Projekt `film-v1-9x16` als eigene Komposition (Layout hochkant neu denken, nicht beschneiden).
-3. GSAP lokal: die Datei aus dem `<script src>` der Vorlage nach `film-v1/vendor/gsap.min.js` laden (`curl -sL <url> -o ...`) und den Verweis auf `vendor/gsap.min.js` ändern. Schriften als `.woff2` nach `assets/fonts/` (Dateien des Nutzers oder freie Schriften, z. B. `https://cdn.jsdelivr.net/npm/@fontsource/<name>/files/<name>-latin-<gewicht>-normal.woff2`), Logo nach `assets/`. Keine Netzwerkzugriffe zur Renderzeit.
-4. Komposition schreiben mit den Techniken der Stilkarte und aus `references/motion-techniken.md`. Root-`data-duration` gleich Gesamtlänge. Keine Shader-Übergänge (flackern im Render), kein `Math.random` (geseedeter Zufall). Mit Stimme alle Zeiten relativ zu den Cues aus `timing.js`, nie feste Sekunden.
+3. GSAP lokal: die Datei aus dem `<script src>` der Vorlage nach `film-v1/vendor/gsap.min.js` laden (`curl -sL <url> -o ...`) und den Verweis auf `vendor/gsap.min.js` ändern. Schriften als `.woff2` nach `assets/fonts/` (Dateien des Nutzers oder freie Schriften, z. B. `https://cdn.jsdelivr.net/npm/@fontsource/<name>/files/<name>-latin-<gewicht>-normal.woff2`), Logo nach `assets/`. Bei 3D Three.js nach `vendor/three/` (Befehle in `references/drei-d.md`). Keine Netzwerkzugriffe zur Renderzeit.
+4. Zuerst `film-v1/timeline.js` aus dem Beat-Plan schreiben (`window.TL = ` plus reines JSON, Felder in `references/drei-d.md` und `references/audio-kette.md`): Dauer, Tempo, Drop, jede Aktion mit Zeit, jeder Klang mit derselben Zeit, Kameraschnitte. Die Komposition bindet sie zuerst ein und liest alle Zeiten daraus, `klang.py` ebenso. Dann die Komposition schreiben mit den Techniken der Stilkarte und aus `references/motion-techniken.md`. Root-`data-duration` gleich Gesamtlänge. Keine Shader-Übergänge (flackern im Render), kein `Math.random` (geseedeter Zufall). Mit Stimme alle Zeiten relativ zu den Cues aus `timing.js`, nie feste Sekunden.
 5. Nach jeder Änderung `npx --yes hyperframes@$V check film-v1` mit null Fehlern.
 6. Snapshots je Szene: `npx --yes hyperframes@$V snapshot film-v1 -o _pruefung/v1-r<runde> --at <zeiten> --describe false` und die Bilder per Read ansehen. Prüfliste `references/best-practices.md`. Mindestens zwei eigene Verbesserungsrunden, bevor der Nutzer etwas sieht. Sie bewerten vor allem Bewegung und Rhythmus: Jede Szene hat eine Einleitung, eine Haltung und einen Übergang. Keine Szene steht länger als 1,5 s ganz still (Atmen, Drift, Kamera). Übergänge laufen über Bewegung (Kamerafahrt, Verwandlung, Match Cut), nicht über Schnitt oder Ausblenden und Einblenden. Dazu Lesbarkeit (Text steht mindestens 1,5 s lesbar), nichts am Rand angeschnitten, eine Hauptaussage je Moment. Für Rhythmus Snapshots dicht um die Übergänge legen (je 0,3 s davor, mittendrin, danach).
+   Erst als Raster prüfen (`contact-sheet.jpg` aus dem Snapshot, bei Bedarf 12 bis 18 Zeiten über den Film verteilt), dann Einzelbilder. Fünf Fragen je Runde: Text am Handy lesbar und im Bild? Knöpfe, Abspielkopf, Marken an der richtigen Stelle? Markenfarbe getroffen? Lichtflecken oder überstrahlte Flächen? Taugt das letzte Bild als Plakat?
+7. Markenfarbe messen: `node "$S/scripts/farbe_pruefen.mjs" <snapshot.png> <#hex> [--bereich x,y,b,h]` für Primär- und Akzentfarbe, bei 3D-Objekten mit Bereich auf der beleuchteten Seite. Über 5 (3D über 8) nachregeln und erneut messen, Werte in Block PRÜFUNG des Briefs.
 
 ### 7. Tor 2, Vorschau
 
-Render in 30 fps Draft: `npx --yes hyperframes@$V render film-vN -o renders/vN/<datum>_<slug>-vN[-9x16].mp4 -f 30 -q draft`. Mit Ton vorher die Tonspur als `<audio>` in die Komposition legen. Datei mit `oeffnen.sh` öffnen, keine Studio-Vorschau. Fragen, ob es passt oder was geändert werden soll.
+Render in 30 fps Draft: `npx --yes hyperframes@$V render film-vN -o renders/vN/<datum>_<slug>-vN[-9x16].mp4 -f 30 -q draft`. Mit Ton vorher den Klang aus der Timeline erzeugen (`klang.py`, siehe `references/audio-kette.md`) und die Tonspur als `<audio>` in die Komposition legen, danach `lautheit.sh` auf den Render. Datei mit `oeffnen.sh` öffnen, keine Studio-Vorschau. Fragen, ob es passt oder was geändert werden soll.
 
-Feedback wörtlich als nummerierte Liste in `brief/FEEDBACK-vN.md`, je Punkt die geplante Umsetzung. Nächste Fassung als Kopie (`cp -R film-vN film-vN+1`, ebenso `-9x16`), Änderungen dort, wieder Check, Snapshots, Render als `renders/vN+1/`. Ändert ein Punkt den gesprochenen Text, die neue Formulierung vorher abstimmen, erst dann Credits ausgeben. Bei Ruckeln oder Bildfehlern erst messen (`ffmpeg -ss <t> -i <video> -frames:v 1 _pruefung/<name>.png`, bei langsamen Zooms `bewegung_messen.py`), dann beheben. Schleife, bis der Nutzer „passt“ sagt. Fassungstabelle im Brief pflegen.
+Feedback wörtlich als nummerierte Liste in `brief/FEEDBACK-vN.md`, je Punkt die geplante Umsetzung als konkreter Fix mit Zahl (was gesehen, was genau geändert wird, etwa „Sprung 3 zu hoch, Höhe 0,45 auf 0,3“ oder „Intro zu laut, intro_db -12 auf -16“). Vages Feedback des Nutzers („wirkt komisch“) in einem Satz zurückfragen, an welcher Stelle und was stört. Nächste Fassung als Kopie (`cp -R film-vN film-vN+1`, ebenso `-9x16`), Änderungen dort, wieder Check, Snapshots, Render als `renders/vN+1/`. Ändert ein Punkt den gesprochenen Text, die neue Formulierung vorher abstimmen, erst dann Credits ausgeben. Bei Ruckeln oder Bildfehlern erst messen (`ffmpeg -ss <t> -i <video> -frames:v 1 _pruefung/<name>.png`, bei langsamen Zooms `bewegung_messen.py`), dann beheben. Schleife, bis der Nutzer „passt“ sagt. Fassungstabelle im Brief pflegen.
 
 ### 8. Endfassung
 
 1. Render 60 fps je Format: `npx --yes hyperframes@$V render film-vN -o final/<YYYY-MM-DD>_<slug>-FINAL.mp4 -f 60 -q standard`, die Hochkant-Fassung als `..._<slug>-FINAL-9x16.mp4` aus ihrer eigenen Komposition. Gibt es nur 9:16, trägt die Datei trotzdem `-9x16`.
-2. Mit Ton: Mix als WAV, dann `bash "$S/scripts/master.sh" <mix.wav> <video.mp4> <ziel.mp4>` (-14 LUFS, -1 dBTP). Ohne Ton entfällt das Mastering.
+2. Mit Ton: Mix als WAV, dann `bash "$S/scripts/master.sh" <mix.wav> <video.mp4> <ziel.mp4>` (-14 LUFS, -1 dBTP), danach `bash "$S/scripts/lautheit.sh" <ziel.mp4> [--drop <s>]` mit Exit 0. Ohne Ton entfällt das Mastering.
 3. Kurzprüfung: `ffprobe` auf Dauer, Auflösung und fps, ein Kontaktbogen nach `_pruefung/` und ansehen.
 4. Datei öffnen, Pfad nennen (nur `final/<datei>`), Brief auf `Status: fertig` setzen. Alte Endfassungen bleiben liegen, eine neue bekommt das neue Datum.
 

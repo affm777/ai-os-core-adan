@@ -26,7 +26,7 @@ Mit diesem Use Case baut Claude ein kurzes animiertes Video (Motion Graphic) fü
 - Dein Setup ist installiert (Node ist damit schon da).
 - ffmpeg, ein kleines Programm zum Verarbeiten von Videos. Fehlt es, sagt dir die Installation genau, was du eingeben musst (Mac `brew install ffmpeg`, Windows `winget install --id Gyan.FFmpeg -e`, danach Git Bash und Claude in einem neuen Fenster öffnen).
 - Internet beim ersten Lauf. Die Installation lädt das Video-Werkzeug HyperFrames und einen Browser zum Rendern herunter (einmalig rund 250 MB inklusive der Python-Umgebung für Ton, etwa 5 bis 10 Minuten). Dabei kommen zehn HyperFrames-Skills mit, von denen motion-graphic vier nutzt. Die übrigen bleiben bewusst installiert, das ist in Ordnung.
-- Für eine generierte Stimme oder Musik eine ElevenLabs-Anbindung. Ohne sie geht alles andere trotzdem, dann ohne Ton oder mit einer eigenen Audiodatei.
+- Für eine generierte Stimme oder Musik eine ElevenLabs-Anbindung. Ohne sie geht alles andere trotzdem: Soundeffekte und ein Beat entstehen kostenlos direkt aus dem Film, für Sprache gibt es dann eine eigene Audiodatei oder keine Stimme.
 
 Zeitbedarf: Ein 15-Sekunden-Video dauert vom ersten Satz bis zur fertigen Datei etwa 20 bis 40 Minuten, das meiste davon arbeitet Claude allein. Das reine Rendern dauert nur wenige Minuten.
 
@@ -45,10 +45,10 @@ Ich möchte ein kurzes Video für Instagram machen.
 Das passiert dann:
 
 1. Claude bittet dich, frei zu erzählen, worum es geht, für wen und ob du schon eine Idee für die Abfolge hast. Danach fasst Claude in drei Sätzen zusammen, was es verstanden hat.
-2. Eine Fragerunde mit vier Klicks: Kanal und Format, Länge (etwa 15, 30 oder 60 Sekunden), Stimme, Musik.
+2. Eine Fragerunde mit vier Klicks: Kanal und Format, Länge (etwa 15, 30 oder 60 Sekunden), Stimme, Musik und Effekte (Standard: Beat und Effekte entstehen kostenlos passend zum Bild).
 3. Eine Runde zum Look. Für welche Marke ist das Video (ADAN e.V., ADAN Impact oder ADAN Careers)? Gibt es einen Style-Guide, ein Logo oder Farben? Gibt es Videos, Bilder oder Links, die dir gefallen? Ohne Vorbilder schlägt Claude zwei passende Stile vor und du wählst.
-4. Du bekommst das Storyboard als Tabelle (Szene, Text, Bildidee, Bewegung, Sekunden) und sagst „passt“ oder was anders sein soll.
-5. Claude baut das Video allein, prüft es selbst und öffnet dir die Vorschau.
+4. Du bekommst den Ablaufplan als Tabelle (Sekunde, Text, was passiert, Bewegung, Klang) und sagst „passt“ oder was anders sein soll.
+5. Claude baut das Video allein, auf Wunsch auch in echtem 3D (eine kleine Figur in eurer Markenfarbe baut euer Ergebnis), prüft Bilder, Markenfarbe und Lautstärke selbst und öffnet dir die Vorschau.
 6. Du sagst, was geändert werden soll, oder „passt“. Jede Änderung wird eine neue Fassung, die alte bleibt liegen.
 7. Claude erstellt die Endfassung, öffnet sie und nennt dir, wo sie liegt.
 
@@ -80,8 +80,8 @@ motion-graphic/
     └── motion-graphic/
         ├── SKILL.md                   ← die Arbeitsanleitung für Claude
         ├── VERSION                    ← feste Version des Video-Werkzeugs HyperFrames
-        ├── references/                ← Storyboard-Vorlage, Qualitätsregeln, Animationstechniken, Ton
-        ├── muster/                    ← fünf Stilvorlagen mit Übersicht
-        ├── scripts/                   ← Hilfsprogramme (Werkzeug-Prüfung, Kontaktbogen, Ton-Mastering, Öffnen)
+        ├── references/                ← Brief-Vorlage, Qualitätsregeln, Animationstechniken, 3D, Ton
+        ├── muster/                    ← sechs Stilvorlagen mit Übersicht
+        ├── scripts/                   ← Hilfsprogramme (Werkzeug-Prüfung, Kontaktbogen, Klang, Farb- und Lautheitsprüfung, Mastering, Öffnen)
         └── .venv/                     ← entsteht bei der Installation, für Stimme und Musik
 ```

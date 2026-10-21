@@ -20,8 +20,8 @@ untergehen                                                       Antwortentwürf
 ## Das brauchst du
 
 - Dein Setup ist installiert.
-- Der Microsoft-365-Connector ist in Claude verbunden (Einstellungen, Connectoren, Microsoft 365).
-- Euer Administrator hat Claude einmalig für euer Microsoft-Konto freigegeben. Wie das geht, steht in der Admin-Anleitung aus dem Workshop (`admin-anleitung-claude-m365.pdf`).
+- Dein Postfach ist in Claude verbunden (Einstellungen, Connectoren), entweder Microsoft 365 oder Gmail. Claude fragt beim ersten Lauf, welches.
+- Bei Microsoft 365: Euer Administrator hat Claude einmalig für euer Microsoft-Konto freigegeben. Wie das geht, steht in der Admin-Anleitung aus dem Workshop (`admin-anleitung-claude-m365.pdf`).
 
 ## Schritt 1: Installieren
 
@@ -45,6 +45,7 @@ Sichte den Posteingang und sortier ihn vor.
 ```
 
 Beim ersten Mal fragt Claude dich:
+- ob du Microsoft 365 (Outlook) oder Gmail sichten willst
 - welche Mailadresse dein Hauptpostfach ist
 - welches Startset du willst (Verein, Pflegedienst, Vertrieb und Projekte oder eigene Labels)
 - ob die Markierungen Dringend und Chance bleiben sollen
@@ -74,7 +75,7 @@ Sichte die letzten 90 Tage auf Liegengebliebenes.
 
 ## Das kommt dabei heraus
 
-- Farb-Kategorien in Outlook, Wichtiges als Dringend, Geld und Gelegenheiten als Chance
+- Farb-Kategorien in Outlook oder Labels in Gmail, Wichtiges als Dringend, Geld und Gelegenheiten als Chance
 - `TODO.md` in deinem Ordner mit einer Zeile je Aufgabe samt Frist
 - Antwortentwürfe im Entwürfe-Ordner für die Nummern, die du nennst
 - `posteingang/KONFIG.md` mit deinen Labels und Regeln

@@ -29,8 +29,8 @@ Dieser Use Case sichtet die Mails, die seit dem letzten Lauf angekommen sind (be
 
 ## Voraussetzungen
 
-- Der Microsoft-365-Connector ist in Claude verbunden (Einstellungen, Connectoren, Microsoft 365).
-- Euer Microsoft-Konto hat Claude einmalig freigegeben. Das macht die Person, die euer Microsoft-Konto als Administrator verwaltet, Schritt für Schritt beschrieben in der Admin-Anleitung, die ihr mit dem Workshop bekommen habt (`admin-anleitung-claude-m365.pdf`). Ohne diese Freigabe sieht Claude dein Postfach nicht.
+- Dein Postfach ist in Claude verbunden (Einstellungen, Connectoren): Microsoft 365 oder Gmail. Claude fragt beim ersten Lauf, welches du sichten willst. Mit Gmail entstehen Labels statt Outlook-Kategorien, sonst läuft alles gleich. Gmail sieht nur das eine verbundene Konto.
+- Bei Microsoft 365: Euer Microsoft-Konto hat Claude einmalig freigegeben. Das macht die Person, die euer Microsoft-Konto als Administrator verwaltet, Schritt für Schritt beschrieben in der Admin-Anleitung, die ihr mit dem Workshop bekommen habt (`admin-anleitung-claude-m365.pdf`). Ohne diese Freigabe sieht Claude dein Postfach nicht.
 - Alles Weitere ist mit deinem Setup bereits installiert.
 
 Zeitbedarf: Der erste Lauf dauert mit dem Festlegen deiner Labels rund 15 Minuten, jeder weitere Lauf etwa 3 bis 5 Minuten, das meiste davon arbeitet Claude allein.

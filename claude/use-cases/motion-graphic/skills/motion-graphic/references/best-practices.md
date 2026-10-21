@@ -25,6 +25,10 @@ Prüfliste vor jeder Preview. Jede Regel stammt aus echtem Feedback, der Grund s
 - **Feste Zahlen nur mit Absicht.** „Zehn Themen“ legte eine Zahl fest, die nichts belegt. Lieber „unzählige“ oder eine Bildmenge ohne Zahl.
 - **Fremde Marken als Text, nicht als Logo.** Grundlage nennen („Claude Code“ als kleine Zeile), aber kein großes Fremdlogo, das eine Partnerschaft nahelegt.
 - **Endkarte vollständig:** Call to Action, Webadresse oder Kontakt, bei Terminen Wochentag, Datum, Ort und Uhrzeit. Alle Werte nur aus dem Rohtext des Nutzers, nichts ergänzen.
+- **Interaktiv statt Folie.** Elemente werden bedient wie eine App: Mauszeiger markiert, klickt „Ersetzen“, wählt Vorschläge, drückt einen Riesen-Knopf, legt Schalter um, klickt am Ende die Webadresse. Dazu Tipp-Zoom, Fortschritts-Checkliste mit Haken, Wort-Wand mit Zählern. Grund: ADAN-Impact-Reel 21.10., v1 als ruhige Karten „richtig langweilig“, v2 mit Knopf „Inklusiv machen“ und Schaltern angenommen.
+- **Keine Karten ohne Handlung.** Statische Karten fallen durch, auch als gekippte 3D-Paneele. Jedes Element im Bild tut etwas oder wird bedient.
+- **Ein durchgehender Film statt Überblendungen.** Überblenden zwischen zwei Textlayouts erzeugt Geisterbilder. Besser eine Komposition, Übergänge über Kamera-Zooms.
+- **Kontrast auf Markenfarben messen.** Weiße Schrift auf `#00AB97` (ADAN-Impact-Teal) hat nur 2,9:1, für Knöpfe mit weißer Schrift ein dunkleres Teal (`#00927F`). Allgemein: Knopf- und Textflächen mindestens 4,5:1, sonst die Markenfarbe abdunkeln.
 - **9:16 eigenständig denken.** Zwei Aussagen, die in 16:9 nebeneinander passen, stapeln sich hochkant auf vier Zeilen und überdecken das Bild. Dann nacheinander zeigen (erste ausblenden, zweite an derselben Stelle).
 
 ## Ton
@@ -53,4 +57,11 @@ Prüfliste vor jeder Preview. Jede Regel stammt aus echtem Feedback, der Grund s
 - **Keine absoluten Sekunden.** Jede Zeitangabe relativ zu `T` (Cue plus Versatz). Feste Werte wie `49.2` müssen bei jeder Neuvertonung von Hand verschoben werden, im AIOS-Video waren es 44 Stellen.
 - **HyperFrames-Version pinnen** und immer so aufrufen: `npx --yes hyperframes@<version> check|snapshot|render`. Ohne Version zieht `npx` die neueste.
 - **Langsamer Zoom über DOM-Text ruckelt.** Chrome rastet Text bei kleinen Skalierungsschritten aufs Pixelraster, er steht mehrere Frames und springt dann. Ebene während der langsamen Fahrt als eigene Grafikebene rendern: `el.style.willChange = t > <zoomstart> ? "transform" : "auto"`, erst nach dem schnellen Heranflug einschalten (sonst unscharf). Ergebnis mit `scripts/bewegung_messen.py` prüfen.
+- **Eine Zeitquelle für Bild und Ton.** Alle Aktionen und Klänge stehen in `timeline.js`, Komposition und `klang.py` lesen dieselbe Datei. Grund: Nur so trifft ein Klick den Frame der Landung auch nach der dritten Änderung (Methode aus dem Blender-Guide, 21.10.2026).
+- **Markenfarbe messen, nicht schätzen.** Tonemapping und Licht verschieben Farben, Orange wurde in der 3D-Probe lachsrosa (Delta E 35). `farbe_pruefen.mjs` je Runde, in 3D `NeutralToneMapping` statt AgX.
+- **Fixes mit Zahlen.** „Strahlen doppelt so breit“, „Belichtung 0 auf -0,4“, „Intro 4 dB leiser“ statt „mach es besser“. Die Qualität entsteht in den Korrekturrunden, nicht im ersten Entwurf.
+- **Lautheit über die Zeit prüfen**, nicht nur den Gesamtwert: `lautheit.sh` zeigt, ob der Drop trifft und der Ausklang leiser wird.
+- **Selektoren eng fassen.** `.ic svg` traf auch das verschachtelte Haken-SVG, der Haken saß nicht mittig. Direkte Kinder mit `.ic > svg` ansprechen.
+- **Dekorative Text-Wände als SVG-Text.** Als HTML-Text schlagen Kontrast- und Overflow-Prüfung von `check` an.
+- **Lautheit immer mastern.** Der Render kommt ohne Mastering mit rund -23 LUFS heraus, für Instagram mit `master.sh` auf -14 LUFS.
 - **Kein `//`-Kommentar in einzeiligem Code.** In einer einzeiligen Arrow-Function schneidet er den Rest der Zeile ab, das ganze Skript fällt aus. Kommentare in eine eigene Zeile oder als `/* */`.

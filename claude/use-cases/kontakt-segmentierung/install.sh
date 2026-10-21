@@ -50,10 +50,10 @@ case "$(uname -s 2>/dev/null || echo unbekannt)" in
   *) OS=anderes; warn "Unbekanntes Betriebssystem, getestet sind macOS und Windows (Git Bash)." ;;
 esac
 
-for pflicht in SKILL.md segmente.md ausschluss.md scripts/einlesen.py scripts/schreiben.py \
+for pflicht in SKILL.md segmente.md ausschluss.md scripts/einlesen.py scripts/bestand.py scripts/schreiben.py \
                scripts/akten.py scripts/spalten.json vorlagen/anlass.md vorlagen/struktur.md \
-               vorlagen/checkliste.md vorlagen/recherche-anlass.md vorlagen/recherche-firmen.md \
-               beispiel/Connections-beispiel.csv beispiel/firmenakte-beispiel.md; do
+               vorlagen/checkliste.md vorlagen/ansprache.md vorlagen/recherche-anlass.md vorlagen/recherche-firmen.md \
+               beispiel/Connections-beispiel.csv beispiel/Partner-beispiel.csv beispiel/firmenakte-beispiel.md; do
   [ -f "$SRC/$pflicht" ] || { err "Bundle unvollständig: $SRC/$pflicht fehlt."; exit 1; }
 done
 
@@ -98,6 +98,22 @@ else
     done
   fi
   info "Skill installiert: $DEST"
+
+  # Agent-Typ "recherche" (nur WebSearch und WebFetch) fuer Phase B und D.
+  # Liegt im Setup-Repo unter claude/agents/, aeltere Setups haben ihn nicht.
+  AGENT_SRC="$BUNDLE_DIR/../../agents/recherche.md"
+  AGENT_DEST="$HOME/.claude/agents/recherche.md"
+  if [ -f "$AGENT_SRC" ]; then
+    mkdir -p "$HOME/.claude/agents"
+    if [ -f "$AGENT_DEST" ] && ! diff -q "$AGENT_SRC" "$AGENT_DEST" >/dev/null 2>&1; then
+      mkdir -p "$HOME/.claude/backups/agents"
+      cp "$AGENT_DEST" "$HOME/.claude/backups/agents/recherche.md.bak.$TS"
+    fi
+    cp "$AGENT_SRC" "$AGENT_DEST"
+    info "Recherche-Helfer installiert: $AGENT_DEST"
+  else
+    warn "Recherche-Helfer (claude/agents/recherche.md) nicht im Setup-Repo gefunden, Claude nimmt den allgemeinen Helfer."
+  fi
 fi
 
 # -----------------------------------------------------------------------------

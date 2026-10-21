@@ -217,7 +217,10 @@ def akte_text(firma, prio, leute, quelle, datum):
          "| Branche | %s |" % OFFEN,
          "| Größe | %s |" % OFFEN,
          "| Website | %s |" % OFFEN,
-         "| Standort | %s |" % OFFEN, "",
+         "| Standort | %s |" % OFFEN]
+    if leute[0].get("bestand"):
+        z.append("| Bisheriger Partner | %s (aus der Partnerliste) |" % zelle(leute[0]["bestand"]))
+    z += ["",
          "## Kontakte aus dem Export", "",
          KOPF_KONTAKTE, "|---|---|---|---|---|---|"]
     z += [kontakt_zeile(p) for p in leute]
