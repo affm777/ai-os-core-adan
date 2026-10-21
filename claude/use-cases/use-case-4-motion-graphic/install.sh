@@ -137,19 +137,22 @@ else
 fi
 
 SKILLS_FEHLEN=""
-for s in hyperframes hyperframes-animation hyperframes-core hyperframes-cli; do
+for s in hyperframes hyperframes-cli; do
   [ -f "$HOME/.claude/skills/$s/SKILL.md" ] || SKILLS_FEHLEN="$SKILLS_FEHLEN $s"
 done
 if [ -z "$SKILLS_FEHLEN" ]; then
   info "HyperFrames-Skills vorhanden"
 elif [ "$DRY" -eq 1 ]; then
-  drylog "würde die HyperFrames-Skills installieren (fehlen:$SKILLS_FEHLEN): npx --yes hyperframes@$HF_VERSION skills update hyperframes-animation hyperframes-core"
+  drylog "würde die HyperFrames-Skills installieren (fehlen:$SKILLS_FEHLEN): npx --yes hyperframes@$HF_VERSION skills update"
 else
-  # hyperframes-animation und hyperframes-core gehören nicht zum Kernsatz von
-  # "skills update", sie werden nur installiert, wenn man sie beim Namen nennt.
   echo "Installiere die HyperFrames-Skills (fehlen:$SKILLS_FEHLEN) ..."
-  hf skills update hyperframes-animation hyperframes-core && info "HyperFrames-Skills installiert" || warn "HyperFrames-Skills nicht installiert. Später: npx --yes hyperframes@$HF_VERSION skills update hyperframes-animation hyperframes-core"
+  hf skills update && info "HyperFrames-Skills installiert" || warn "HyperFrames-Skills nicht installiert. Später: npx --yes hyperframes@$HF_VERSION skills update"
 fi
+# hyperframes-animation und hyperframes-core liefert "skills update" nicht mit.
+# Der Skill motion-graphic kommt ohne sie aus, mit ihnen nutzt er die Zusatzregeln.
+for s in hyperframes-animation hyperframes-core; do
+  [ -f "$HOME/.claude/skills/$s/SKILL.md" ] && info "Zusatz-Skill /$s vorhanden" || info "Zusatz-Skill /$s nicht vorhanden (optional)"
+done
 echo "       HyperFrames bringt zehn Skills mit (hyperframes, hyperframes-*, media-use). motion-graphic nutzt vier davon, die übrigen bleiben bewusst installiert und stören nicht."
 
 # -----------------------------------------------------------------------------
