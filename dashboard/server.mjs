@@ -217,6 +217,52 @@ function loadDashboardConfig() {
   }
 }
 
+
+// --- Eigene Reiter (public/reiter/<slug>.html plus <slug>.json) ---
+// Skills legen hier fertige HTML-Seiten ab (etwa eine Kontakt-Segmentierung).
+// Die Seite erscheint als Reiter in der Sidebar-Gruppe "Eigene Reiter",
+// ausgeliefert wie jede statische Datei aus public/. Entfernen heisst: beide
+// Dateien loeschen. Die json-Datei traegt Titel, Untertitel, Stand und Quelle.
+const REITER_DIR = path.join(PUBLIC_DIR, 'reiter');
+function listReiter() {
+  let names;
+  try {
+    names = fs.readdirSync(REITER_DIR);
+  } catch {
+    return [];
+  }
+  const out = [];
+  for (const name of names) {
+    if (!name.endsWith('.json')) continue;
+    const slug = name.slice(0, -5);
+    if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(slug)) continue;
+    const htmlPath = path.join(REITER_DIR, `${slug}.html`);
+    if (!fs.existsSync(htmlPath)) continue;
+    let meta = {};
+    try {
+      meta = JSON.parse(fs.readFileSync(path.join(REITER_DIR, name), 'utf-8')) || {};
+    } catch {
+      meta = {};
+    }
+    let mtime = 0;
+    try {
+      mtime = fs.statSync(htmlPath).mtimeMs;
+    } catch {
+      mtime = 0;
+    }
+    out.push({
+      slug,
+      title: String(meta.title || slug).slice(0, 80),
+      subtitle: String(meta.subtitle || '').slice(0, 200),
+      source: String(meta.source || '').slice(0, 200),
+      updated_at: new Date(mtime).toISOString(),
+      order: Number.isFinite(meta.order) ? meta.order : 100,
+    });
+  }
+  out.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, 'de'));
+  return out;
+}
+
 function aggregateData() {
   const sections = ['system-check', 'portfolio', 'vault-stats', 'usage', 'heute', 'recommendations', 'skills', 'automationen', 'inbox', 'meta'];
   const out = {};
@@ -247,6 +293,7 @@ function aggregateData() {
   out.config = cfg
     ? { present: true, data: cfg }
     : { present: false, data: { onboarding_completed: false, modules: { branding: { enabled: false }, sales: { enabled: false } } } };
+  out.reiter = listReiter();
   out.generated_at = new Date().toISOString();
   return out;
 }

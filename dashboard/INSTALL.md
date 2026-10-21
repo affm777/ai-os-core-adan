@@ -125,3 +125,7 @@ dashboard/
 - **Port 4747 belegt:** Der Server meldet das klar und beendet sich (kein zweiter Prozess). Alten Prozess über `kill "$(cat ~/.claude/dashboard/.pid)"` beenden (Windows/Git Bash: `taskkill //PID $(cat ~/.claude/dashboard/.pid) //F`).
 - **Autostart beim Login:** optional per launchd möglich, Beispiel-Plist steht in `README.md` (Abschnitt „Autostart"), muss manuell angelegt werden.
 - **Collector einzeln laufen lassen:** `bash ~/.claude/dashboard/collectors/portfolio.sh` (analog für die anderen). Details in `README.md`.
+
+## Eigene Reiter
+
+Skills können fertige HTML-Seiten als Reiter ins Dashboard legen. Je Reiter liegen zwei Dateien in `public/reiter/`: `<slug>.html` (die Seite, wird im Dashboard als iframe gezeigt) und `<slug>.json` mit `title`, optional `subtitle`, `source` und `order`. Der Server listet sie bei jedem `/api/data`-Aufruf als `reiter`, das Frontend baut daraus die Sidebar-Gruppe „Eigene Reiter". Eine Seite mit demselben Slug erneut ablegen heißt aktualisieren, beide Dateien löschen heißt entfernen. Der Slug besteht nur aus Kleinbuchstaben, Ziffern und Bindestrich. Erstes Beispiel ist die Kontakt-Segmentierung (`schreiben.py --reiter "<Titel>"`).

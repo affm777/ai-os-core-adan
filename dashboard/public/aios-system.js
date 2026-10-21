@@ -363,10 +363,52 @@ function renderBadge(){
   else if(open.length){b.className="badge warn";b.innerHTML='<span class="dot warn"></span> '+open.length+" Hinweis"+(open.length>1?"e":"");}
   else{b.className="badge ok";b.innerHTML='<span class="dot ok"></span> Alles in Ordnung';}
 }
+/* Eigene Reiter: fertige HTML-Seiten aus public/reiter/ (Liste kommt als
+   data.reiter vom Server). Je Reiter ein Nav-Knopf in der Gruppe "Eigene
+   Reiter", eine Seite mit iframe und ein Eintrag in TITLES. Wird bei jedem
+   Datenabruf abgeglichen, damit neue oder entfernte Reiter ohne Neuladen
+   auftauchen. Der iframe-Link traegt den Stand, so laedt der Browser eine
+   aktualisierte Seite neu statt aus dem Cache. */
+var REITER_KEY=null;
+function renderReiter(list){
+  var group=$("sbReiterGroup");if(!group)return;
+  list=Array.isArray(list)?list:[];
+  var key=JSON.stringify(list.map(function(r){return[r.slug,r.title,r.subtitle,r.updated_at];}));
+  if(key===REITER_KEY)return;
+  REITER_KEY=key;
+  group.querySelectorAll(".sb-item").forEach(function(b){b.remove();});
+  document.querySelectorAll('.page[data-reiter]').forEach(function(s){s.remove();});
+  Object.keys(A.pages).forEach(function(k){if(k.indexOf("reiter-")===0)delete A.pages[k];});
+  Object.keys(TITLES).forEach(function(k){if(k.indexOf("reiter-")===0)delete TITLES[k];});
+  var last=null;document.querySelectorAll(".page").forEach(function(s){last=s;});
+  list.forEach(function(r){
+    if(!r||!/^[a-z0-9][a-z0-9-]{0,63}$/.test(String(r.slug||"")))return;
+    var page="reiter-"+r.slug;
+    var btn=document.createElement("button");
+    btn.className="sb-item";btn.setAttribute("data-page",page);btn.title=r.title||r.slug;
+    btn.innerHTML='<span class="sb-ico"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="12" rx="2"></rect><line x1="3" y1="8" x2="17" y2="8"></line><line x1="8" y1="8" x2="8" y2="16"></line></svg></span><span class="sb-label"></span>';
+    btn.querySelector(".sb-label").textContent=r.title||r.slug;
+    btn.addEventListener("click",function(){location.hash="#/"+page;if(window.innerWidth<=820)document.body.classList.remove("sb-open");});
+    group.appendChild(btn);
+    var sec=document.createElement("section");
+    sec.className="page";sec.setAttribute("data-page",page);sec.setAttribute("data-reiter",r.slug);
+    var src="reiter/"+encodeURIComponent(r.slug)+".html?v="+encodeURIComponent(r.updated_at||"");
+    sec.innerHTML='<section class="blk" style="margin-top:16px"><iframe title="" style="width:100%;height:calc(100vh - 150px);min-height:480px;border:1px solid var(--line,#e3e3e3);border-radius:12px;background:#fff"></iframe></section>';
+    var fr=sec.querySelector("iframe");fr.title=r.title||r.slug;fr.src=src;
+    if(last&&last.parentNode)last.parentNode.insertBefore(sec,last.nextSibling);else document.body.appendChild(sec);
+    last=sec;
+    var stand=r.updated_at?new Date(r.updated_at).toLocaleString("de-DE",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})+" Uhr":"";
+    TITLES[page]=[r.title||r.slug,(r.subtitle||"")+(stand?(r.subtitle?" · ":"")+"Stand "+stand:"")];
+    A.pages[page]=function(){};
+  });
+  group.style.display=list.length?"":"none";
+}
+A.renderReiter=renderReiter;
 A.renderAll=function(data){
   data=A.applyStateVariant(data);A.DATA=data;
   $("dataStand").innerHTML=(A.IS_DEMO?'<span class="demo-flag">Demo-Daten</span>':"")+" · Stand "+new Date(data.generated_at).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})+" Uhr";
   applyModules();
+  renderReiter(data.reiter);
   renderBadge();
   A.renderPage();
 };
