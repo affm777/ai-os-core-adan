@@ -73,7 +73,7 @@ Hat der Nutzer keinen Pfad genannt, fragen:
 > Wo liegt dein LinkedIn-Export? Zieh die Datei Connections.csv (oder deine Excel-Liste) einfach hier ins Fenster, dann habe ich den Pfad. Für eine Probe mit erfundenen Kontakten sag „Demo".
 
 - „Demo" heißt `$S/beispiel/Connections-beispiel.csv`. Im Chat einmal sagen, dass alle Namen und Firmen erfunden sind.
-- Hat er noch keinen Export, kurz erklären: LinkedIn, Profilbild (Ich), Einstellungen und Datenschutz, Datenschutz, „Kopie Ihrer Daten abrufen", nur „Verbindungen" anhaken, Archiv anfordern. LinkedIn schickt den Link meist innerhalb von 10 Minuten bis 24 Stunden per Mail. In der ZIP-Datei liegt `Connections.csv`. Dann stoppen.
+- Hat er noch keinen Export, kurz erklären: LinkedIn, Profilbild (Ich), Einstellungen und Datenschutz, Daten-Privatsphäre, „Kopie Ihrer Daten abrufen". Dort nicht das große Datenarchiv wählen, sondern „auf der Suche nach etwas Bestimmtem" und nur „Kontakte" anhaken, dann Archiv anfordern. LinkedIn nennt 24 Stunden, die Kontaktliste allein kommt meist nach rund 10 Minuten per Mail. In der ZIP-Datei liegt `Connections.csv`. Dann stoppen.
 - Bei einer Excel-Datei nimmt das Skript das erste Blatt mit erkennbarer Kopfzeile und nennt es (`blatt`). Ist das falsch, mit `--blatt <name>` erneut einlesen.
 - Andere Exporte als LinkedIn (Phantombuster, Evaboot, Wiza, Event- und Messelisten) erkennt das Skript über den Spaltenkatalog. Beispiele liegen in `$S/beispiel/formate/`.
 
