@@ -235,6 +235,20 @@ Danach Claude Code neu starten, der Knopf öffnet per Strg+Klick den Browser. Ü
 
 ---
 
+## 17) `claude` startet nicht: „Input must be provided either through stdin or as a prompt argument"
+
+**Symptom:** `claude` in Git Bash bricht sofort ab mit `Warning: no stdin data received in 3s` und `Error: Input must be provided either through stdin or as a prompt argument when using --print`.
+
+**Ursache:** Das Git-Bash-Fenster (mintty) gibt Node-Programmen keine echte Windows-Konsole. Claude Code hält die Sitzung für nicht interaktiv und fällt in den Druckmodus, der einen Prompt als Argument erwartet.
+
+**Lösung:** In Git Bash immer mit `winpty` starten:
+```bash
+winpty claude
+```
+`winpty` kommt mit Git für Windows mit. Alternativ Claude Code aus PowerShell oder Windows Terminal starten (`claude` ohne Zusatz) oder die Claude Desktop App (Reiter Code) nutzen, die `~/.claude/`-Konfiguration gilt dort genauso.
+
+---
+
 ## Noch ein Problem?
 
 Falls keine der obigen Lösungen hilft: Terminal-Output oder Fehlermeldung an Affom schicken. Für allgemeine (nicht Windows-spezifische) Probleme: [../troubleshooting.md](../troubleshooting.md).

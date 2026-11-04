@@ -202,8 +202,10 @@ claude --version
 
 ```bash
 cd ~
-claude
+winpty claude
 ```
+
+In Git Bash immer mit `winpty` davor, sonst meldet Claude „Input must be provided either through stdin or as a prompt argument" und startet nicht (Git Bash gibt Node keine echte Konsole). In PowerShell oder Windows Terminal reicht `claude`.
 
 In der Claude-REPL wie beim Mac: `/help`, `/brain:health-check`, `/aios-dashboard`.
 
