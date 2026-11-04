@@ -13,7 +13,7 @@ Danach eine neue Session starten, damit Claude den Skill kennt.
 
 ## Loslegen
 
-**Hast du eigene Daten?** Leg deinen LinkedIn-Export bereit (die Kontaktliste aus „Kopie deiner Daten“, meist eine Datei namens Connections.csv) und, falls vorhanden, eine Liste bisheriger Partner, Aussteller oder Sponsoren als Excel oder CSV, auch die vom letzten Jahr. Fehlt dir der Export, erklärt Claude dir den Weg, LinkedIn braucht dafür 10 Minuten bis 24 Stunden. Öffne Claude in deinem Projektordner, zieh die Dateien ins Chatfenster und sag Claude:
+**Hast du eigene Daten?** Leg deinen LinkedIn-Export bereit (die Kontaktliste aus „Kopie deiner Daten“, meist eine Datei namens Connections.csv) und, falls vorhanden, eine Liste bisheriger Partner, Aussteller oder Sponsoren als Excel oder CSV, auch die vom letzten Jahr. Fehlt dir der Export: in LinkedIn auf dein Profilbild, „Einstellungen und Datenschutz", Reiter „Datenschutz", „Ihre Daten herunterladen", dort „auf der Suche nach etwas Bestimmtem" wählen und nur „Kontakte" anhaken (nicht das große Datenarchiv). LinkedIn nennt 24 Stunden, die Kontaktliste kommt meist nach rund 10 Minuten per Mail als ZIP mit der Datei Connections.csv. Öffne Claude in deinem Projektordner, zieh die Dateien ins Chatfenster und sag Claude:
 ```
 Segmentier meine LinkedIn-Kontakte für den Career Day. Die Dateien hängen an, die Partnerliste ist dabei.
 ```
