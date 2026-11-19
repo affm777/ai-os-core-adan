@@ -1,6 +1,6 @@
-# Codex: ein zweiter Coding-Agent
+# Codex: ChatGPT direkt aus Claude nutzen
 
-Codex ist der Coding-Agent von OpenAI. Claude holt ihn bei Bedarf für eine zweite Meinung, einen Auftrag oder ein Bild dazu, angemeldet über dein ChatGPT-Konto.
+Codex ist der KI-Assistent von OpenAI. Mit diesem Werkzeug verbindest du dein ChatGPT-Konto mit Claude und nutzt ChatGPT direkt aus dem Claude-Chat heraus, etwa für Bilder, zum Überarbeiten von Texten oder für eine zweite Meinung.
 
 Steht hier **Sag Claude**, kopierst du den grauen Kasten in den Chat.
 
@@ -13,41 +13,50 @@ Steht hier **Sag Claude**, kopierst du den grauen Kasten in den Chat.
 
 Sag Claude:
 ```
-Installiere mir das Werkzeug codex aus meinem Setup-Repo ~/ai-os-core, in der aktuellsten Version.
-Lies dafür zuerst ~/ai-os-core/claude/werkzeuge/codex/details.md und halte dich an die Schritte dort.
+Installiere mir das Werkzeug codex in der aktuellsten Version.
+Hol dafür zuerst mit git -C ~/ai-os-core pull den neuesten Stand meines Setup-Repos (fehlt der Ordner, klon https://github.com/affm777/ai-os-core-adan.git nach ~/ai-os-core).
+Lies danach ~/ai-os-core/claude/werkzeuge/codex/details.md und halte dich an die Schritte dort.
 Sag mir am Ende in einfachen Worten, ob alles geklappt hat.
 ```
 
 Starte danach eine neue Session, damit Claude die drei Skills kennt.
 
-## Schritt 2: Erster Lauf
+## Schritt 2: Anmelden
 
 Melde dich einmalig selbst an. Tippe dafür in einem eigenen Terminal (unter Windows in Git Bash), nicht im Chat:
 ```
 codex login
 ```
 
-Öffne danach Claude in einem beliebigen Projektordner. Sag Claude:
+Der Browser öffnet die Anmeldeseite von ChatGPT. Melde dich an und bestätige den Zugriff, danach kannst du das Terminal schließen.
+
+## Schritt 3: Erstes Bild
+
+Öffne Claude in einem beliebigen Projektordner. Sag Claude:
 ```
-/codex-ask Was fällt dir an der Struktur dieses Ordners auf?
+Generier mir mit Codex ein Bild: ein ruhiges Büro mit Blick auf einen Park, Morgenlicht
 ```
 
-## Schritt 3: So nutzt du es
+Das Bild landet als PNG im aktuellen Ordner und öffnet sich.
 
-**Auftrag.** Codex liest nur. Mit `write:` vor dem Auftrag darf Codex im aktuellen Ordner schreiben.
+## So nutzt du es
+
+Du musst dir keine Befehle merken. Sobald du Codex im Satz nennst, holt Claude ihn dazu.
+
+**Bild.** Etwa für Slides oder einen Post.
 ```
-/codex Erklär mir, was die Skripte in diesem Ordner tun.
+Generier mir mit Codex ein Bild für meine Slides: Menschen im Gespräch an einem Tisch, warmes Licht
 ```
 
-**Bild.** Codex erzeugt ein Bild und legt es als PNG im aktuellen Ordner ab.
+**Text überarbeiten.** Als letzter Schritt, damit ein Text menschlicher klingt.
 ```
-/codex-image ein ruhiges Büro mit Blick auf einen Park, Morgenlicht
+Lass Codex diesen LinkedIn-Post überarbeiten, damit er sich menschlicher anhört: <Text>
 ```
 
-## Das kommt dabei heraus
-
-- Antworten von Codex fasst Claude im Chat zusammen und sagt dir, wo Codex etwas anders sieht.
-- Nach einem Auftrag mit `write:` zeigt Claude dir die Änderungen, Bilder liegen als PNG im aktuellen Ordner.
+**Zweite Meinung.** Codex liest nur und ändert nichts.
+```
+Frag Codex, was ihm an diesem Entwurf auffällt.
+```
 
 ## Grenzen
 
@@ -57,4 +66,4 @@ codex login
 
 ## Mehr dazu
 
-Die Installationsschritte für Claude, die Anmeldung im Detail und alle Grenzen stehen in [details.md](details.md).
+Die Installationsschritte für Claude, die Anmeldung im Detail, die Befehle `/codex`, `/codex-ask` und `/codex-image` und alle Grenzen stehen in [details.md](details.md).
