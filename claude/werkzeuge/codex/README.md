@@ -1,13 +1,8 @@
 # Codex: ChatGPT direkt aus Claude nutzen
 
-Codex ist der KI-Assistent von OpenAI. Mit diesem Werkzeug verbindest du dein ChatGPT-Konto mit Claude und nutzt ChatGPT direkt aus dem Claude-Chat heraus, etwa für Bilder, zum Überarbeiten von Texten oder für eine zweite Meinung.
+Verbinde dein ChatGPT-Konto mit Claude und nutze ChatGPT direkt aus dem Claude-Chat, etwa für Bilder oder um Texte zu überarbeiten. Du brauchst ein ChatGPT-Konto mit Plus oder höher.
 
 Steht hier **Sag Claude**, kopierst du den grauen Kasten in den Chat.
-
-## Das brauchst du
-
-- Dein Setup ist installiert. Node.js und npm sind damit schon da.
-- Ein ChatGPT-Konto mit Plus oder höher. Einen API-Schlüssel brauchst du nicht.
 
 ## Schritt 1: Installieren
 
@@ -19,51 +14,36 @@ Lies danach ~/ai-os-core/claude/werkzeuge/codex/details.md und halte dich an die
 Sag mir am Ende in einfachen Worten, ob alles geklappt hat.
 ```
 
-Starte danach eine neue Session, damit Claude die drei Skills kennt.
+Starte danach eine neue Session.
 
 ## Schritt 2: Anmelden
 
-Melde dich einmalig selbst an. Tippe dafür in einem eigenen Terminal (unter Windows in Git Bash), nicht im Chat:
+Öffne einmalig das Terminal (Windows: Git Bash) und tippe:
 ```
 codex login
 ```
 
-Der Browser öffnet die Anmeldeseite von ChatGPT. Melde dich an und bestätige den Zugriff, danach kannst du das Terminal schließen.
+Im Browser mit deinem ChatGPT-Konto anmelden, fertig.
 
-## Schritt 3: Erstes Bild
+## Schritt 3: Loslegen
 
-Öffne Claude in einem beliebigen Projektordner. Sag Claude:
-```
-Generier mir mit Codex ein Bild: ein ruhiges Büro mit Blick auf einen Park, Morgenlicht
-```
+Nenn Codex im Satz, Claude holt ihn dann dazu.
 
-Das Bild landet als PNG im aktuellen Ordner und öffnet sich.
-
-## So nutzt du es
-
-Du musst dir keine Befehle merken. Sobald du Codex im Satz nennst, holt Claude ihn dazu.
-
-**Bild.** Etwa für Slides oder einen Post.
+**Bild**
 ```
 Generier mir mit Codex ein Bild für meine Slides: Menschen im Gespräch an einem Tisch, warmes Licht
 ```
 
-**Text überarbeiten.** Als letzter Schritt, damit ein Text menschlicher klingt.
+**Text überarbeiten**
 ```
 Lass Codex diesen LinkedIn-Post überarbeiten, damit er sich menschlicher anhört: <Text>
 ```
 
-**Zweite Meinung.** Codex liest nur und ändert nichts.
+**Zweite Meinung**
 ```
 Frag Codex, was ihm an diesem Entwurf auffällt.
 ```
 
-## Grenzen
+Bilder landen im Ordner, in dem du gerade arbeitest. Codex nutzt das Kontingent deines ChatGPT-Abos.
 
-- Codex verbraucht das Kontingent deines ChatGPT-Abos.
-- Codex arbeitet nur im aktuellen Ordner, die Schutzschranken (Sandbox) bleiben immer an.
-- Unter Windows läuft Codex in Git Bash, Sonderfälle stehen in [details.md](details.md).
-
-## Mehr dazu
-
-Die Installationsschritte für Claude, die Anmeldung im Detail, die Befehle `/codex`, `/codex-ask` und `/codex-image` und alle Grenzen stehen in [details.md](details.md).
+Technische Details für Claude stehen in [details.md](details.md).
